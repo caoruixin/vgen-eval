@@ -1,0 +1,30 @@
+# secrets: real keys live only in .env (see .env.example)
+.env
+.env.*
+!.env.example
+
+# runtime data: database, clips, frames, uploads
+data/
+data-mock/
+*.db
+*.db-shm
+*.db-wal
+*.part
+*.log
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+
+# web
+node_modules/
+web/dist/
+
+# tools, editors and chat transcripts
+.firecrawl/
+.specstory/
+.cursorindexingignore
+.vscode/
+.claude/
+.DS_Store

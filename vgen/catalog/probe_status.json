@@ -1,0 +1,684 @@
+{
+  "models": {
+    "happyhorse-1.0-t2v": {
+      "tasks": {
+        "t2v": "ok"
+      },
+      "cases": {
+        "hh10-t2v": {
+          "case": "hh10-t2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.162667,
+          "size": "1280x720",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.357,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "happyhorse-1.0-i2v": {
+      "tasks": {
+        "i2v": "ok"
+      },
+      "delivery": {
+        "image": {
+          "url": "yes",
+          "data_uri": "yes"
+        }
+      },
+      "cases": {
+        "hh10-i2v-url": {
+          "case": "hh10-i2v-url",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "auto",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.162667,
+          "size": "834x1106",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.357,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        },
+        "hh10-i2v-datauri": {
+          "case": "hh10-i2v-datauri",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "auto",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.162667,
+          "size": "834x1106",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.357,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "happyhorse-1.0-r2v": {
+      "tasks": {
+        "r2v": "ok"
+      },
+      "cases": {
+        "hh10-r2v": {
+          "case": "hh10-r2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.162667,
+          "size": "1280x720",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.357,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "wan2.7-t2v": {
+      "notes": [
+        "slow: the 3 s probe clip took 11 min (submit→finish)"
+      ],
+      "tasks": {
+        "t2v": "ok"
+      },
+      "cases": {
+        "wan27-t2v": {
+          "case": "wan27-t2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.018005,
+          "size": "1280x720",
+          "fps": 30.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.255,
+          "latency_s": 666.0,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "wan2.7-i2v": {
+      "tasks": {
+        "i2v": "ok",
+        "flf2v": "ok"
+      },
+      "delivery": {
+        "image": {
+          "data_uri": "yes"
+        }
+      },
+      "cases": {
+        "wan27-i2v-datauri": {
+          "case": "wan27-i2v-datauri",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "auto",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.018005,
+          "size": "832x1106",
+          "fps": 30.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.255,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        },
+        "wan27-flf2v": {
+          "case": "wan27-flf2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "auto",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.065011,
+          "size": "960x960",
+          "fps": 30.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.255,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "wan2.7-r2v": {
+      "tasks": {
+        "r2v": "ok"
+      },
+      "cases": {
+        "wan27-r2v": {
+          "case": "wan27-r2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.018005,
+          "size": "1280x720",
+          "fps": 30.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.255,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "wan2.7-videoedit": {
+      "tasks": {
+        "v2v_edit": "ok"
+      },
+      "cases": {
+        "wan27-edit": {
+          "case": "wan27-edit",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "auto",
+            "audio": false,
+            "has_video_input": true
+          },
+          "duration": 6.8,
+          "size": "1280x720",
+          "fps": 30.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.255,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "wan3.0": {
+      "notes": [
+        "480p rejected: 'resolution must be one of [720p, 1080p, 720, 1080]'"
+      ],
+      "tasks": {
+        "t2v": "ok",
+        "i2v": "fail"
+      },
+      "cases": {
+        "wan30-t2v": {
+          "case": "wan30-t2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": 3.018005,
+          "size": "1280x720",
+          "fps": 30.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.3,
+          "latency_s": 277.0,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        },
+        "wan30-i2v": {
+          "case": "wan30-i2v",
+          "outcome": "fail",
+          "status": "failed",
+          "fail_reason": "Video generation failed, please retry or contact support with your task id",
+          "requested": {
+            "duration": 3,
+            "resolution": "720p",
+            "ratio": "auto",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": null,
+          "size": null,
+          "fps": null,
+          "codec": null,
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.3,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "veo-3.1-generate-preview": {
+      "unavailable": "tokenbay.com returned 'Internal server error' on submit (2026-10-29); re-check from the Models page",
+      "cases": {
+        "veo-t2v": {
+          "case": "veo-t2v",
+          "outcome": "unknown",
+          "status": "submit_unknown",
+          "fail_reason": "Internal server error — the task may exist and may be billed",
+          "requested": {
+            "duration": 4,
+            "resolution": "720p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": null,
+          "size": null,
+          "fps": null,
+          "codec": null,
+          "audio": false,
+          "quota": null,
+          "est_usd": 1.6,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "veo-3.1-fast-generate-preview": {
+      "unavailable": "tokenbay.com returned 'Internal server error' on submit (2026-10-29); re-check from the Models page",
+      "cases": {
+        "veo-fast-audio": {
+          "case": "veo-fast-audio",
+          "outcome": "unknown",
+          "status": "submit_unknown",
+          "fail_reason": "Internal server error — the task may exist and may be billed",
+          "requested": {
+            "duration": 4,
+            "resolution": "720p",
+            "ratio": "16:9",
+            "audio": true,
+            "has_video_input": false
+          },
+          "duration": null,
+          "size": null,
+          "fps": null,
+          "codec": null,
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.8,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "veo-3.1-lite-generate-preview": {
+      "unavailable": "tokenbay.com returned 'Internal server error' on submit (2026-10-29); re-check from the Models page",
+      "cases": {
+        "veo-lite-flf2v-datauri": {
+          "case": "veo-lite-flf2v-datauri",
+          "outcome": "unknown",
+          "status": "submit_unknown",
+          "fail_reason": "Internal server error — the task may exist and may be billed",
+          "requested": {
+            "duration": 4,
+            "resolution": "720p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false
+          },
+          "duration": null,
+          "size": null,
+          "fps": null,
+          "codec": null,
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.2,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "seedance-2.0": {
+      "tasks": {
+        "t2v": "ok"
+      },
+      "cases": {
+        "sd20-t2v": {
+          "case": "sd20-t2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false,
+            "input_video_s": 0.0
+          },
+          "duration": 4.041667,
+          "size": "864x496",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.2722,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "seedance-2.0-fast": {
+      "tasks": {
+        "t2v": "ok"
+      },
+      "cases": {
+        "sd20fast-t2v": {
+          "case": "sd20fast-t2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false,
+            "input_video_s": 0.0
+          },
+          "duration": 4.041667,
+          "size": "864x496",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.2177,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "seedance-2.5": {
+      "tasks": {
+        "t2v": "ok"
+      },
+      "cases": {
+        "sd25-t2v": {
+          "case": "sd25-t2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false,
+            "input_video_s": 0.0
+          },
+          "duration": 4.041667,
+          "size": "864x496",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.416,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      }
+    },
+    "seedance-2.0-mini": {
+      "tasks": {
+        "t2v": "ok",
+        "i2v": "ok",
+        "flf2v": "ok",
+        "r2v": "ok",
+        "extend": "fail",
+        "a2v": "ok"
+      },
+      "cases": {
+        "sdmini-t2v-audio": {
+          "case": "sdmini-t2v-audio",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "16:9",
+            "audio": true,
+            "has_video_input": false,
+            "input_video_s": 0.0
+          },
+          "duration": 4.064,
+          "size": "864x496",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.0544,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        },
+        "sdmini-i2v-datauri": {
+          "case": "sdmini-i2v-datauri",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "adaptive",
+            "audio": false,
+            "has_video_input": false,
+            "input_video_s": 0.0
+          },
+          "duration": 4.041667,
+          "size": "560x752",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.0544,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        },
+        "sdmini-flf2v": {
+          "case": "sdmini-flf2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "adaptive",
+            "audio": false,
+            "has_video_input": false,
+            "input_video_s": 0.0
+          },
+          "duration": 4.041667,
+          "size": "640x640",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.0544,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        },
+        "sdmini-r2v": {
+          "case": "sdmini-r2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": false,
+            "input_video_s": 0.0
+          },
+          "duration": 4.041667,
+          "size": "864x496",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.0544,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        },
+        "sdmini-extend": {
+          "case": "sdmini-extend",
+          "outcome": "fail",
+          "status": "failed",
+          "fail_reason": "The request was rejected by content safety policy",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "16:9",
+            "audio": false,
+            "has_video_input": true,
+            "input_video_s": 6.833333
+          },
+          "duration": null,
+          "size": null,
+          "fps": null,
+          "codec": null,
+          "audio": false,
+          "quota": null,
+          "est_usd": 0.0885,
+          "latency_s": null,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        },
+        "sdmini-a2v": {
+          "case": "sdmini-a2v",
+          "outcome": "ok",
+          "status": "succeeded",
+          "fail_reason": "",
+          "requested": {
+            "duration": 4,
+            "resolution": "480p",
+            "ratio": "adaptive",
+            "audio": true,
+            "has_video_input": false,
+            "input_video_s": 0.0
+          },
+          "duration": 4.064,
+          "size": "560x752",
+          "fps": 24.0,
+          "codec": "h264",
+          "audio": true,
+          "quota": null,
+          "est_usd": 0.0544,
+          "latency_s": 150.0,
+          "failed_checks": [],
+          "ts": "2026-10-29 19:34"
+        }
+      },
+      "delivery": {
+        "image": {
+          "data_uri": "yes"
+        }
+      }
+    }
+  },
+  "judge": {
+    "model": "gemini-3.1-pro-preview",
+    "ok": true,
+    "mode": "frames-v1",
+    "error": null,
+    "usage": {
+      "input_tokens": 9503,
+      "output_tokens": 967,
+      "usd": 0.03061
+    },
+    "ts": "2026-10-29 19:34"
+  },
+  "updated_at": "2026-10-29T19:34:13",
+  "quota_note": "task details carry no quota; Seedance reports usage.totalTokens, other models are billed per second"
+}

@@ -1,0 +1,556 @@
+# Scenario packs: each pack = requirements + default models + prompts (EN/中文) + checklists.
+# Prompts can reference images as {ref1}, {ref2}; adapters render them per model family.
+# Assets are pinned to a commit and served from jsDelivr (with the GitHub raw URL as fallback).
+
+assets:
+  cat:
+    file: cat_surfboard.jpg
+    repo: Wan-Video/Wan2.1
+    sha: 9737cba9c1c3c4d04b33fcad41c111989865d315
+    path: examples/i2v_input.JPG
+    label: {en: Cat in sunglasses on a surfboard, zh: 冲浪板上戴墨镜的猫}
+  bird_first:
+    file: bird_first.png
+    repo: Wan-Video/Wan2.1
+    sha: 9737cba9c1c3c4d04b33fcad41c111989865d315
+    path: examples/flf2v_input_first_frame.png
+    label: {en: Blue bird on the ground (first frame), zh: 地面上的蓝色小鸟（首帧）}
+  bird_last:
+    file: bird_last.png
+    repo: Wan-Video/Wan2.1
+    sha: 9737cba9c1c3c4d04b33fcad41c111989865d315
+    path: examples/flf2v_input_last_frame.png
+    label: {en: Blue bird flying in the sky (last frame), zh: 天空中飞翔的蓝色小鸟（尾帧）}
+  girl:
+    file: girl.png
+    repo: Wan-Video/Wan2.1
+    sha: 9737cba9c1c3c4d04b33fcad41c111989865d315
+    path: examples/girl.png
+    label: {en: Cartoon girl in a red Chinese outfit, zh: 穿红色中式服装的卡通女孩}
+  snake:
+    file: snake.png
+    repo: Wan-Video/Wan2.1
+    sha: 9737cba9c1c3c4d04b33fcad41c111989865d315
+    path: examples/snake.png
+    label: {en: Green cartoon snake, zh: 绿色卡通小蛇}
+  woman:
+    file: woman_street.png
+    repo: Wan-Video/Wan2.2
+    sha: 1ea34ff48f87168174e12956e200b1d908b1c5ff
+    path: examples/pose.png
+    label: {en: Portrait of a woman on a street, zh: 街头女性肖像}
+  traveler:
+    file: traveler_train.png
+    repo: Wan-Video/Wan2.2
+    sha: 1ea34ff48f87168174e12956e200b1d908b1c5ff
+    path: examples/Five Hundred Miles.png
+    label: {en: Man walking beside a train, zh: 火车旁行走的男子}
+  song:
+    file: traveler_song.mp3
+    repo: Wan-Video/Wan2.2
+    sha: 1ea34ff48f87168174e12956e200b1d908b1c5ff
+    path: examples/Five Hundred Miles.MP3
+    label: {en: Sung vocal clip (5 s), zh: 歌声片段（5 秒）}
+  talk:
+    file: talk.wav
+    repo: Wan-Video/Wan2.2
+    sha: 1ea34ff48f87168174e12956e200b1d908b1c5ff
+    path: examples/talk.wav
+    label: {en: Spoken voice clip (5 s), zh: 人声说话片段（5 秒）}
+  market_clip:
+    file: market_boy.mp4
+    repo: Wan-Video/Wan2.2
+    sha: 1ea34ff48f87168174e12956e200b1d908b1c5ff
+    path: examples/wan_animate/replace/video.mp4
+    label: {en: Cartoon boy in a market (6.8 s source clip), zh: 集市中的卡通男孩（6.8 秒源视频）}
+  robed:
+    file: robed_character.jpeg
+    repo: Wan-Video/Wan2.2
+    sha: 1ea34ff48f87168174e12956e200b1d908b1c5ff
+    path: examples/wan_animate/replace/image.jpeg
+    label: {en: Cartoon character in a grey robe, zh: 灰色长袍卡通角色}
+  perfume:
+    file: perfume_product.png
+    generated: true
+    label: {en: Perfume bottle product shot (generated), zh: 香水瓶产品图（AI 生成）}
+    prompt: >-
+      Studio product photo of an elegant faceted glass perfume bottle with a gold cap and amber liquid,
+      standing on a black marble pedestal, soft gradient grey background, rim lighting, no text, no logo.
+
+categories:
+  tour: {en: Quick tour, zh: 快速体验}
+  ads: {en: "Ads, cinematic & social", zh: 广告 / 电影感 / 社媒}
+  product: {en: Product & photo animation, zh: 商品与照片动画}
+  character: {en: Character / IP consistency, zh: 角色 / IP 一致性}
+  audio: {en: "Audio, talking & editing", zh: 音频 / 口播 / 编辑}
+
+packs:
+  # ------------------------------------------------------------------------------------ tour
+  - id: quick-tour
+    category: tour
+    task: t2v
+    title: {en: Quick tour (≈ $1.5), zh: 快速体验（约 1.5 美元）}
+    description:
+      en: One prompt on four cheap settings across four model families — the fastest way to see the whole flow.
+      zh: 一个提示词、四个低价配置、四个模型家族——最快体验完整流程。
+    params: {duration: 5, resolution: 720p, ratio: "16:9", audio: false}
+    models: [seedance-2.0-mini, wan3.0, wan2.7-t2v, veo-3.1-fast-generate-preview]
+    model_overrides:
+      seedance-2.0-mini: {resolution: 480p}
+      veo-3.1-fast-generate-preview: {duration: 4}
+    look_for:
+      en: [How each model reads the same prompt, Motion and camera behaviour, Cost vs speed]
+      zh: [同一提示词的理解差异, 运动与镜头表现, 成本与速度对比]
+    prompts:
+      - key: fox
+        title: {en: Red fox in snow, zh: 雪中赤狐}
+        text:
+          en: >-
+            A red fox trots through fresh snow in a quiet birch forest at golden hour, its breath visible in the
+            cold air. The camera tracks alongside at the fox's height, shallow depth of field, soft backlight.
+          zh: 黄金时刻，一只赤狐在安静的白桦林中踏着新雪小跑，冷空气中呼出白气。镜头在狐狸的高度平行跟拍，浅景深，柔和逆光。
+        checklist:
+          en: [A red fox is the main subject, The fox trots or walks through snow, Birch forest setting,
+               Low tracking camera moving alongside the fox, Warm golden-hour backlight, Breath vapour is visible]
+          zh: [主体是一只赤狐, 狐狸在雪地中小跑或行走, 白桦林场景, 低机位平行跟拍, 暖色黄金时刻逆光, 能看到呼出的白气]
+
+  # ------------------------------------------------------------------------------------ ads
+  - id: cinematic
+    category: ads
+    task: t2v
+    title: {en: Cinematic brand film, zh: 电影感品牌片}
+    description:
+      en: Landscape 16:9 hero shots — composition, lighting, camera moves and product rigidity.
+      zh: 16:9 大片镜头——构图、光影、运镜与产品形体稳定性。
+    params: {duration: 6, resolution: 720p, ratio: "16:9", audio: false}
+    models: [veo-3.1-fast-generate-preview, seedance-2.0, seedance-2.5, happyhorse-1.0-t2v, wan2.7-t2v, wan3.0]
+    look_for:
+      en: [Lighting and colour grade, Smooth intentional camera motion, Product shape stays rigid, No garbled text]
+      zh: [光影与调色, 运镜是否平稳且符合描述, 产品形体是否稳定, 无乱码文字]
+    prompts:
+      - key: karst
+        title: {en: Li River sunrise drone shot, zh: 漓江日出航拍}
+        text:
+          en: >-
+            Cinematic aerial drone shot at sunrise gliding low over the Li River, mist drifting between towering
+            karst peaks, a lone fisherman on a bamboo raft in the river below. Smooth forward camera motion, warm
+            golden light, volumetric haze, 35mm film look.
+          zh: 电影感日出航拍：无人机低空掠过漓江，薄雾在高耸的喀斯特山峰间流动，江面上一位渔夫撑着竹筏。镜头平稳前推，暖金色光线，体积雾，35 毫米胶片质感。
+        checklist:
+          en: [Aerial view over a river, Steep karst peaks with drifting mist, A person on a bamboo raft,
+               Smooth continuous forward camera motion with no cuts, Warm sunrise lighting]
+          zh: [河流上空的航拍视角, 陡峭的喀斯特山峰与流动薄雾, 竹筏上有一个人, 镜头连续平稳前推且无剪切, 暖色日出光线]
+      - key: perfume
+        title: {en: Luxury perfume commercial, zh: 高端香水广告}
+        text:
+          en: >-
+            Luxury perfume commercial: a faceted glass perfume bottle stands on wet black stone while slow-motion
+            water droplets splash around it, catching the rim light. Slow macro dolly-in, dark background, crisp
+            reflections, high-end product photography. No text or logos.
+          zh: 高端香水广告：多切面玻璃香水瓶立在湿润的黑色石头上，慢动作水珠在周围飞溅，被轮廓光照亮。微距镜头缓慢推近，深色背景，反射清晰，高级产品摄影风格。画面中不要出现文字或标志。
+        checklist:
+          en: [A glass perfume bottle is the hero subject, The bottle shape stays rigid with no warping,
+               Slow-motion water droplets or splashes, Slow camera push-in, Dark background with rim light,
+               No garbled text or logos]
+          zh: [玻璃香水瓶是画面主体, 瓶身形状稳定不扭曲, 慢动作水珠或水花, 镜头缓慢推近, 深色背景与轮廓光, 没有乱码文字或标志]
+      - key: car
+        title: {en: Coastal road at dusk, zh: 黄昏海岸公路}
+        text:
+          en: >-
+            A red vintage sports car drives along a winding coastal cliff road at dusk, waves crashing on the rocks
+            below. Helicopter tracking shot that swings alongside the car. Headlights on, warm sunset sky, realistic
+            motion blur.
+          zh: 黄昏时分，一辆红色复古跑车沿着蜿蜒的海边悬崖公路行驶，下方海浪拍打礁石。直升机跟拍镜头随后摆到车侧并行。车灯亮起，暖色晚霞，真实的运动模糊。
+        checklist:
+          en: [A red vintage sports car, A winding coastal cliff road with the ocean below,
+               The car moves forward plausibly (wheels and road motion agree), The camera tracks the car,
+               Dusk light with headlights on]
+          zh: [一辆红色复古跑车, 海边悬崖上的蜿蜒公路, 车辆前进运动合理（车轮与路面运动一致）, 镜头跟随车辆, 黄昏光线且车灯亮起]
+
+  - id: social-vertical
+    category: ads
+    task: t2v
+    title: {en: Vertical social clips (9:16), zh: 竖屏社媒短视频（9:16）}
+    description:
+      en: Short-form vertical content where speed and cost matter as much as quality.
+      zh: 竖屏短视频场景，速度与成本和画质同样重要。
+    params: {duration: 6, resolution: 720p, ratio: "9:16", audio: false}
+    models: [veo-3.1-fast-generate-preview, seedance-2.0-fast, seedance-2.0-mini, happyhorse-1.0-t2v, wan2.7-t2v]
+    look_for:
+      en: [Correct 9:16 framing (no letterbox), Fluid and liquid physics, Hands and bodies, Cost per clip]
+      zh: [是否真正竖屏（无黑边）, 液体等物理效果, 手部与肢体, 单条成本]
+    prompts:
+      - key: latte
+        title: {en: Latte-art pour, zh: 咖啡拉花}
+        text:
+          en: >-
+            Vertical close-up of a barista pouring steamed milk into an espresso cup, forming a perfect heart-shaped
+            latte art. Overhead handheld angle, cosy café, natural window light, a satisfying slow pour.
+          zh: 竖屏特写：咖啡师将蒸汽奶缓缓倒入浓缩咖啡杯，拉出完美的爱心拉花。俯角手持拍摄，温馨咖啡馆，自然窗光，倒奶过程丝滑治愈。
+        checklist:
+          en: [Vertical 9:16 framing, Milk is poured into a coffee cup, The liquid behaves like real milk and coffee,
+               A heart-shaped pattern forms, Hands look natural]
+          zh: [竖屏 9:16 构图, 牛奶倒入咖啡杯, 液体表现符合真实物理, 形成爱心图案, 手部自然]
+      - key: dancer
+        title: {en: Street dancer in neon rain, zh: 霓虹雨夜街舞}
+        text:
+          en: >-
+            Vertical shot of a street dancer performing energetic hip-hop moves under neon signs on a rainy night
+            street, reflections on the wet asphalt, the camera slowly circling, music-video style.
+          zh: 竖屏：雨夜街头霓虹灯下，一名街舞者跳着充满活力的嘻哈舞步，湿漉漉的柏油路面映出倒影，镜头缓慢环绕，MV 风格。
+        checklist:
+          en: [Vertical framing, One dancer performing hip-hop moves, Limbs and body proportions stay correct,
+               Neon light reflected on a wet street, The camera orbits the dancer]
+          zh: [竖屏构图, 一名舞者跳嘻哈舞, 四肢与身体比例正确, 霓虹灯与湿地面倒影, 镜头环绕舞者]
+      - key: wok
+        title: {en: Flaming wok, zh: 火焰颠勺}
+        text:
+          en: >-
+            Vertical close-up of a chef tossing vegetables and noodles in a flaming wok, fire bursting up, glossy
+            sauce, steam rising — fast, energetic food-video style.
+          zh: 竖屏特写：厨师在火焰升腾的炒锅中颠勺翻炒蔬菜和面条，火苗窜起，酱汁油亮，热气腾腾，快节奏美食短视频风格。
+        checklist:
+          en: [Vertical framing, Food is tossed in a wok, Flames burst from the wok,
+               Food pieces move plausibly without merging or morphing, Steam or smoke rises]
+          zh: [竖屏构图, 炒锅中翻炒食物, 锅中火焰窜起, 食物运动合理不粘连变形, 有蒸汽或烟雾升起]
+
+  - id: hard-cases
+    category: ads
+    task: t2v
+    title: {en: "Stress tests — physics, text, Chinese aesthetics", zh: 压力测试——物理、文字、中式美学}
+    description:
+      en: Prompts that commonly break video models. The ink-wash prompt is best run in Chinese.
+      zh: 视频模型常见翻车点。水墨提示词建议使用中文运行。
+    params: {duration: 6, resolution: 720p, ratio: "16:9", audio: false}
+    models: [veo-3.1-fast-generate-preview, seedance-2.0, happyhorse-1.0-t2v, wan2.7-t2v, wan3.0]
+    look_for:
+      en: [Physically plausible full-body motion, Exact text rendering, Cultural style fidelity]
+      zh: [全身运动物理合理性, 文字渲染是否准确, 文化风格还原度]
+    prompts:
+      - key: backflip
+        title: {en: Beach backflip, zh: 沙滩后空翻}
+        text:
+          en: >-
+            A gymnast performs a standing backflip on a sandy beach and lands cleanly on both feet, sand kicking up
+            on landing. Side view, real-time speed, natural daylight.
+          zh: 一名体操运动员在沙滩上原地后空翻，双脚稳稳落地，落地时扬起沙子。侧面视角，真实速度，自然日光。
+        checklist:
+          en: [A single person performs a backflip, The rotation is physically plausible (no floating or teleporting),
+               Lands on both feet, Limbs stay anatomically correct throughout, Sand reacts at the landing]
+          zh: [一个人完成后空翻, 翻转过程物理合理（无漂浮或瞬移）, 双脚落地, 全程肢体结构正确, 落地时沙子有反应]
+      - key: neon
+        title: {en: Neon sign "OPEN 24H", zh: 霓虹招牌 "OPEN 24H"}
+        text:
+          en: >-
+            Close-up of a neon sign on a brick wall in a rainy alley at night. The sign flickers on and clearly reads
+            "OPEN 24H" in red letters. Raindrops streak past and puddles reflect the glow.
+          zh: 雨夜小巷，砖墙上的霓虹灯招牌特写。招牌闪烁着亮起，红色字母清晰地显示 "OPEN 24H"。雨丝划过，水洼映出灯光。
+        checklist:
+          en: [A neon sign on a brick wall, The text reads exactly "OPEN 24H", Letters stay stable and legible once lit,
+               The sign flickers on, Rain and reflections in puddles]
+          zh: [砖墙上的霓虹招牌, 文字准确为 "OPEN 24H", 亮起后字母稳定清晰, 招牌闪烁亮起, 有雨丝和水洼倒影]
+      - key: inkwash
+        title: {en: Ink-wash hanfu scene, zh: 水墨汉服}
+        prefer_lang: zh
+        text:
+          en: >-
+            Chinese ink-wash painting style: a woman in flowing white hanfu holds an oil-paper umbrella and walks
+            across an arched stone bridge in a Jiangnan water town in drizzling rain; willow branches sway and ink
+            mist spreads.
+          zh: 中国水墨画风格：一位身着飘逸白色汉服的女子撑着油纸伞，走过江南水乡的拱形石桥，细雨蒙蒙，柳枝摇曳，墨色烟雨晕染开来。
+        checklist:
+          en: [Ink-wash painting style, A woman in traditional hanfu, She holds an oil-paper umbrella,
+               An arched stone bridge in a water town, Drizzle and swaying willow branches]
+          zh: [水墨画风格, 身穿汉服的女子, 手撑油纸伞, 江南水乡拱桥, 细雨与摇曳的柳枝]
+
+  # ------------------------------------------------------------------------------------ product
+  - id: image-to-video
+    category: product
+    task: i2v
+    title: {en: Animate a photo (I2V), zh: 照片动起来（图生视频）}
+    description:
+      en: The clip must start from the given image and keep its subject intact. First-frame fidelity is measured.
+      zh: 视频需从给定图片开始并保持主体不变，会测量首帧还原度。
+    params: {duration: 6, resolution: 720p, ratio: auto, audio: false}
+    models: [veo-3.1-fast-generate-preview, seedance-2.0, happyhorse-1.0-i2v, wan2.7-i2v, seedance-2.0-mini]
+    look_for:
+      en: [Starts exactly on the input image, Identity and details preserved, Natural motion, Aspect ratio handling]
+      zh: [是否从输入图开始, 主体与细节是否保持, 运动是否自然, 画幅比例处理]
+    prompts:
+      - key: cat
+        title: {en: Surfing cat, zh: 冲浪猫}
+        assets: {first_frame: cat}
+        text:
+          en: >-
+            Summer beach vacation style. The cat wearing sunglasses sits on the surfboard as gentle waves roll past;
+            its fur ruffles in the sea breeze and it slowly turns its head toward the camera. Bright sunlight,
+            relaxed mood.
+          zh: 夏日海滩度假风格。戴着墨镜的猫坐在冲浪板上，海浪轻轻涌过，毛发在海风中微微拂动，它缓缓把头转向镜头。阳光明媚，氛围轻松。
+        checklist:
+          en: [Starts from the provided image, The same cat keeps its sunglasses throughout, The waves move naturally,
+               The fur moves in the breeze, The cat turns its head toward the camera]
+          zh: [从提供的图片开始, 同一只猫全程戴着墨镜, 海浪运动自然, 毛发随风摆动, 猫把头转向镜头]
+      - key: portrait
+        title: {en: Street portrait, zh: 街头人像}
+        assets: {first_frame: woman}
+        text:
+          en: >-
+            The woman gently turns her head toward the camera and smiles; strands of hair move in a light breeze and
+            the background traffic stays softly out of focus. Slow, subtle camera push-in. Keep her face exactly as in
+            the image.
+          zh: 女子轻轻把头转向镜头并露出微笑，几缕发丝在微风中飘动，背景街景保持柔和虚化。镜头缓慢轻微推近。面部保持与原图完全一致。
+        checklist:
+          en: [Starts from the provided image, Her facial identity is preserved, She turns toward the camera and smiles,
+               Hair moves gently, The camera pushes in slowly]
+          zh: [从提供的图片开始, 面部身份保持一致, 她转向镜头并微笑, 头发轻轻飘动, 镜头缓慢推近]
+      - key: product
+        title: {en: Perfume turntable, zh: 香水转台展示}
+        assets: {first_frame: perfume}
+        text:
+          en: >-
+            Product showcase: the perfume bottle slowly rotates on its pedestal while a soft light sweeps across the
+            glass and reflections glide over the surface. Clean studio background, premium commercial feel.
+          zh: 产品展示：香水瓶在底座上缓慢旋转，柔光扫过瓶身，反射在玻璃表面流动。干净的影棚背景，高级商业质感。
+        checklist:
+          en: [Starts from the provided product image, The bottle shape and cap stay consistent while rotating,
+               Smooth rotation, Light sweeps across the glass, No added text or logos]
+          zh: [从提供的产品图开始, 旋转时瓶身与瓶盖形状保持一致, 旋转平滑, 光线扫过玻璃, 没有新增文字或标志]
+
+  - id: first-last-frame
+    category: product
+    task: flf2v
+    title: {en: First → last frame transition, zh: 首尾帧过渡}
+    description:
+      en: The clip must start on the first image and land on the last one — ideal for controlled transitions.
+      zh: 视频需从首帧图开始并落在尾帧图上——适合可控的转场。
+    params: {duration: 6, resolution: 720p, ratio: auto, audio: false}
+    models: [veo-3.1-fast-generate-preview, veo-3.1-lite-generate-preview, seedance-2.0, seedance-2.0-mini]
+    look_for:
+      en: [Starts on frame A and ends on frame B, Smooth in-between motion, Character consistency]
+      zh: [是否从 A 开始并以 B 结束, 中间过渡是否流畅, 角色是否一致]
+    prompts:
+      - key: bird
+        title: {en: Bird take-off, zh: 小鸟起飞}
+        assets: {first_frame: bird_first, last_frame: bird_last}
+        text:
+          en: >-
+            CG animation style: a small blue bird takes off from the ground, flapping its wings. Its feathers are
+            delicate with a distinctive pattern on its chest; blue sky and white clouds, bright sunshine. The camera
+            follows the bird upward, showing its flight and the vastness of the sky. Close shot, low angle.
+          zh: CG 动画风格，一只蓝色的小鸟从地面起飞，扇动翅膀。小鸟羽毛细腻，胸前有独特的花纹，背景是蓝天白云，阳光明媚。镜头跟随小鸟向上移动，展现出小鸟飞翔的姿态和天空的广阔。近景，仰视视角。
+        checklist:
+          en: [Starts on the first provided frame, Ends on the last provided frame, The bird takes off and flaps its wings,
+               The transition is continuous (no hard cut or melt), The bird's design stays consistent]
+          zh: [从提供的首帧开始, 以提供的尾帧结束, 小鸟起飞并扇动翅膀, 过渡连续（无硬切或融化）, 小鸟形象保持一致]
+
+  # ------------------------------------------------------------------------------------ character
+  - id: multi-reference
+    category: character
+    task: r2v
+    title: {en: Keep my characters consistent (R2V), zh: 角色一致性（参考生视频）}
+    description:
+      en: Two reference characters placed in three different scenes — do they stay the same characters?
+      zh: 两个参考角色放入三个不同场景——它们是否始终是同一个角色？
+    params: {duration: 6, resolution: 720p, ratio: "16:9", audio: false}
+    models: [happyhorse-1.0-r2v, wan2.7-r2v, seedance-2.0, veo-3.1-fast-generate-preview]
+    assets: {references: [girl, snake]}
+    look_for:
+      en: ["Faces, outfits and colours match the references", Both characters present, Consistency across the three scenes]
+      zh: [面部、服装与颜色是否与参考一致, 两个角色是否都出现, 三个场景间是否一致]
+    prompts:
+      - key: newyear
+        title: {en: Lunar New Year play, zh: 新年嬉戏}
+        text:
+          en: >-
+            In a joyful festive scene, the cartoon girl from {ref1}, in her bright red outfit with golden patterns,
+            plays with the cute green cartoon snake from {ref2}. She laughs and gently pats the snake's head while the
+            snake looks up with big friendly eyes. Colourful lanterns and ribbons fill the background and warm sunlight
+            falls on them — a cosy Lunar New Year atmosphere.
+          zh: 在欢乐的节日场景中，{ref1}里穿着带金色图案红色衣服的卡通女孩，正和{ref2}里可爱的绿色卡通蛇嬉戏。她开心地笑着，轻轻抚摸蛇的头，小蛇睁着友善的大眼睛抬头看她。周围挂满五彩灯笼和彩带，暖阳洒在她们身上，营造出温馨的新年氛围。
+        checklist:
+          en: ["The girl matches reference 1 (face, hair buns, red outfit)", The snake matches reference 2 (green cartoon snake),
+               The girl pats the snake's head, Festive lanterns and ribbons, Both characters stay consistent through the clip]
+          zh: [女孩与参考图 1 一致（面部、发髻、红衣）, 小蛇与参考图 2 一致（绿色卡通蛇）, 女孩抚摸蛇的头, 节日灯笼与彩带, 两个角色全程保持一致]
+      - key: park
+        title: {en: Bicycle in the park, zh: 公园骑车}
+        text:
+          en: >-
+            The same cartoon girl from {ref1} rides a small bicycle through a sunny park while the cartoon snake from
+            {ref2} sits in the front basket, looking around happily. Tracking shot, cherry blossoms, cheerful mood.
+          zh: "{ref1}中的同一个卡通女孩骑着小自行车穿过阳光明媚的公园，{ref2}中的卡通蛇坐在前车筐里开心地四处张望。跟拍镜头，樱花盛开，氛围欢快。"
+        checklist:
+          en: [Same girl as reference 1, Same snake as reference 2, The girl rides a bicycle,
+               The snake sits in the basket, A park with cherry blossoms]
+          zh: [与参考图 1 是同一个女孩, 与参考图 2 是同一条蛇, 女孩骑自行车, 小蛇坐在车筐里, 樱花盛开的公园]
+      - key: snowman
+        title: {en: Building a snowman, zh: 堆雪人}
+        text:
+          en: >-
+            Winter evening: the cartoon girl from {ref1} and the cartoon snake from {ref2} build a snowman together in a
+            snowy courtyard hung with red lanterns; snowflakes fall and warm light glows from the windows. Medium shot,
+            gentle camera pan.
+          zh: 冬日傍晚，{ref1}中的卡通女孩和{ref2}中的卡通蛇在挂着红灯笼的雪中庭院里一起堆雪人，雪花飘落，窗户透出暖光。中景，镜头缓慢横移。
+        checklist:
+          en: [Same girl as reference 1, Same snake as reference 2, They build a snowman together,
+               A snowy courtyard with red lanterns, Falling snow]
+          zh: [与参考图 1 是同一个女孩, 与参考图 2 是同一条蛇, 她们一起堆雪人, 挂红灯笼的雪中庭院, 雪花飘落]
+
+  # ------------------------------------------------------------------------------------ audio
+  - id: dialogue-audio
+    category: audio
+    task: t2v
+    title: {en: Native dialogue & sound effects, zh: 原生对白与音效}
+    description:
+      en: Speech, lip-sync and sound effects generated together with the picture (audio models only).
+      zh: 画面与语音、口型、音效一起生成（仅支持音频的模型）。
+    params: {duration: 6, resolution: 720p, ratio: "16:9", audio: true}
+    models: [veo-3.1-fast-generate-preview, veo-3.1-lite-generate-preview, seedance-2.0, seedance-2.5, seedance-2.0-fast]
+    look_for:
+      en: [Speech is intelligible and correct, Lip-sync, Sound effects in sync with events, Unwanted music]
+      zh: [语音是否清晰正确, 口型同步, 音效与画面事件同步, 是否有多余配乐]
+    prompts:
+      - key: vendor
+        title: {en: Night-market vendor, zh: 夜市摊主}
+        text:
+          en: >-
+            Night-market street-food stall. A cheerful middle-aged vendor looks into the camera and says: "Fresh hot
+            dumplings — three for five dollars!" while steam rises from bamboo steamers. Ambient crowd chatter and
+            sizzling sounds. Handheld documentary style.
+          zh: 夜市小吃摊。一位开朗的中年摊主看着镜头说："热腾腾的饺子，三块钱一份！"，竹蒸笼冒着热气。背景有人群嘈杂声和滋滋的煎炸声。手持纪录片风格。
+        checklist:
+          en: [A vendor speaks to the camera, The spoken line is intelligible and matches the prompt,
+               Lip movement matches the speech, Crowd and sizzling sounds are audible, Steam rises from the steamers]
+          zh: [摊主对着镜头说话, 台词清晰且与提示一致, 口型与语音匹配, 能听到人群与煎炸声, 蒸笼冒出热气]
+      - key: storm
+        title: {en: Thunderstorm attic, zh: 雷雨阁楼}
+        text:
+          en: >-
+            Inside a cosy attic room at night during a thunderstorm: rain hammers the skylight, a flash of lightning
+            lights up the room and rolling thunder follows a moment later; a cat on the windowsill flinches. No music,
+            only natural sounds.
+          zh: 雷雨夜，温馨阁楼房间内：雨点猛烈敲打天窗，一道闪电照亮房间，片刻后雷声滚滚；窗台上的猫被吓得一缩。没有音乐，只有自然声音。
+        checklist:
+          en: [Rain on the skylight is visible and audible, A lightning flash lights the room,
+               Thunder follows the flash, The cat reacts to the thunder, There is no background music]
+          zh: [天窗上的雨可见且可闻, 闪电照亮房间, 闪电之后传来雷声, 猫对雷声有反应, 没有背景音乐]
+      - key: cafe
+        title: {en: Two-person café dialogue, zh: 咖啡馆双人对话}
+        text:
+          en: >-
+            Two friends sit at a small café table. The woman asks: "Did you really quit your job?" The man laughs and
+            replies: "Best decision I ever made." Natural conversation, café ambience, shot–reverse-shot framing.
+          zh: 两个朋友坐在咖啡馆的小桌旁。女人问："你真的辞职了？" 男人笑着回答："这是我做过最好的决定。" 自然对话，咖啡馆环境音，正反打镜头。
+        checklist:
+          en: [Two people talk at a café table, Both lines are spoken intelligibly and in order,
+               Lip-sync matches each speaker, Each line comes from the right person, Café ambience is audible]
+          zh: [两人在咖啡桌旁交谈, 两句台词按顺序清晰说出, 口型与说话人匹配, 台词由正确的人说出, 能听到咖啡馆环境音]
+
+  - id: audio-driven
+    category: audio
+    task: a2v
+    title: {en: Audio-driven talking & singing, zh: 音频驱动口播与演唱}
+    description:
+      en: A supplied voice or song drives the animation of an image. Experimental on Wan until probed.
+      zh: 用给定的语音或歌曲驱动图片中的角色。万相模型需探测通过后启用。
+    params: {duration: 5, resolution: 720p, ratio: auto, audio: true}
+    models: [seedance-2.0, seedance-2.0-fast, wan2.7-r2v, wan3.0]
+    look_for:
+      en: [Mouth follows the audio, Supplied audio is kept, Identity from the image preserved]
+      zh: [口型是否跟随音频, 是否保留输入音频, 是否保持图片中的人物形象]
+    prompts:
+      - key: talking-cat
+        title: {en: Talking cat, zh: 会说话的猫}
+        assets: {first_frame: cat, audio_input: talk}
+        text:
+          en: The cat wearing sunglasses on the surfboard talks to the camera, its mouth moving in sync with the voice; waves roll past behind it.
+          zh: 冲浪板上戴墨镜的猫对着镜头说话，嘴部动作与声音同步，身后海浪涌过。
+        checklist:
+          en: [Starts from the provided image, Mouth movement follows the supplied voice, The supplied voice is audible in the output,
+               The cat keeps its look, The background waves move]
+          zh: [从提供的图片开始, 嘴部动作跟随输入语音, 输出中能听到输入语音, 猫的外观保持不变, 背景海浪在动]
+      - key: singer
+        title: {en: Singing by the tracks, zh: 铁轨旁演唱}
+        assets: {first_frame: traveler, audio_input: song}
+        text:
+          en: The man walking beside the train sings along to the music, his lips in sync with the vocals, natural head movement, overcast autumn light.
+          zh: 火车旁行走的男子跟着音乐演唱，口型与歌声同步，头部动作自然，阴天秋日光线。
+        checklist:
+          en: [Starts from the provided image, Lips sync with the vocals, Natural head and body motion,
+               The man's identity is preserved, The song is audible in the output]
+          zh: [从提供的图片开始, 口型与歌声同步, 头部与身体动作自然, 人物身份保持一致, 输出中能听到歌声]
+
+  - id: video-edit
+    category: audio
+    task: v2v_edit
+    title: {en: Edit an existing video, zh: 编辑已有视频}
+    description:
+      en: Instruction-based edits of a 6.8 s source clip — restyle, change the setting or swap the character.
+      zh: 按指令编辑 6.8 秒源视频——换风格、换场景或替换角色。
+    params: {duration: 6, resolution: 720p, ratio: auto, audio: false}
+    models: [wan2.7-videoedit, wan3.0]
+    assets: {source_video: market_clip}
+    look_for:
+      en: [Motion and camera kept from the source, The edit is applied everywhere, No flicker between frames]
+      zh: [是否保留源视频的动作与镜头, 编辑是否贯穿全片, 帧间无闪烁]
+    prompts:
+      - key: watercolor
+        title: {en: Watercolour restyle, zh: 水彩风格化}
+        text:
+          en: Restyle the whole video as a hand-drawn watercolour illustration; keep the boy's motion, the camera move and the market layout unchanged.
+          zh: 将整段视频改为手绘水彩插画风格，男孩的动作、镜头运动和集市布局保持不变。
+        checklist:
+          en: [Watercolour illustration style throughout, The boy's motion matches the source, The camera move matches the source,
+               The market layout is unchanged, No frame-to-frame flicker]
+          zh: [全片为水彩插画风格, 男孩动作与源视频一致, 镜头运动与源视频一致, 集市布局不变, 帧间无闪烁]
+      - key: winter
+        title: {en: Snowy evening, zh: 雪夜集市}
+        text:
+          en: Change the setting to a snowy winter evening — snow on the stalls and ground, falling snowflakes, warm lantern light — while the boy and his motion stay unchanged.
+          zh: 把场景改为下雪的冬日傍晚——摊位和地面覆盖积雪，雪花飘落，灯笼暖光——男孩及其动作保持不变。
+        checklist:
+          en: [Snow covers the stalls and ground, Snowflakes fall, Evening lantern light, The boy and his motion are unchanged,
+               No frame-to-frame flicker]
+          zh: [摊位和地面有积雪, 雪花飘落, 傍晚灯笼光, 男孩与动作不变, 帧间无闪烁]
+      - key: swap
+        title: {en: Swap the character, zh: 替换角色}
+        assets: {references: [robed]}
+        text:
+          en: Replace the boy with the character from the reference image (grey robe, topknot), keeping the same motion, camera and background.
+          zh: 用参考图中的角色（灰色长袍、发髻）替换视频中的男孩，动作、镜头和背景保持不变。
+        checklist:
+          en: [The boy is replaced by the robed character, The new character matches the reference image,
+               The motion follows the source, Camera and background are unchanged]
+          zh: [男孩被替换为长袍角色, 新角色与参考图一致, 动作跟随源视频, 镜头与背景不变]
+
+  - id: video-extend
+    category: audio
+    task: extend
+    title: {en: Extend a video, zh: 视频续写}
+    description:
+      en: Continue the 6.8 s source clip seamlessly (Seedance).
+      zh: 无缝续写 6.8 秒源视频（Seedance）。
+    params: {duration: 5, resolution: 480p, ratio: "16:9", audio: false}
+    models: [seedance-2.0, seedance-2.0-fast, seedance-2.0-mini]
+    assets: {source_video: market_clip}
+    look_for:
+      en: [Seamless continuation from the last frame, Same character and setting, Follows the new action]
+      zh: [是否从末帧无缝衔接, 角色与场景是否一致, 是否执行新的动作]
+    prompts:
+      - key: walk
+        title: {en: Walk toward camera, zh: 走向镜头}
+        text:
+          en: Continue the video — the boy looks up, smiles and walks toward the camera while the market bustles behind him.
+          zh: 续写视频——男孩抬起头，露出微笑，向镜头走来，身后的集市熙熙攘攘。
+        checklist:
+          en: [Continues seamlessly from the source clip, Same boy and same market, The boy looks up and smiles,
+               He walks toward the camera, No jump cut at the junction]
+          zh: [与源视频无缝衔接, 同一个男孩与同一个集市, 男孩抬头微笑, 他走向镜头, 衔接处无跳切]
+      - key: reveal
+        title: {en: Crane-up reveal, zh: 升镜头全景}
+        text:
+          en: Continue the video — the camera slowly cranes up and pulls back to reveal the whole market from above.
+          zh: 续写视频——镜头缓缓升高拉远，从上方展现整个集市全景。
+        checklist:
+          en: [Continues seamlessly from the source clip, The camera rises and pulls back, The whole market becomes visible,
+               The style stays consistent with the source]
+          zh: [与源视频无缝衔接, 镜头升高并拉远, 展现整个集市, 风格与源视频一致]

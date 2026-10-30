@@ -1,0 +1,236 @@
+"""SQLite persistence (SQLModel). JSON columns are replaced wholesale on update."""
+
+from __future__ import annotations
+
+import time
+import uuid
+from contextlib import contextmanager
+from pathlib import Path
+from typing import Any, Iterator
+
+from sqlalchemy import JSON, Column, event
+from sqlmodel import Field, Session, SQLModel, create_engine, select
+
+# Job lifecycle. Terminal states never change again unless the user acts.
+PENDING = "pending"            # waiting for a submit slot
+SUBMITTING = "submitting"      # POST in flight (on restart -> submit_unknown)
+QUEUED = "queued"
+IN_PROGRESS = "in_progress"
+DOWNLOADING = "downloading"
+ANALYZING = "analyzing"
+SUCCEEDED = "succeeded"
+FAILED = "failed"
+SUBMIT_UNKNOWN = "submit_unknown"
+TIMEOUT = "timeout"
+STOPPED = "stopped"
+BLOCKED = "blocked"            # payload could not be built; never submitted
+
+ACTIVE_REMOTE = {QUEUED, IN_PROGRESS}
+TERMINAL = {SUCCEEDED, FAILED, SUBMIT_UNKNOWN, TIMEOUT, STOPPED, BLOCKED}
+
+
+def new_id(prefix: str) -> str:
+    return f"{prefix}_{uuid.uuid4().hex[:12]}"
+
+
+def now() -> float:
+    return time.time()
+
+
+class Run(SQLModel, table=True):
+    id: str = Field(default_factory=lambda: new_id("run"), primary_key=True)
+    created_at: float = Field(default_factory=now, index=True)
+    title: str = ""
+    kind: str = "compare"                      # compare | pack | probe
+    scenario_id: str | None = Field(default=None, index=True)
+    category: str | None = None
+    task: str = "t2v"
+    lang: str = "en"
+    endpoint: str = "com"
+    params: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    prompts: list = Field(default_factory=list, sa_column=Column(JSON))   # [{key,title,text,checklist}]
+    models: list = Field(default_factory=list, sa_column=Column(JSON))
+    judge: bool = False
+    est_cost_usd: float = 0.0
+    notes: str = ""
+
+
+class Job(SQLModel, table=True):
+    id: str = Field(default_factory=lambda: new_id("job"), primary_key=True)
+    run_id: str = Field(index=True)
+    prompt_key: str = ""
+    model: str = Field(index=True)
+    endpoint: str = "com"
+    label: str = ""                              # anonymous label for blind mode
+    status: str = Field(default=PENDING, index=True)
+    spec: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    payload: dict = Field(default_factory=dict, sa_column=Column(JSON))  # redacted
+    adjustments: list = Field(default_factory=list, sa_column=Column(JSON))
+    effective: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    est_cost_usd: float = 0.0
+    task_id: str | None = Field(default=None, index=True)
+    progress: str = ""
+    remote_status: str = ""
+    submit_response: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    last_detail: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    fail_reason: str = ""
+    error_code: str = ""
+    quota: int | None = None
+    created_at: float = Field(default_factory=now)
+    submitted_at: float | None = None
+    gw_submit_time: float | None = None
+    gw_start_time: float | None = None
+    gw_finish_time: float | None = None
+    done_at: float | None = None
+    next_poll_at: float | None = None
+    poll_count: int = 0
+    submit_attempts: int = 0
+    video_path: str | None = None
+    poster_path: str | None = None
+    strip_path: str | None = None
+    video_sha: str | None = None
+    media: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    compliance: list = Field(default_factory=list, sa_column=Column(JSON))
+    signals: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    fidelity: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    judge: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    judge_status: str = ""                       # "", pending, running, done, error, skipped
+
+
+class Rating(SQLModel, table=True):
+    job_id: str = Field(primary_key=True)
+    run_id: str = Field(index=True)
+    usable: bool | None = None
+    overall: int | None = None
+    defects: list = Field(default_factory=list, sa_column=Column(JSON))
+    comment: str = ""
+    updated_at: float = Field(default_factory=now)
+
+
+class Pick(SQLModel, table=True):
+    id: str = Field(default_factory=lambda: new_id("pick"), primary_key=True)
+    run_id: str = Field(index=True)
+    prompt_key: str = ""
+    winner_job_id: str = ""
+    created_at: float = Field(default_factory=now)
+
+
+class LedgerEntry(SQLModel, table=True):
+    id: str = Field(default_factory=lambda: new_id("led"), primary_key=True)
+    ts: float = Field(default_factory=now, index=True)
+    kind: str = "video"                          # video | judge | image
+    job_id: str | None = Field(default=None, index=True)
+    run_id: str | None = None
+    model: str = ""
+    endpoint: str = "com"
+    est_usd: float = 0.0
+    actual_usd: float | None = None
+    quota: int | None = None
+    note: str = ""
+
+
+class Asset(SQLModel, table=True):
+    id: str = Field(primary_key=True)            # sha256 of the bytes
+    kind: str = "image"                          # image | video | audio
+    label: str = ""
+    filename: str = ""
+    mime: str = ""
+    size: int = 0
+    width: int | None = None
+    height: int | None = None
+    duration: float | None = None
+    local_path: str = ""
+    public_urls: list = Field(default_factory=list, sa_column=Column(JSON))
+    source: str = ""                             # upload | url | example | generated
+    created_at: float = Field(default_factory=now)
+
+
+class ProbeResult(SQLModel, table=True):
+    id: str = Field(default_factory=lambda: new_id("probe"), primary_key=True)
+    ts: float = Field(default_factory=now, index=True)
+    case_id: str = Field(index=True)
+    model: str = ""
+    ok: bool = False
+    job_id: str | None = None
+    detail: dict = Field(default_factory=dict, sa_column=Column(JSON))
+
+
+class JudgeCache(SQLModel, table=True):
+    key: str = Field(primary_key=True)
+    created_at: float = Field(default_factory=now)
+    result: dict = Field(default_factory=dict, sa_column=Column(JSON))
+
+
+class KV(SQLModel, table=True):
+    key: str = Field(primary_key=True)
+    value: Any = Field(default=None, sa_column=Column(JSON))
+
+
+_engine = None
+
+
+def init_db(db_path: Path):
+    global _engine
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    engine = create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False, "timeout": 30})
+
+    @event.listens_for(engine, "connect")
+    def _pragmas(dbapi_conn, _record):  # pragma: no cover - trivial
+        cur = dbapi_conn.cursor()
+        cur.execute("PRAGMA journal_mode=WAL")
+        cur.execute("PRAGMA busy_timeout=30000")
+        cur.execute("PRAGMA synchronous=NORMAL")
+        cur.close()
+
+    SQLModel.metadata.create_all(engine)
+    _engine = engine
+    return engine
+
+
+def get_engine():
+    if _engine is None:
+        raise RuntimeError("init_db() has not been called")
+    return _engine
+
+
+@contextmanager
+def session() -> Iterator[Session]:
+    with Session(get_engine(), expire_on_commit=False) as s:
+        yield s
+
+
+def update_job(job_id: str, **fields) -> Job | None:
+    with session() as s:
+        job = s.get(Job, job_id)
+        if job is None:
+            return None
+        for k, v in fields.items():
+            setattr(job, k, v)
+        s.add(job)
+        s.commit()
+        s.refresh(job)
+        return job
+
+
+def get_job(job_id: str) -> Job | None:
+    with session() as s:
+        return s.get(Job, job_id)
+
+
+def jobs_for_run(run_id: str) -> list[Job]:
+    with session() as s:
+        return list(s.exec(select(Job).where(Job.run_id == run_id).order_by(Job.prompt_key, Job.label)))
+
+
+def kv_get(key: str, default: Any = None) -> Any:
+    with session() as s:
+        row = s.get(KV, key)
+        return default if row is None else row.value
+
+
+def kv_set(key: str, value: Any) -> None:
+    with session() as s:
+        row = s.get(KV, key) or KV(key=key)
+        row.value = value
+        s.add(row)
+        s.commit()

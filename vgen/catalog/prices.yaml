@@ -1,0 +1,51 @@
+# Public tokenbay.com prices (USD), scraped 2026-10-29 from https://www.tokenbay.com/models/<id>.
+# per_second: USD per output second by resolution tier.
+# per_mtok: USD per million video tokens; tokens = W x H x (fps x seconds + 1) / 1024 (Seedance formula,
+#   +1 frame as reported by the gateway).
+#   without_video / with_video = whether the *input* contains a video.
+# audio_multiplier: worst-case factor applied when audio generation is requested.
+# The real charge is the task's `quota`; quota_per_usd is calibrated by `vgen probe`.
+
+currency: USD
+checked_at: "2026-10-29"
+quota_per_usd: 500000
+quota_calibrated: false
+
+models:
+  happyhorse-1.0-t2v: &hh {per_second: {720p: 0.119, 1080p: 0.204}, promo: "15% off (list 0.14 / 0.24)"}
+  happyhorse-1.0-i2v: *hh
+  happyhorse-1.0-r2v: *hh
+
+  veo-3.1-generate-preview: {per_second: {720p: 0.40, 1080p: 0.40, 4k: 0.60}, audio_multiplier: 2.0}
+  veo-3.1-fast-generate-preview: {per_second: {720p: 0.10, 1080p: 0.12, 4k: 0.30}, audio_multiplier: 2.0}
+  veo-3.1-lite-generate-preview: {per_second: {720p: 0.05, 1080p: 0.08}, audio_multiplier: 2.0}
+
+  # The .com page lists with_video 7.00 / without_video 4.30 at 480p-720p (likely swapped); worst case is used.
+  seedance-2.0:
+    per_mtok:
+      without_video: {480p: 7.00, 720p: 7.00, 1080p: 7.70}
+      with_video: {480p: 7.00, 720p: 7.00, 1080p: 4.70}
+  seedance-2.0-fast:
+    per_mtok:
+      without_video: {480p: 5.60, 720p: 5.60}
+      with_video: {480p: 3.30, 720p: 3.30}
+  seedance-2.0-mini:
+    per_mtok:
+      without_video: {480p: 1.40, 720p: 1.40}
+      with_video: {480p: 0.84, 720p: 0.84}
+    promo: "60% off (list 3.50 / 2.10)"
+  seedance-2.5:
+    per_mtok:
+      without_video: {480p: 10.70, 720p: 10.70}
+      with_video: {480p: 6.40, 720p: 6.40}
+
+  wan2.7-t2v: &wan27 {per_second: {720p: 0.085, 1080p: 0.1275}, promo: "15% off (list 0.10 / 0.15)"}
+  wan2.7-i2v: *wan27
+  wan2.7-r2v: *wan27
+  wan2.7-videoedit: *wan27
+  wan3.0: {per_second: {480p: 0.05, 720p: 0.10, 1080p: 0.20}}
+
+# AI judge (Gemini native API on tokenbay.com), USD per million tokens.
+judge:
+  gemini-3.1-pro-preview: {input: 2.00, output: 12.00}
+  gemini-3.5-flash: {input: 1.50, output: 9.00}

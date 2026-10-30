@@ -1,0 +1,303 @@
+# Video-generation model registry (tokenbay.com scope for v1).
+#
+# doc: documented = fields from tokenbay docs (docs/reference/video/*); inferred = guessed from the
+#      vendor's sibling models and checked by `vgen probe` (results overlay: probe_status.json).
+# tasks: t2v | i2v | flf2v (first+last frame) | r2v (reference images) | v2v_edit | extend | a2v (audio-driven)
+# experimental_tasks: only enabled after a passing probe case.
+# delivery: how each input kind may be sent: url | data_uri  (value: yes | no | unknown)
+# durations: either {min, max} or an explicit list; by_resolution narrows it.
+
+families:
+  happyhorse:
+    vendor: Alibaba
+    adapter: alibaba
+  wan:
+    vendor: Alibaba
+    adapter: alibaba
+  veo:
+    vendor: Google
+    adapter: veo
+  seedance:
+    vendor: ByteDance
+    adapter: seedance
+
+_alibaba_ratios: &alibaba_ratios ["16:9", "9:16", "1:1", "4:3", "3:4", "4:5", "5:4", "9:21", "21:9"]
+_wan_ratios: &wan_ratios ["16:9", "9:16", "1:1", "4:3", "3:4"]
+_seedance_ratios: &seedance_ratios ["16:9", "4:3", "1:1", "3:4", "9:16", "21:9", "adaptive"]
+
+models:
+  # ---------------------------------------------------------------- HappyHorse 1.0 (documented)
+  - id: happyhorse-1.0-t2v
+    family: happyhorse
+    label: HappyHorse 1.0 T2V
+    endpoints: [com]
+    doc: documented
+    tasks: [t2v]
+    durations: {min: 3, max: 15}
+    resolutions: [720p, 1080p]
+    ratios: *alibaba_ratios
+    audio: always
+    delivery: {image: {url: yes, data_uri: unknown}}
+    max_refs: 0
+    latency_s: 130
+    watermark_param: metadata.watermark
+    notes:
+      en: Alibaba's text-to-video model, 3–15 s up to 1080p, wide choice of aspect ratios.
+      zh: 阿里文生视频模型，3–15 秒，最高 1080P，画幅比例选择多。
+  - id: happyhorse-1.0-i2v
+    family: happyhorse
+    label: HappyHorse 1.0 I2V
+    endpoints: [com]
+    doc: documented
+    tasks: [i2v]
+    durations: {min: 3, max: 15}
+    resolutions: [720p, 1080p]
+    ratios: [auto]
+    audio: always
+    delivery: {image: {url: yes, data_uri: unknown}}
+    max_refs: 0
+    latency_s: 130
+    watermark_param: metadata.watermark
+    notes:
+      en: Animates one first-frame image; output aspect follows the image.
+      zh: 单张首帧图生视频，输出比例跟随输入图。
+  - id: happyhorse-1.0-r2v
+    family: happyhorse
+    label: HappyHorse 1.0 R2V
+    endpoints: [com]
+    doc: documented
+    tasks: [r2v]
+    durations: {min: 3, max: 15}
+    resolutions: [720p, 1080p]
+    ratios: *alibaba_ratios
+    audio: always
+    delivery: {image: {url: yes, data_uri: unknown}}
+    max_refs: 9
+    latency_s: 140
+    watermark_param: metadata.watermark
+    notes:
+      en: Multi-reference video from 1–9 images (subject or style), referenced as [Image N] in the prompt.
+      zh: 1–9 张参考图（主体或风格）生成视频，提示词中用 [Image N] 引用。
+
+  # ---------------------------------------------------------------- Veo 3.1 (documented)
+  - id: veo-3.1-generate-preview
+    family: veo
+    label: Veo 3.1
+    endpoints: [com]
+    doc: documented
+    tasks: [t2v, i2v, flf2v, r2v]
+    durations: [4, 6, 8]
+    by_resolution: {1080p: [8], 4k: [8]}
+    resolutions: [720p, 1080p, 4k]
+    ratios: ["16:9", "9:16"]
+    audio: optional
+    delivery: {image: {url: yes, data_uri: yes}}
+    max_refs: 1
+    latency_s: 90
+    prompt_rewrite_param: enhance_prompt
+    notes:
+      en: Google's highest-fidelity tier; native synchronized audio (dialogue, SFX), first/last-frame, up to 4K.
+      zh: 谷歌最高画质档，原生同步音频（对白/音效），支持首尾帧，最高 4K。
+  - id: veo-3.1-fast-generate-preview
+    family: veo
+    label: Veo 3.1 Fast
+    endpoints: [com]
+    doc: documented
+    tasks: [t2v, i2v, flf2v, r2v]
+    durations: [4, 6, 8]
+    by_resolution: {1080p: [8], 4k: [8]}
+    resolutions: [720p, 1080p, 4k]
+    ratios: ["16:9", "9:16"]
+    audio: optional
+    delivery: {image: {url: yes, data_uri: yes}}
+    max_refs: 1
+    latency_s: 60
+    prompt_rewrite_param: enhance_prompt
+    notes:
+      en: Balanced Veo tier, about 1/4 of the price of Veo 3.1 at 720p.
+      zh: 画质与速度均衡的 Veo 档位，720p 价格约为标准版的 1/4。
+  - id: veo-3.1-lite-generate-preview
+    family: veo
+    label: Veo 3.1 Lite
+    endpoints: [com]
+    doc: documented
+    tasks: [t2v, i2v, flf2v, r2v]
+    durations: [4, 6, 8]
+    by_resolution: {1080p: [8]}
+    resolutions: [720p, 1080p]
+    ratios: ["16:9", "9:16"]
+    audio: optional
+    delivery: {image: {url: yes, data_uri: yes}}
+    max_refs: 1
+    latency_s: 45
+    prompt_rewrite_param: enhance_prompt
+    notes:
+      en: Fastest and cheapest Veo tier; no 4K.
+      zh: 速度最快、成本最低的 Veo 档位，不支持 4K。
+
+  # ---------------------------------------------------------------- Seedance (2.0 / fast documented)
+  - id: seedance-2.0
+    family: seedance
+    label: Seedance 2.0
+    endpoints: [com]
+    doc: documented
+    tasks: [t2v, i2v, flf2v, r2v, extend, a2v]
+    durations: {min: 4, max: 15}
+    resolutions: [480p, 720p, 1080p]
+    ratios: *seedance_ratios
+    audio: optional
+    delivery: {image: {url: yes, data_uri: yes}, video: {url: yes, data_uri: no}, audio: {url: yes, data_uri: no}}
+    max_refs: 4
+    latency_s: 100
+    watermark_param: metadata.watermark
+    notes:
+      en: ByteDance flagship; strong character consistency, style keeping and camera control; multimodal references and optional audio.
+      zh: 字节旗舰；人物一致性、风格保持与运镜控制突出；支持多模态参考与可选音频。
+  - id: seedance-2.0-fast
+    family: seedance
+    label: Seedance 2.0 Fast
+    endpoints: [com]
+    doc: documented
+    tasks: [t2v, i2v, flf2v, r2v, extend, a2v]
+    durations: {min: 4, max: 15}
+    resolutions: [480p, 720p]
+    ratios: *seedance_ratios
+    audio: optional
+    delivery: {image: {url: yes, data_uri: yes}, video: {url: yes, data_uri: no}, audio: {url: yes, data_uri: no}}
+    max_refs: 4
+    latency_s: 60
+    watermark_param: metadata.watermark
+    notes:
+      en: Lower-latency, cheaper Seedance 2.0; no 1080p.
+      zh: 低延迟、更便宜的 Seedance 2.0，不支持 1080p。
+  - id: seedance-2.0-mini
+    family: seedance
+    label: Seedance 2.0 Mini
+    endpoints: [com]
+    doc: inferred
+    tasks: [t2v, i2v, flf2v, r2v]
+    experimental_tasks: [extend, a2v]
+    durations: {min: 4, max: 15}
+    resolutions: [480p, 720p]
+    ratios: *seedance_ratios
+    audio: optional
+    delivery: {image: {url: yes, data_uri: unknown}, video: {url: yes, data_uri: no}, audio: {url: yes, data_uri: no}}
+    max_refs: 4
+    latency_s: 60
+    watermark_param: metadata.watermark
+    notes:
+      en: Budget Seedance tier (currently 60% off); 480p/720p only.
+      zh: 低价 Seedance 档位（当前 4 折），仅 480p/720p。
+  - id: seedance-2.5
+    family: seedance
+    label: Seedance 2.5
+    endpoints: [com]
+    doc: inferred
+    tasks: [t2v, i2v, flf2v, r2v]
+    durations: {min: 4, max: 15}
+    resolutions: [480p, 720p]
+    ratios: *seedance_ratios
+    audio: optional
+    delivery: {image: {url: yes, data_uri: unknown}}
+    max_refs: 4
+    latency_s: 120
+    watermark_param: metadata.watermark
+    notes:
+      en: Newest Seedance generation (text + image inputs), priced above 2.0.
+      zh: 最新一代 Seedance（文本 + 图像输入），价格高于 2.0。
+
+  # ---------------------------------------------------------------- Wan (inferred; Alibaba, like HappyHorse)
+  - id: wan2.7-t2v
+    family: wan
+    label: Wan 2.7 T2V
+    endpoints: [com]
+    doc: inferred
+    tasks: [t2v]
+    durations: {min: 2, max: 15}
+    resolutions: [720p, 1080p]
+    ratios: *wan_ratios
+    audio: always
+    delivery: {image: {url: yes, data_uri: unknown}}
+    max_refs: 0
+    latency_s: 120
+    watermark_param: metadata.watermark
+    prompt_rewrite_param: metadata.prompt_extend
+    notes:
+      en: Alibaba Wan 2.7 text-to-video (open-weights lineage); cheapest per second at 720p among the Alibaba models.
+      zh: 阿里万相 2.7 文生视频（开源系列），720p 每秒价格在阿里系中最低。
+  - id: wan2.7-i2v
+    family: wan
+    label: Wan 2.7 I2V
+    endpoints: [com]
+    doc: inferred
+    tasks: [i2v]
+    experimental_tasks: [flf2v]
+    durations: {min: 2, max: 15}
+    resolutions: [720p, 1080p]
+    ratios: [auto]
+    audio: always
+    delivery: {image: {url: yes, data_uri: unknown}}
+    max_refs: 0
+    latency_s: 120
+    watermark_param: metadata.watermark
+    prompt_rewrite_param: metadata.prompt_extend
+    notes:
+      en: Wan 2.7 image-to-video; first+last-frame mode is experimental until probed.
+      zh: 万相 2.7 图生视频；首尾帧模式需探测通过后启用。
+  - id: wan2.7-r2v
+    family: wan
+    label: Wan 2.7 R2V
+    endpoints: [com]
+    doc: inferred
+    tasks: [r2v]
+    experimental_tasks: [a2v]
+    durations: {min: 2, max: 15}
+    resolutions: [720p, 1080p]
+    ratios: *wan_ratios
+    audio: always
+    delivery: {image: {url: yes, data_uri: unknown}, audio: {url: yes, data_uri: no}}
+    max_refs: 4
+    latency_s: 130
+    watermark_param: metadata.watermark
+    prompt_rewrite_param: metadata.prompt_extend
+    notes:
+      en: Wan 2.7 reference-to-video (images, and per the catalog also audio/video references).
+      zh: 万相 2.7 参考生视频（图像参考，目录显示也支持音频/视频参考）。
+  - id: wan2.7-videoedit
+    family: wan
+    label: Wan 2.7 Video Edit
+    endpoints: [com]
+    doc: inferred
+    tasks: []
+    experimental_tasks: [v2v_edit]
+    durations: {min: 2, max: 15}
+    resolutions: [720p, 1080p]
+    ratios: [auto]
+    audio: unknown
+    delivery: {image: {url: yes, data_uri: unknown}, video: {url: yes, data_uri: no}}
+    max_refs: 1
+    latency_s: 200
+    watermark_param: metadata.watermark
+    prompt_rewrite_param: metadata.prompt_extend
+    notes:
+      en: Instruction-based editing of an existing video (style, scene, objects).
+      zh: 按指令编辑已有视频（风格、场景、物体）。
+  - id: wan3.0
+    family: wan
+    label: Wan 3.0
+    endpoints: [com]
+    doc: inferred
+    tasks: [t2v]
+    experimental_tasks: [i2v, r2v, v2v_edit, a2v]
+    durations: {min: 2, max: 15}
+    resolutions: [720p, 1080p]
+    ratios: *wan_ratios
+    audio: always            # both 2026-10-29 clips had an audible track although audio was not requested
+    delivery: {image: {url: yes, data_uri: unknown}, video: {url: yes, data_uri: no}, audio: {url: yes, data_uri: no}}
+    max_refs: 4
+    latency_s: 120
+    watermark_param: metadata.watermark
+    prompt_rewrite_param: metadata.prompt_extend
+    notes:
+      en: Newest Wan with unified multimodal input; 720p/1080p only on this gateway (480p is rejected).
+      zh: 最新万相，统一多模态输入；本网关仅支持 720p/1080p（480p 会被拒绝）。
