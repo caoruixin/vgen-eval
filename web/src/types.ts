@@ -4,6 +4,7 @@ export type Task = "t2v" | "i2v" | "flf2v" | "r2v" | "v2v_edit" | "extend" | "a2
 
 export interface AppConfig {
   mock: boolean;
+  public: boolean;
   endpoints: { key: string; name: string; rpm: number; used_last_minute: number; disabled_reason: string | null; last_error: string | null }[];
   budget_usd: number;
   hard_cap_usd: number | null;
@@ -174,7 +175,7 @@ export interface Plan {
   total_usd: number;
   unknown_prices: number;
   runnable: number;
-  budget: { spent_usd: number; budget_usd: number; confirm_reasons: string[]; hard_cap_usd: number | null; hard_cap_blocked: boolean };
+  budget: { spent_usd: number; budget_usd: number; confirm_reasons: string[]; hard_cap_usd: number | null; hard_cap_blocked: boolean; billed_to?: "visitor" };
 }
 
 export interface ComplianceItem {
@@ -284,6 +285,10 @@ export interface RunDetail {
   picks: Record<string, string>;
   active: number;
   spent_usd: number;
+  /** false for the hosted demo's example runs (read-only) */
+  mine: boolean;
+  /** hosted demo: the server restarted and needs the visitor's key again to finish this run */
+  needs_key: boolean;
 }
 
 export interface RunSummary {
@@ -304,6 +309,7 @@ export interface RunSummary {
   active: number;
   posters: string[];
   spent_usd: number;
+  mine: boolean;
 }
 
 export interface LeaderRow {

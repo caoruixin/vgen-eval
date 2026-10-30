@@ -2,11 +2,14 @@ import type { AppConfig, Asset, Leaderboard, Ledger, ModelRow, Plan, Rating, Run
 
 declare global {
   interface Window {
-    __VGEN__?: { token: string; mock: boolean };
+    __VGEN__?: { token: string; mock: boolean; public?: boolean };
   }
 }
 
 const TOKEN = () => window.__VGEN__?.token ?? "";
+
+/** Hosted demo: no server key; visitors generate with their own Tokenbay key. */
+export const IS_PUBLIC = Boolean(window.__VGEN__?.public);
 
 export class ApiError extends Error {
   status: number;
@@ -18,12 +21,29 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(method: string, path: string, body?: unknown, form?: FormData): Promise<T> {
+/** The launch token changes when the server restarts (e.g. a deploy); read the new one from the page. */
+async function refreshToken(): Promise<boolean> {
+  try {
+    const html = await (await fetch("/", { cache: "no-store" })).text();
+    const m = html.match(/window\.__VGEN__=(\{.*?\})<\/script>/);
+    if (!m) return false;
+    window.__VGEN__ = JSON.parse(m[1]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function request<T>(method: string, path: string, body?: unknown, form?: FormData, key?: string, retry = true): Promise<T> {
   const headers: Record<string, string> = {};
   if (method !== "GET") headers["x-vgen-token"] = TOKEN();
   if (body !== undefined) headers["content-type"] = "application/json";
+  if (key) headers["x-tokenbay-key"] = key;
   const res = await fetch(path, { method, headers, body: form ?? (body !== undefined ? JSON.stringify(body) : undefined) });
   const text = await res.text();
+  if (res.status === 403 && retry && method !== "GET" && text.includes("launch token") && (await refreshToken())) {
+    return request<T>(method, path, body, form, key, false);
+  }
   let data: unknown = null;
   try {
     data = text ? JSON.parse(text) : null;
@@ -53,15 +73,17 @@ export const api = {
   },
   assetFromUrl: (url: string, label: string) => request<Asset>("POST", "/api/assets/url", { url, label }),
   plan: (req: RunRequest) => request<Plan>("POST", "/api/plan", req),
-  createRun: (req: RunRequest) => request<RunDetail>("POST", "/api/runs", req),
+  createRun: (req: RunRequest, key?: string) => request<RunDetail>("POST", "/api/runs", req, undefined, key),
+  checkKey: (key: string) => request<{ ok: boolean }>("POST", "/api/key/check", {}, undefined, key),
+  attachKey: (runId: string, key: string) => request<RunDetail>("POST", `/api/runs/${runId}/key`, {}, undefined, key),
   runs: (kind?: string) => request<RunSummary[]>("GET", `/api/runs${kind ? `?kind=${kind}` : ""}`),
   run: (id: string) => request<RunDetail>("GET", `/api/runs/${id}`),
-  rerun: (id: string, confirm: boolean) => request<RunDetail>("POST", `/api/runs/${id}/rerun`, { confirm }),
+  rerun: (id: string, confirm: boolean, key?: string) => request<RunDetail>("POST", `/api/runs/${id}/rerun`, { confirm }, undefined, key),
   deleteRun: (id: string) => request<{ ok: boolean }>("DELETE", `/api/runs/${id}`),
   stopJob: (id: string) => request("POST", `/api/jobs/${id}/stop`, {}),
-  repollJob: (id: string) => request("POST", `/api/jobs/${id}/repoll`, {}),
-  resubmitJob: (id: string, confirm: boolean) => request("POST", `/api/jobs/${id}/resubmit`, { confirm }),
-  judgeJob: (id: string) => request("POST", `/api/jobs/${id}/judge`, {}),
+  repollJob: (id: string, key?: string) => request("POST", `/api/jobs/${id}/repoll`, {}, undefined, key),
+  resubmitJob: (id: string, confirm: boolean, key?: string) => request("POST", `/api/jobs/${id}/resubmit`, { confirm }, undefined, key),
+  judgeJob: (id: string, key?: string) => request("POST", `/api/jobs/${id}/judge`, {}, undefined, key),
   rate: (id: string, patch: Partial<Rating>) => request<Rating>("PUT", `/api/jobs/${id}/rating`, patch),
   pick: (runId: string, promptKey: string, winner: string) =>
     request("PUT", `/api/runs/${runId}/pick`, { prompt_key: promptKey, winner_job_id: winner }),

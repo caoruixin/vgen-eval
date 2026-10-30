@@ -88,6 +88,7 @@ class MockGateway:
         self.tasks: dict[str, dict] = {}
         self.videos: dict[str, bytes] = {}
         self.requests: list[tuple[str, str]] = []
+        self.auth: list[tuple[str, str]] = []           # (path, Authorization header) per request
 
     def transport(self) -> httpx.MockTransport:
         return httpx.MockTransport(self.handle)
@@ -95,6 +96,10 @@ class MockGateway:
     async def handle(self, request: httpx.Request) -> httpx.Response:
         path = request.url.path
         self.requests.append((request.method, path))
+        self.auth.append((path, request.headers.get("authorization", "")))
+        if request.headers.get("authorization", "").startswith("Bearer sk-bad"):
+            return httpx.Response(401, json={"error": {"message": "Invalid API key", "type": "authentication_error",
+                                                       "code": "invalid_api_key"}})
         if path == "/v1/models":
             ids = list(self.registry.models) + ["gemini-3.1-pro-preview", "gemini-3.5-flash", "seedream-5.0-lite"]
             return httpx.Response(200, json={"object": "list", "data": [{"id": i, "object": "model"} for i in ids]})

@@ -54,12 +54,15 @@ def _media_meta(path: Path, kind: str) -> tuple[int | None, int | None, float | 
 
 
 def store_bytes(uploads_dir: Path, data: bytes, filename: str, *, label: str = "", source: str = "upload",
-                public_urls: list[str] | None = None, normalize_images: bool = True) -> Asset:
+                public_urls: list[str] | None = None, normalize_images: bool = True,
+                owner: str | None = None) -> Asset:
     mime = _guess_mime(filename, data)
     kind = KIND_BY_MIME.get(mime.split("/")[0], "image")
     if kind == "image" and normalize_images:
         data, mime = _normalize_image(data, mime)
     digest = sha256_bytes(data)
+    # a visitor's upload is their own row (and only theirs to list), even if someone else uploaded the same bytes
+    asset_id = digest if owner is None else sha256_bytes(owner.encode() + b":" + data)
     ext = mimetypes.guess_extension(mime) or Path(filename).suffix or ".bin"
     if ext == ".jpe":
         ext = ".jpg"
@@ -69,11 +72,11 @@ def store_bytes(uploads_dir: Path, data: bytes, filename: str, *, label: str = "
         path.write_bytes(data)
     width, height, duration = _media_meta(path, kind)
     with session() as s:
-        asset = s.get(Asset, digest)
+        asset = s.get(Asset, asset_id)
         if asset is None:
-            asset = Asset(id=digest, kind=kind, label=label or filename, filename=filename, mime=mime,
+            asset = Asset(id=asset_id, kind=kind, label=label or filename, filename=filename, mime=mime,
                           size=len(data), width=width, height=height, duration=duration,
-                          local_path=str(path), public_urls=list(public_urls or []), source=source)
+                          local_path=str(path), public_urls=list(public_urls or []), source=source, owner=owner)
         else:
             merged = list(dict.fromkeys([*(asset.public_urls or []), *(public_urls or [])]))
             asset.public_urls = merged
@@ -106,9 +109,13 @@ def get_asset(asset_id: str) -> Asset | None:
         return s.get(Asset, asset_id)
 
 
-def list_assets() -> list[Asset]:
+def list_assets(viewer: str | None = None, scoped: bool = False) -> list[Asset]:
+    """All assets; with `scoped`, only the shared ones plus the viewer's own uploads."""
     with session() as s:
-        return list(s.exec(select(Asset).order_by(Asset.created_at.desc())))
+        q = select(Asset).order_by(Asset.created_at.desc())
+        if scoped:
+            q = q.where((Asset.owner == None) | (Asset.owner == viewer))  # noqa: E711
+        return list(s.exec(q))
 
 
 def resolver() -> AssetResolver:

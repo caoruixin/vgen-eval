@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api, ApiError } from "../api";
+import { api, ApiError, IS_PUBLIC } from "../api";
+import { useApiKey } from "../apiKey";
 import { useI18n, type TKey } from "../i18n";
 import type { ModelRow, Plan, RunRequest, Task } from "../types";
 import { cls, secs, usd } from "../util";
 import { ErrorBox, Modal, Spinner, VendorDot } from "./common";
+import { KeyField } from "./KeyField";
 
 export function useModels() {
   return useQuery({ queryKey: ["models"], queryFn: api.models, staleTime: 60_000 });
@@ -186,6 +188,10 @@ export function PlanDialog({ request, open, onClose }: { request: RunRequest | n
   const [plan, setPlan] = useState<Plan | null>(null);
   const [err, setErr] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
+  const stored = useApiKey();
+  const [key, setKey] = useState(stored.key);
+  const [remember, setRemember] = useState(stored.remember);
+  const needsKey = IS_PUBLIC && !key;
 
   useEffect(() => {
     if (!open || !request) return;
@@ -208,7 +214,8 @@ export function PlanDialog({ request, open, onClose }: { request: RunRequest | n
     setBusy(true);
     setErr(null);
     try {
-      const detail = await api.createRun({ ...request, confirm: true, allow_unknown_price: true });
+      if (IS_PUBLIC) stored.save(key, remember);
+      const detail = await api.createRun({ ...request, confirm: true, allow_unknown_price: true }, IS_PUBLIC ? key : undefined);
       await qc.invalidateQueries({ queryKey: ["runs"] });
       await qc.invalidateQueries({ queryKey: ["config"] });
       onClose();
@@ -243,9 +250,13 @@ export function PlanDialog({ request, open, onClose }: { request: RunRequest | n
               </div>
             </div>
             <div className="text-right text-xs text-ink-2">
-              <div>
-                {usd(plan.budget.spent_usd)} / {usd(plan.budget.budget_usd, 0)}
-              </div>
+              {IS_PUBLIC ? (
+                <div>{t("plan.billed_to_key")}</div>
+              ) : (
+                <div>
+                  {usd(plan.budget.spent_usd)} / {usd(plan.budget.budget_usd, 0)}
+                </div>
+              )}
               {plan.budget.confirm_reasons.map((r) => (
                 <div key={r} style={{ color: "var(--serious)" }}>
                   ⚠ {r}
@@ -296,11 +307,26 @@ export function PlanDialog({ request, open, onClose }: { request: RunRequest | n
               );
             })}
           </div>
+          {IS_PUBLIC && (
+            <div className="rounded-lg border border-line p-3">
+              <KeyField
+                value={key}
+                onChange={setKey}
+                remember={remember}
+                onRemember={setRemember}
+                onForget={() => {
+                  stored.forget();
+                  setKey("");
+                  setRemember(false);
+                }}
+              />
+            </div>
+          )}
           <div className="flex justify-end gap-2">
             <button className="btn" onClick={onClose}>
               {t("common.cancel")}
             </button>
-            <button className="btn btn-primary" disabled={busy || runnable === 0 || plan.budget.hard_cap_blocked} onClick={submit}>
+            <button className="btn btn-primary" disabled={busy || runnable === 0 || plan.budget.hard_cap_blocked || needsKey} onClick={submit}>
               {busy ? <Spinner className="text-surface" /> : null}
               {t("plan.confirm")} · {usd(plan.total_usd)}
             </button>

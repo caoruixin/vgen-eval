@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../api";
+import { api, IS_PUBLIC } from "../api";
 import { useI18n, type TKey } from "../i18n";
 import type { ModelRow, Task } from "../types";
 import { cls, secs, usd } from "../util";
@@ -67,18 +67,20 @@ export default function ModelsPage() {
           <h1 className="text-2xl font-semibold tracking-tight">{t("models.title")}</h1>
           <p className="max-w-4xl text-[13.5px] text-ink-2">{t("models.intro")}</p>
         </div>
-        <button
-          className="btn"
-          disabled={busy}
-          onClick={async () => {
-            setBusy(true);
-            await api.refreshModels().catch(() => undefined);
-            await qc.invalidateQueries({ queryKey: ["models"] });
-            setBusy(false);
-          }}
-        >
-          {busy ? <Spinner /> : "↻"} {t("models.refresh")}
-        </button>
+        {!IS_PUBLIC && (
+          <button
+            className="btn"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true);
+              await api.refreshModels().catch(() => undefined);
+              await qc.invalidateQueries({ queryKey: ["models"] });
+              setBusy(false);
+            }}
+          >
+            {busy ? <Spinner /> : "↻"} {t("models.refresh")}
+          </button>
+        )}
       </div>
       {(probe?.running || offer) && (
         <div className="card space-y-2 p-3 text-xs">
@@ -190,7 +192,7 @@ export default function ModelsPage() {
                         {(m.probe?.notes ?? []).map((n) => (
                           <p key={n} className="mb-1 text-muted">• {n}</p>
                         ))}
-                        {(probe?.cases ?? []).some((c) => c.model === m.id) && (
+                        {!IS_PUBLIC && (probe?.cases ?? []).some((c) => c.model === m.id) && (
                           <button className="btn mb-2" disabled={probe?.running} onClick={(e) => { e.stopPropagation(); void recheck(m); }}>
                             ↻ {t("models.recheck")}
                           </button>

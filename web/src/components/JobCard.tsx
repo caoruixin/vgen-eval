@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { api } from "../api";
+import { api, IS_PUBLIC } from "../api";
+import { storedKey } from "../apiKey";
 import { useI18n, type TKey } from "../i18n";
 import type { Job, Rating } from "../types";
 import { cls, pct, secs, TERMINAL, usd } from "../util";
-import { Check, StatusBadge, VendorDot } from "./common";
+import { Check, ErrorBox, StatusBadge, VendorDot } from "./common";
 
 export const DEFECT_TAGS = ["morphing", "anatomy", "physics", "text_garbled", "identity_drift", "lip_sync", "audio_artifact", "ignores_prompt", "flicker", "letterbox_watermark"];
 
@@ -68,6 +69,7 @@ export default function JobCard({
   onSeek,
   muted,
   judgeEnabled,
+  editable = true,
 }: {
   job: Job;
   rating: Rating | undefined;
@@ -78,16 +80,22 @@ export default function JobCard({
   onSeek: (t: number) => void;
   muted: boolean;
   judgeEnabled: boolean;
+  /** false on the hosted demo's example runs: watch only */
+  editable?: boolean;
 }) {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
   const [details, setDetails] = useState(false);
   const [showChecklist, setShowChecklist] = useState(false);
+  const [actionErr, setActionErr] = useState<unknown>(null);
   const refresh = () => qc.invalidateQueries({ queryKey: ["run", job.run_id] });
-  const rate = async (patch: Partial<Rating>) => {
-    await api.rate(job.id, patch);
-    refresh();
+  // hosted demo: paid follow-ups (check again, re-submit, re-judge) are billed to the visitor's own key
+  const key = () => (IS_PUBLIC ? storedKey() : undefined);
+  const act = (call: () => Promise<unknown>) => {
+    setActionErr(null);
+    call().then(refresh, setActionErr);
   };
+  const rate = (patch: Partial<Rating>) => act(() => api.rate(job.id, patch));
   const name = blind ? `${lang === "zh" ? "视频" : "Clip"} ${job.label}` : job.model_label;
   const done = job.status === "succeeded";
   const active = !TERMINAL.has(job.status);
@@ -144,9 +152,13 @@ export default function JobCard({
           </div>
           <div className="flex flex-col items-end gap-1">
             {done && <StatusBadge status={job.status} />}
-            <button className={cls("chip", picked && "!border-[var(--good)]")} onClick={onPick} disabled={!done} title={t("board.pick")}>
-              {picked ? "★" : "☆"} {picked ? t("board.picked") : t("board.pick")}
-            </button>
+            {editable ? (
+              <button className={cls("chip", picked && "!border-[var(--good)]")} onClick={onPick} disabled={!done} title={t("board.pick")}>
+                {picked ? "★" : "☆"} {picked ? t("board.picked") : t("board.pick")}
+              </button>
+            ) : (
+              picked && <span className="chip !border-[var(--good)]">★ {t("board.picked")}</span>
+            )}
           </div>
         </div>
 
@@ -291,7 +303,7 @@ export default function JobCard({
           </div>
         )}
 
-        {done && (
+        {done && editable && (
           <div className="space-y-2 border-t border-line pt-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 text-xs">
@@ -325,20 +337,21 @@ export default function JobCard({
           </div>
         )}
 
+        <ErrorBox error={actionErr} />
         <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
-          {["pending", "queued", "in_progress"].includes(job.status) && (
-            <TwoStep label={t("board.stop")} confirmLabel={`${t("board.stop")}?`} onConfirm={() => api.stopJob(job.id).then(refresh)} />
+          {editable && ["pending", "queued", "in_progress"].includes(job.status) && (
+            <TwoStep label={t("board.stop")} confirmLabel={`${t("board.stop")}?`} onConfirm={() => act(() => api.stopJob(job.id))} />
           )}
-          {["timeout", "stopped"].includes(job.status) && job.task_id && (
-            <button className="btn" onClick={() => api.repollJob(job.id).then(refresh)}>
+          {editable && ["timeout", "stopped"].includes(job.status) && job.task_id && (
+            <button className="btn" onClick={() => act(() => api.repollJob(job.id, key()))}>
               {t("board.repoll")}
             </button>
           )}
-          {["failed", "submit_unknown", "timeout", "stopped", "blocked"].includes(job.status) && (
-            <TwoStep label={t("board.resubmit")} confirmLabel={job.task_id ? t("board.resubmit_confirm") : `${t("board.resubmit")}?`} onConfirm={() => api.resubmitJob(job.id, true).then(refresh)} />
+          {editable && ["failed", "submit_unknown", "timeout", "stopped", "blocked"].includes(job.status) && (
+            <TwoStep label={t("board.resubmit")} confirmLabel={job.task_id ? t("board.resubmit_confirm") : `${t("board.resubmit")}?`} onConfirm={() => act(() => api.resubmitJob(job.id, true, key()))} />
           )}
-          {done && (
-            <button className="btn" onClick={() => api.judgeJob(job.id).then(refresh)}>
+          {editable && done && (
+            <button className="btn" onClick={() => act(() => api.judgeJob(job.id, key()))}>
               {t("board.rejudge")}
             </button>
           )}

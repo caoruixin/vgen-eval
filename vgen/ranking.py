@@ -78,7 +78,9 @@ def _compliant(job: Job) -> bool | None:
 
 
 def collect(scenario_id: str | None = None, category: str | None = None, task: str | None = None,
-            include_probes: bool = False) -> tuple[list[Run], list[Job], dict[str, Rating], list[Pick]]:
+            include_probes: bool = False, viewer: str | None = None,
+            scoped: bool = False) -> tuple[list[Run], list[Job], dict[str, Rating], list[Pick]]:
+    """`scoped` (public mode): only the showcase runs plus the viewer's own."""
     with session() as s:
         q = select(Run)
         if scenario_id:
@@ -87,6 +89,8 @@ def collect(scenario_id: str | None = None, category: str | None = None, task: s
             q = q.where(Run.category == category)
         if task:
             q = q.where(Run.task == task)
+        if scoped:
+            q = q.where((Run.owner == None) | (Run.owner == viewer))  # noqa: E711
         runs = [r for r in s.exec(q) if include_probes or r.kind != "probe"]
         run_ids = [r.id for r in runs]
         if not run_ids:
@@ -100,8 +104,9 @@ def collect(scenario_id: str | None = None, category: str | None = None, task: s
 def leaderboard(registry: Registry, *, scenario_id: str | None = None, category: str | None = None,
                 task: str | None = None, ratio: str | None = None, duration: int | None = None,
                 need_audio: bool = False, max_cost: float | None = None, max_latency: float | None = None,
-                rank_by: str = "quality", resolution: str = "720p") -> dict[str, Any]:
-    runs, jobs, ratings, picks = collect(scenario_id, category, task)
+                rank_by: str = "quality", resolution: str = "720p", viewer: str | None = None,
+                scoped: bool = False) -> dict[str, Any]:
+    runs, jobs, ratings, picks = collect(scenario_id, category, task, viewer=viewer, scoped=scoped)
     by_model: dict[str, list[Job]] = {}
     for j in jobs:
         if j.status in ATTEMPT_STATES:

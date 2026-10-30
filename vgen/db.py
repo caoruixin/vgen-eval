@@ -53,6 +53,7 @@ class Run(SQLModel, table=True):
     judge: bool = False
     est_cost_usd: float = 0.0
     notes: str = ""
+    owner: str | None = Field(default=None, index=True)   # public mode: visitor id; None = operator/showcase
 
 
 class Job(SQLModel, table=True):
@@ -143,6 +144,7 @@ class Asset(SQLModel, table=True):
     public_urls: list = Field(default_factory=list, sa_column=Column(JSON))
     source: str = ""                             # upload | url | example | generated
     created_at: float = Field(default_factory=now)
+    owner: str | None = Field(default=None, index=True)   # public mode: the visitor who uploaded it
 
 
 class ProbeResult(SQLModel, table=True):
@@ -168,6 +170,19 @@ class KV(SQLModel, table=True):
 
 _engine = None
 
+# Columns added after the first release. create_all() never alters an existing table.
+ADDED_COLUMNS: dict[str, list[tuple[str, str]]] = {"run": [("owner", "VARCHAR")], "asset": [("owner", "VARCHAR")]}
+
+
+def _add_missing_columns(engine) -> None:
+    with engine.begin() as conn:
+        for table, columns in ADDED_COLUMNS.items():
+            have = {row[1] for row in conn.exec_driver_sql(f"PRAGMA table_info({table})")}
+            for name, ddl in columns:
+                if name not in have:
+                    conn.exec_driver_sql(f"ALTER TABLE {table} ADD COLUMN {name} {ddl}")
+                    conn.exec_driver_sql(f"CREATE INDEX IF NOT EXISTS ix_{table}_{name} ON {table} ({name})")
+
 
 def init_db(db_path: Path):
     global _engine
@@ -183,6 +198,7 @@ def init_db(db_path: Path):
         cur.close()
 
     SQLModel.metadata.create_all(engine)
+    _add_missing_columns(engine)
     _engine = engine
     return engine
 

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../api";
+import { api, IS_PUBLIC } from "../api";
 import { useI18n } from "../i18n";
 import type { Asset } from "../types";
 import { cls } from "../util";
@@ -107,7 +107,7 @@ export default function AssetPicker({
       </div>
       <Modal open={open} onClose={() => setOpen(false)} title={label} wide>
         <div className="mb-4 seg">
-          {(["library", "upload", "url"] as const).map((k) => (
+          {(IS_PUBLIC ? (["library", "upload"] as const) : (["library", "upload", "url"] as const)).map((k) => (
             <button key={k} aria-pressed={tab === k} onClick={() => setTab(k)}>
               {t(`assets.${k}`)}
             </button>

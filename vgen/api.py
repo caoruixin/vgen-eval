@@ -9,6 +9,8 @@ import io
 import json
 import logging
 import os
+import re
+import secrets
 import shutil
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -27,14 +29,26 @@ from vgen.catalog.registry import TASKS, Registry
 from vgen.config import ROOT, Settings, get_settings
 from vgen.costs import estimate_job, quota_to_usd
 from vgen.db import ACTIVE_REMOTE, TERMINAL, Job, LedgerEntry, Pick, ProbeResult, Rating, Run, session
-from vgen.gateway import Gateway, GatewayError
+from vgen.gateway import AUTH, RATE_LIMIT, Gateway, GatewayError
 from vgen.jobs import JobEngine
+from vgen.keys import KEY_HEADER, KeyRing
 from vgen.mock_gateway import MockGateway
 from vgen.scenarios import load_packs, packs_for_api, register_assets
 from vgen.security import LAUNCH_TOKEN, TokenGuard
 
 log = logging.getLogger("vgen.api")
 WEB_DIST = ROOT / "web" / "dist"
+
+# Public mode: an anonymous id per browser decides which runs and uploads are a visitor's own.
+VISITOR_COOKIE = "vgen_vid"
+_VISITOR_ID = re.compile(r"[A-Za-z0-9_-]{16,64}")
+MAX_UPLOAD_BYTES = 60 * 1024 * 1024
+MAX_PUBLIC_UPLOAD_BYTES = 20 * 1024 * 1024
+
+
+def viewer(request: Request) -> str | None:
+    vid = request.cookies.get(VISITOR_COOKIE) or ""
+    return vid if _VISITOR_ID.fullmatch(vid) else None
 
 
 class EngineLock:
@@ -76,6 +90,7 @@ class AppState:
     settings: Settings
     registry: Registry
     gateways: dict[str, Gateway]
+    keys: KeyRing | None
     engine: JobEngine
     packs_raw: dict[str, Any]
     asset_ids: dict[str, str]
@@ -89,10 +104,19 @@ def build_runtime(settings: Settings, transport_factory: Callable[[str], httpx.A
     st.registry = Registry.load()
     st.mock = MockGateway(st.registry) if settings.mock else None
     st.gateways = {}
-    for key, ep in settings.endpoints.items():
-        transport = st.mock.transport() if st.mock else (transport_factory(key) if transport_factory else None)
-        st.gateways[key] = Gateway(ep, transport=transport, submit_read_timeout=settings.submit_read_timeout_s)
-    st.engine = JobEngine(settings, st.registry, st.gateways)
+    st.keys = None
+
+    def transport_for(key: str) -> httpx.AsyncBaseTransport | None:
+        return st.mock.transport() if st.mock else (transport_factory(key) if transport_factory else None)
+
+    if settings.public:
+        # visitors bring their own keys: this process never holds a gateway with the operator's key
+        st.keys = KeyRing(settings.endpoints["com"], transport_factory=lambda: transport_for("com"),
+                          submit_read_timeout=settings.submit_read_timeout_s)
+    else:
+        for key, ep in settings.endpoints.items():
+            st.gateways[key] = Gateway(ep, transport=transport_for(key), submit_read_timeout=settings.submit_read_timeout_s)
+    st.engine = JobEngine(settings, st.registry, st.gateways, keys=st.keys)
     st.packs_raw = load_packs()
     st.asset_ids = register_assets(settings, st.packs_raw)
     _apply_overrides(st, db.kv_get("settings_overrides") or {})
@@ -164,14 +188,79 @@ def create_app(settings: Settings | None = None,
             await st.engine.stop()
             for gw in st.gateways.values():
                 await gw.aclose()
+            if st.keys:
+                await st.keys.aclose()
             lock.release()
 
     app = FastAPI(title="vgen-eval", lifespan=lifespan)
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "testserver"])
+    app.add_middleware(TrustedHostMiddleware,
+                       allowed_hosts=["127.0.0.1", "localhost", "testserver", *settings.allowed_hosts])
     app.add_middleware(TokenGuard)
 
     def S(request: Request) -> AppState:
         return request.app.state.vgen
+
+    # ------------------------------------------------------------------ public mode: who may see / change what
+    def operator_only(request: Request) -> None:
+        if S(request).settings.public:
+            raise HTTPException(403, "not available on the hosted demo")
+
+    def can_see(st: AppState, request: Request, run: Run | None) -> bool:
+        if run is None:
+            return False
+        if not st.settings.public:
+            return True
+        return run.kind != "probe" and (run.owner is None or run.owner == viewer(request))
+
+    def visible_run(st: AppState, request: Request, run_id: str) -> Run:
+        with session() as s:
+            run = s.get(Run, run_id)
+        if not can_see(st, request, run):
+            raise HTTPException(404, "run not found")
+        return run
+
+    def editable_run(st: AppState, request: Request, run_id: str) -> Run:
+        run = visible_run(st, request, run_id)
+        if st.settings.public and (run.owner is None or run.owner != viewer(request)):
+            raise HTTPException(403, "example runs are read-only; re-run one to try it with your own key")
+        return run
+
+    def editable_job(st: AppState, request: Request, job_id: str) -> Job:
+        j = _job_or_404(job_id)
+        editable_run(st, request, j.run_id)
+        return j
+
+    async def visitor_key(st: AppState, request: Request) -> str:
+        """The visitor's Tokenbay key from this request, verified with a free model-list call."""
+        key = (request.headers.get(KEY_HEADER) or "").strip()
+        if not key:
+            raise HTTPException(401, "enter your Tokenbay API key to generate videos")
+        if len(key) > 256 or not key.isprintable() or any(c.isspace() for c in key):
+            raise HTTPException(400, "that does not look like a Tokenbay API key")
+        try:
+            await st.keys.check(key)
+        except GatewayError as err:
+            if err.kind == AUTH:
+                raise HTTPException(401, f"Tokenbay rejected this key: {err.message}") from None
+            if err.kind == RATE_LIMIT:
+                raise HTTPException(429, "Tokenbay's rate limit for this key was reached; try again in a minute") from None
+            raise HTTPException(502, f"could not reach Tokenbay to check the key: {err.message}") from None
+        return key
+
+    async def attach_visitor_key(st: AppState, request: Request, run_id: str) -> None:
+        """Paid follow-up actions on a visitor's run (re-submit, judge, check again) use the key sent with them."""
+        if st.settings.public:
+            st.keys.attach(run_id, await visitor_key(st, request))
+
+    def busy_runs(owner: str) -> int:
+        with session() as s:
+            run_ids = list(s.exec(select(Run.id).where(Run.owner == owner)))
+            if not run_ids:
+                return 0
+            rows = s.exec(select(Job.run_id).where(
+                Job.run_id.in_(run_ids),
+                Job.status.not_in(list(TERMINAL)) | Job.judge_status.in_(["pending", "running"]))).all()
+        return len(set(rows))
 
     # ------------------------------------------------------------------ config & catalog
     @app.get("/api/config")
@@ -179,12 +268,13 @@ def create_app(settings: Settings | None = None,
         st = S(request)
         return {
             "mock": st.settings.mock,
+            "public": st.settings.public,
             "endpoints": [{"key": k, "name": g.endpoint.name, "rpm": g.limiter.rpm, "used_last_minute": g.limiter.used(),
                            "disabled_reason": g.disabled_reason, "last_error": g.last_error} for k, g in st.gateways.items()],
             "budget_usd": st.settings.budget_usd,
             "hard_cap_usd": st.settings.hard_cap_usd,
             "confirm_above_usd": st.settings.confirm_above_usd,
-            "spent_usd": runs.spent_usd(),
+            "spent_usd": 0.0 if st.settings.public else runs.spent_usd(),   # the operator's spend stays private
             "usd_cny": st.settings.usd_cny,
             "judge_model": st.settings.judge_model,
             "max_inflight": st.settings.max_inflight,
@@ -213,15 +303,16 @@ def create_app(settings: Settings | None = None,
                 "task_states": {t: m.task_state(t) for t in TASKS},
                 "delivery_effective": {k: {meth: m.delivery_state(k, meth) for meth in ("url", "data_uri")}
                                        for k in ("image", "video", "audio")},
-                "available": {k: st.registry.available(m.id, k) for k in st.gateways},
+                "available": {k: st.registry.available(m.id, k) for k in st.settings.endpoints},
                 "price": st.registry.price(m.id),
                 "price_ref": {"settings": f"{dur5}s @ {res}", **est.as_dict()},
             })
-        return {"models": out, "unregistered": {k: st.registry.unregistered(k) for k in st.gateways},
+        return {"models": out, "unregistered": {k: st.registry.unregistered(k) for k in st.settings.endpoints},
                 "live_checked_at": st.registry.live_checked_at}
 
     @app.put("/api/settings")
     def update_settings(request: Request, payload: dict = Body(...)) -> dict[str, Any]:
+        operator_only(request)
         st = S(request)
         changes = _settings_changes(st, payload)
         db.kv_set("settings_overrides", {**(db.kv_get("settings_overrides") or {}), **changes})
@@ -230,8 +321,17 @@ def create_app(settings: Settings | None = None,
 
     @app.post("/api/models/refresh")
     async def models_refresh(request: Request) -> dict[str, Any]:
+        operator_only(request)
         await refresh_live(S(request))
         return {"ok": True, "live_checked_at": S(request).registry.live_checked_at}
+
+    @app.post("/api/key/check")
+    async def key_check(request: Request) -> dict[str, Any]:
+        st = S(request)
+        if not st.settings.public:
+            raise HTTPException(404, "keys are entered only on the hosted demo")
+        await visitor_key(st, request)
+        return {"ok": True}
 
     @app.get("/api/scenarios")
     def scenarios(request: Request) -> dict[str, Any]:
@@ -240,26 +340,33 @@ def create_app(settings: Settings | None = None,
 
     # ------------------------------------------------------------------ assets
     def asset_out(a) -> dict[str, Any]:
-        d = a.model_dump(exclude={"local_path"})
+        d = a.model_dump(exclude={"local_path", "owner"})
         d["url"] = f"/api/assets/{a.id}/file"
         return d
 
     @app.get("/api/assets")
-    def assets() -> list[dict[str, Any]]:
-        return [asset_out(a) for a in list_assets()]
+    def assets(request: Request) -> list[dict[str, Any]]:
+        return [asset_out(a) for a in list_assets(viewer(request), scoped=S(request).settings.public)]
 
     @app.post("/api/assets")
     async def upload_asset(request: Request, file: UploadFile = File(...), label: str = Form(""),
                            public_url: str = Form("")) -> dict[str, Any]:
+        st = S(request)
+        owner, limit = None, MAX_UPLOAD_BYTES
+        if st.settings.public:
+            owner, limit = viewer(request), MAX_PUBLIC_UPLOAD_BYTES
+            if owner is None:
+                raise HTTPException(400, "reload the page to start a session")
         data = await file.read()
-        if len(data) > 60 * 1024 * 1024:
-            raise HTTPException(413, "file too large (max 60 MB)")
-        a = store_bytes(S(request).settings.uploads_dir, data, file.filename or "upload", label=label,
-                        public_urls=[public_url] if public_url else [])
+        if len(data) > limit:
+            raise HTTPException(413, f"file too large (max {limit // (1024 * 1024)} MB)")
+        a = store_bytes(st.settings.uploads_dir, data, file.filename or "upload", label=label,
+                        public_urls=[public_url] if public_url else [], owner=owner)
         return asset_out(a)
 
     @app.post("/api/assets/url")
     async def asset_from_url(request: Request, payload: dict = Body(...)) -> dict[str, Any]:
+        operator_only(request)       # the server would fetch any URL a visitor names
         url = str(payload.get("url") or "").strip()
         if not url.startswith(("http://", "https://")):
             raise HTTPException(400, "url must be http(s)")
@@ -277,14 +384,19 @@ def create_app(settings: Settings | None = None,
         return asset_out(a)
 
     @app.get("/api/assets/{asset_id}/file")
-    def asset_file(asset_id: str):
+    def asset_file(request: Request, asset_id: str):
         a = get_asset(asset_id)
         if a is None or not Path(a.local_path).exists():
+            raise HTTPException(404, "asset not found")
+        if S(request).settings.public and a.owner is not None and a.owner != viewer(request):
             raise HTTPException(404, "asset not found")
         return FileResponse(a.local_path, media_type=a.mime)
 
     # ------------------------------------------------------------------ runs
     def budget_view(st: AppState, total: float) -> dict[str, Any]:
+        if st.settings.public:     # billed to the visitor's own key: the operator's budget and caps don't apply
+            return {"spent_usd": 0.0, "budget_usd": 0.0, "confirm_reasons": [], "hard_cap_usd": None,
+                    "hard_cap_blocked": False, "billed_to": "visitor"}
         spent = runs.spent_usd()
         reasons = []
         if total > st.settings.confirm_above_usd:
@@ -296,17 +408,32 @@ def create_app(settings: Settings | None = None,
         return {"spent_usd": spent, "budget_usd": st.settings.budget_usd, "confirm_reasons": reasons,
                 "hard_cap_usd": cap, "hard_cap_blocked": blocked}
 
+    def visitor_request(st: AppState, req: runs.RunRequest) -> runs.RunRequest:
+        if not st.settings.public:
+            return req
+        return req.model_copy(update={"kind": req.kind if req.kind in ("pack", "compare") else "compare",
+                                      "endpoint": "com"})
+
     @app.post("/api/plan")
     def plan_run(request: Request, req: runs.RunRequest) -> dict[str, Any]:
         st = S(request)
-        planned = runs.plan(st.registry, req, st.settings.judge_model)
+        planned = runs.plan(st.registry, visitor_request(st, req), st.settings.judge_model)
         return {**planned, "budget": budget_view(st, planned["total_usd"])}
 
     @app.post("/api/runs")
-    def create_run(request: Request, req: runs.RunRequest):
+    async def create_run(request: Request, req: runs.RunRequest):
         st = S(request)
-        if req.endpoint not in st.gateways:
+        req = visitor_request(st, req)
+        if req.endpoint not in st.settings.endpoints:
             raise HTTPException(400, f"endpoint '{req.endpoint}' is not enabled")
+        owner = None
+        if st.settings.public:
+            owner = viewer(request)
+            if owner is None:
+                raise HTTPException(400, "reload the page to start a session")
+            busy = busy_runs(owner)
+            if busy >= st.settings.public_max_active_runs:
+                raise HTTPException(429, f"you already have {busy} runs in progress; wait for one to finish")
         planned = runs.plan(st.registry, req, st.settings.judge_model)
         if planned["runnable"] == 0:
             raise HTTPException(400, "nothing to run: " + "; ".join(sorted({i.get("reason", "") for i in planned["items"]})))
@@ -319,16 +446,34 @@ def create_app(settings: Settings | None = None,
         if budget["confirm_reasons"] and not req.confirm:
             return JSONResponse(status_code=409, content={"needs_confirmation": True, "plan": planned,
                                                           "reasons": budget["confirm_reasons"], "budget": budget})
-        run = runs.create(st.registry, req, planned)
+        key = await visitor_key(st, request) if st.settings.public else None
+        run = runs.create(st.registry, req, planned, owner=owner)
+        if key:
+            st.keys.attach(run.id, key)
         st.engine.wake()
-        return run_detail(st, run.id)
+        return run_detail(st, run.id, request)
+
+    @app.post("/api/runs/{run_id}/key")
+    async def attach_run_key(request: Request, run_id: str) -> dict[str, Any]:
+        """Hand a visitor's key back to their run after a server restart (keys are kept in memory only)."""
+        st = S(request)
+        if not st.settings.public:
+            raise HTTPException(404, "keys are entered only on the hosted demo")
+        editable_run(st, request, run_id)
+        st.keys.attach(run_id, await visitor_key(st, request))
+        st.engine.wake()
+        return run_detail(st, run_id, request)
 
     @app.get("/api/runs")
     def list_runs(request: Request, limit: int = 100, kind: str | None = None) -> list[dict[str, Any]]:
+        st = S(request)
+        vid = viewer(request)
         with session() as s:
             q = select(Run).order_by(Run.created_at.desc()).limit(limit)
             if kind:
                 q = q.where(Run.kind == kind)
+            if st.settings.public:
+                q = q.where(Run.kind != "probe", (Run.owner == None) | (Run.owner == vid))  # noqa: E711
             rows = list(s.exec(q))
             jobs = list(s.exec(select(Job).where(Job.run_id.in_([r.id for r in rows])))) if rows else []
         by_run: dict[str, list[Job]] = {}
@@ -346,7 +491,8 @@ def create_app(settings: Settings | None = None,
                                                 "task", "lang", "judge", "est_cost_usd", "models"}),
                         "n_prompts": len(r.prompts or []), "n_jobs": len(js), "counts": counts,
                         "active": sum(1 for j in js if j.status not in TERMINAL), "posters": posters,
-                        "spent_usd": spend.get(r.id, 0.0)})
+                        "spent_usd": spend.get(r.id, 0.0),
+                        "mine": not st.settings.public or (r.owner is not None and r.owner == vid)})
         return out
 
     def job_out(st: AppState, j: Job) -> dict[str, Any]:
@@ -368,7 +514,7 @@ def create_app(settings: Settings | None = None,
                      if j.status == db.SUCCEEDED else None}
         return d
 
-    def run_detail(st: AppState, run_id: str) -> dict[str, Any]:
+    def run_detail(st: AppState, run_id: str, request: Request) -> dict[str, Any]:
         with session() as s:
             run = s.get(Run, run_id)
             if run is None:
@@ -378,21 +524,23 @@ def create_app(settings: Settings | None = None,
             picks = {}
             for p in sorted(s.exec(select(Pick).where(Pick.run_id == run_id)), key=lambda p: p.created_at):
                 picks[p.prompt_key] = p.winner_job_id
-        return {"run": run.model_dump(), "jobs": [job_out(st, j) for j in jobs], "ratings": ratings, "picks": picks,
-                "active": sum(1 for j in jobs if j.status not in TERMINAL),
-                "spent_usd": runs.spent_by_run([run_id]).get(run_id, 0.0)}
+        mine = not st.settings.public or (run.owner is not None and run.owner == viewer(request))
+        unfinished = any(j.status not in TERMINAL or j.judge_status in ("pending", "running") for j in jobs)
+        needs_key = bool(st.settings.public and run.owner and unfinished and st.keys.for_run(run_id) is None)
+        return {"run": run.model_dump(exclude={"owner"}), "jobs": [job_out(st, j) for j in jobs], "ratings": ratings,
+                "picks": picks, "active": sum(1 for j in jobs if j.status not in TERMINAL),
+                "spent_usd": runs.spent_by_run([run_id]).get(run_id, 0.0), "mine": mine, "needs_key": needs_key}
 
     @app.get("/api/runs/{run_id}")
     def get_run(request: Request, run_id: str) -> dict[str, Any]:
-        return run_detail(S(request), run_id)
+        st = S(request)
+        visible_run(st, request, run_id)
+        return run_detail(st, run_id, request)
 
     @app.post("/api/runs/{run_id}/rerun")
-    def rerun(request: Request, run_id: str, payload: dict = Body(default={})):
+    async def rerun(request: Request, run_id: str, payload: dict = Body(default={})):
         st = S(request)
-        with session() as s:
-            run = s.get(Run, run_id)
-        if run is None:
-            raise HTTPException(404, "run not found")
+        run = visible_run(st, request, run_id)
         params = dict(run.params or {})
         req = runs.RunRequest(
             title=f"{run.title} (re-run)", kind=run.kind if run.kind != "probe" else "compare",
@@ -402,11 +550,12 @@ def create_app(settings: Settings | None = None,
             model_overrides=params.get("model_overrides") or {}, assets=params.get("assets") or {}, judge=run.judge,
             allow_experimental=bool(params.get("allow_experimental")), confirm=bool(payload.get("confirm")),
             allow_unknown_price=bool(payload.get("allow_unknown_price")))
-        return create_run(request, req)
+        return await create_run(request, req)
 
     @app.delete("/api/runs/{run_id}")
     def delete_run(request: Request, run_id: str) -> dict[str, Any]:
         st = S(request)
+        editable_run(st, request, run_id)
         with session() as s:
             run = s.get(Run, run_id)
             if run is None:
@@ -428,7 +577,8 @@ def create_app(settings: Settings | None = None,
     @app.get("/api/runs/{run_id}/export")
     def export_run(request: Request, run_id: str, format: str = "json"):
         st = S(request)
-        detail = run_detail(st, run_id)
+        visible_run(st, request, run_id)
+        detail = run_detail(st, run_id, request)
         if format == "json":
             return Response(json.dumps(detail, ensure_ascii=False, indent=2, default=str), media_type="application/json",
                             headers={"content-disposition": f'attachment; filename="{run_id}.json"'})
@@ -459,37 +609,40 @@ def create_app(settings: Settings | None = None,
 
     @app.post("/api/jobs/{job_id}/stop")
     def stop_job(request: Request, job_id: str) -> dict[str, Any]:
-        _job_or_404(job_id)
         st = S(request)
+        editable_job(st, request, job_id)
         return job_out(st, st.engine.stop_job(job_id))
 
     @app.post("/api/jobs/{job_id}/repoll")
-    def repoll(request: Request, job_id: str) -> dict[str, Any]:
-        _job_or_404(job_id)
+    async def repoll(request: Request, job_id: str) -> dict[str, Any]:
         st = S(request)
+        j = editable_job(st, request, job_id)
+        await attach_visitor_key(st, request, j.run_id)
         return job_out(st, st.engine.repoll(job_id))
 
     @app.post("/api/jobs/{job_id}/resubmit")
-    def resubmit(request: Request, job_id: str, payload: dict = Body(default={})) -> dict[str, Any]:
-        j = _job_or_404(job_id)
+    async def resubmit(request: Request, job_id: str, payload: dict = Body(default={})) -> dict[str, Any]:
+        st = S(request)
+        j = editable_job(st, request, job_id)
         if j.status not in (db.FAILED, db.SUBMIT_UNKNOWN, db.STOPPED, db.TIMEOUT, db.BLOCKED):
             raise HTTPException(409, f"job is {j.status}")
         if j.task_id and not payload.get("confirm"):
             raise HTTPException(409, "this job already created a task (possibly billed); resend with confirm=true")
-        st = S(request)
+        await attach_visitor_key(st, request, j.run_id)
         return job_out(st, st.engine.resubmit(job_id))
 
     @app.post("/api/jobs/{job_id}/judge")
-    def rejudge(request: Request, job_id: str) -> dict[str, Any]:
-        j = _job_or_404(job_id)
+    async def rejudge(request: Request, job_id: str) -> dict[str, Any]:
+        st = S(request)
+        j = editable_job(st, request, job_id)
         if j.status != db.SUCCEEDED:
             raise HTTPException(409, "only finished clips can be judged")
-        st = S(request)
+        await attach_visitor_key(st, request, j.run_id)
         return job_out(st, st.engine.rejudge(job_id))
 
     @app.put("/api/jobs/{job_id}/rating")
-    def rate(job_id: str, payload: dict = Body(...)) -> dict[str, Any]:
-        j = _job_or_404(job_id)
+    def rate(request: Request, job_id: str, payload: dict = Body(...)) -> dict[str, Any]:
+        j = editable_job(S(request), request, job_id)
         with session() as s:
             r = s.get(Rating, job_id) or Rating(job_id=job_id, run_id=j.run_id)
             for k in ("usable", "overall", "defects", "comment"):
@@ -502,7 +655,8 @@ def create_app(settings: Settings | None = None,
             return r.model_dump()
 
     @app.put("/api/runs/{run_id}/pick")
-    def pick(run_id: str, payload: dict = Body(...)) -> dict[str, Any]:
+    def pick(request: Request, run_id: str, payload: dict = Body(...)) -> dict[str, Any]:
+        editable_run(S(request), request, run_id)
         winner = payload.get("winner_job_id") or ""
         key = payload.get("prompt_key") or ""
         if winner:
@@ -514,24 +668,25 @@ def create_app(settings: Settings | None = None,
             s.commit()
         return {"ok": True, "prompt_key": key, "winner_job_id": winner}
 
-    def _job_file(job_id: str, attr: str, media_type: str):
+    def _job_file(request: Request, job_id: str, attr: str, media_type: str):
         j = _job_or_404(job_id)
+        visible_run(S(request), request, j.run_id)
         path = getattr(j, attr)
         if not path or not Path(path).exists():
             raise HTTPException(404, "file not available")
         return FileResponse(path, media_type=media_type)
 
     @app.get("/api/jobs/{job_id}/video")
-    def job_video(job_id: str):
-        return _job_file(job_id, "video_path", "video/mp4")
+    def job_video(request: Request, job_id: str):
+        return _job_file(request, job_id, "video_path", "video/mp4")
 
     @app.get("/api/jobs/{job_id}/poster")
-    def job_poster(job_id: str):
-        return _job_file(job_id, "poster_path", "image/jpeg")
+    def job_poster(request: Request, job_id: str):
+        return _job_file(request, job_id, "poster_path", "image/jpeg")
 
     @app.get("/api/jobs/{job_id}/strip")
-    def job_strip(job_id: str):
-        return _job_file(job_id, "strip_path", "image/jpeg")
+    def job_strip(request: Request, job_id: str):
+        return _job_file(request, job_id, "strip_path", "image/jpeg")
 
     # ------------------------------------------------------------------ insights
     @app.get("/api/leaderboard")
@@ -540,12 +695,15 @@ def create_app(settings: Settings | None = None,
                     need_audio: bool = False, max_cost: float | None = None, max_latency: float | None = None,
                     rank_by: str = Query("quality", pattern="^(quality|value|speed)$"),
                     resolution: str = "720p") -> dict[str, Any]:
-        return ranking.leaderboard(S(request).registry, scenario_id=scenario_id or None, category=category or None,
+        st = S(request)
+        return ranking.leaderboard(st.registry, scenario_id=scenario_id or None, category=category or None,
                                    task=task or None, ratio=ratio or None, duration=duration, need_audio=need_audio,
-                                   max_cost=max_cost, max_latency=max_latency, rank_by=rank_by, resolution=resolution)
+                                   max_cost=max_cost, max_latency=max_latency, rank_by=rank_by, resolution=resolution,
+                                   viewer=viewer(request), scoped=st.settings.public)
 
     @app.get("/api/ledger")
-    def ledger() -> dict[str, Any]:
+    def ledger(request: Request) -> dict[str, Any]:
+        operator_only(request)
         with session() as s:
             rows = list(s.exec(select(LedgerEntry).order_by(LedgerEntry.ts.desc())))
         by_kind: dict[str, float] = {}
@@ -573,6 +731,7 @@ def create_app(settings: Settings | None = None,
     async def probe_resummarize(request: Request) -> dict[str, Any]:
         from vgen.probe import resummarize
 
+        operator_only(request)
         st = S(request)
         lines: list[str] = []
         loop = asyncio.get_running_loop()
@@ -584,6 +743,7 @@ def create_app(settings: Settings | None = None,
         """Plan (and with confirm=true run) live probe cases inside this server's engine."""
         from vgen.probe import execute_cases, plan_cases
 
+        operator_only(request)
         st = S(request)
         task = getattr(st, "probe_task", None)
         if task and not task.done():
@@ -605,12 +765,17 @@ def create_app(settings: Settings | None = None,
 
     def index_html(request: Request) -> HTMLResponse:
         st = S(request)
-        boot = json.dumps({"token": LAUNCH_TOKEN, "mock": st.settings.mock})
+        boot = json.dumps({"token": LAUNCH_TOKEN, "mock": st.settings.mock, "public": st.settings.public})
         index = WEB_DIST / "index.html"
         if not index.exists():
-            return HTMLResponse("<h1>vgen-eval</h1><p>Frontend not built. Run <code>make web</code>.</p>", status_code=200)
-        html = index.read_text(encoding="utf-8").replace("</head>", f"<script>window.__VGEN__={boot}</script></head>", 1)
-        return HTMLResponse(html, headers={"cache-control": "no-store"})
+            resp = HTMLResponse("<h1>vgen-eval</h1><p>Frontend not built. Run <code>make web</code>.</p>", status_code=200)
+        else:
+            html = index.read_text(encoding="utf-8").replace("</head>", f"<script>window.__VGEN__={boot}</script></head>", 1)
+            resp = HTMLResponse(html, headers={"cache-control": "no-store"})
+        if st.settings.public and viewer(request) is None:
+            resp.set_cookie(VISITOR_COOKIE, secrets.token_urlsafe(18), max_age=365 * 86400, httponly=True,
+                            samesite="lax", secure=request.url.scheme == "https")
+        return resp
 
     @app.get("/", response_class=HTMLResponse)
     def root(request: Request):

@@ -127,14 +127,14 @@ def spent_by_run(run_ids: list[str]) -> dict[str, float]:
     return {k: round(v, 4) for k, v in out.items()}
 
 
-def create(registry: Registry, req: RunRequest, planned: dict[str, Any]) -> Run:
+def create(registry: Registry, req: RunRequest, planned: dict[str, Any], owner: str | None = None) -> Run:
     rng = random.Random()
     run = Run(title=req.title or _default_title(req), kind=req.kind, scenario_id=req.scenario_id,
               category=req.category, task=req.task, lang=req.lang, endpoint=req.endpoint,
               params={**req.params, "model_overrides": req.model_overrides, "assets": req.assets,
                       "allow_experimental": req.allow_experimental},
               prompts=[p.model_dump() for p in req.prompts], models=list(req.models), judge=req.judge,
-              est_cost_usd=planned["total_usd"])
+              est_cost_usd=planned["total_usd"], owner=owner)
     jobs: list[Job] = []
     by_prompt: dict[str, list[dict]] = {}
     for item in planned["items"]:

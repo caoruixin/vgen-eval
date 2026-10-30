@@ -1,0 +1,32 @@
+# /etc/systemd/system/vgen.service: the vgen·eval hosted demo behind nginx at https://video.llm-pro.cn.
+# Installed by deploy/provision.sh. Public mode (see /etc/vgen/vgen.env): no Tokenbay key lives on this server.
+[Unit]
+Description=vgen·eval hosted demo (video-model comparison) behind https://video.llm-pro.cn
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=vgenapp
+Group=vgenapp
+WorkingDirectory=/opt/vgen
+EnvironmentFile=/etc/vgen/vgen.env
+Environment=VGEN_ENV_FILE=/etc/vgen/vgen.env PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HOME=/var/lib/vgen
+ExecStart=/opt/vgen/.venv/bin/vgen serve --log-level warning
+Restart=always
+RestartSec=2
+# a guest on this host: capped so llm-pro.cn and the knowledge base never starve (clip analysis is CPU-heavy)
+MemoryMax=1G
+MemoryHigh=800M
+CPUQuota=100%
+Nice=10
+TasksMax=256
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/vgen
+ReadOnlyPaths=/opt/vgen /opt/uv
+
+[Install]
+WantedBy=multi-user.target

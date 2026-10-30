@@ -1,4 +1,4 @@
-"""Command line: vgen serve | probe | gen-assets | models."""
+"""Command line: vgen serve | probe | gen-assets | models | relocate."""
 
 from __future__ import annotations
 
@@ -30,6 +30,8 @@ def cmd_serve(args: argparse.Namespace) -> int:
         print("refusing to bind outside localhost: the app can spend money on your API key", file=sys.stderr)
         return 2
     mode = "MOCK gateway (no spending)" if settings.mock else ", ".join(e.name for e in settings.endpoints.values())
+    if settings.public:
+        mode += "  ·  public: visitors use their own keys"
     print(f"vgen-eval on http://{host}:{port}  ·  {mode}")
     uvicorn.run(create_app(settings), host=host, port=port, log_level=args.log_level)
     return 0
@@ -131,6 +133,51 @@ def cmd_gen_assets(args: argparse.Namespace) -> int:
     return 0
 
 
+def relocate_db(db_path, pairs: list[tuple[str, str]]) -> int:
+    """Rewrite path prefixes in every text column (paths are stored absolute, also inside JSON)."""
+    import sqlite3
+
+    con = sqlite3.connect(db_path)
+    changed = 0
+    try:
+        tables = [r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")]
+        for table in tables:
+            cols = [r[1] for r in con.execute(f'PRAGMA table_info("{table}")')
+                    if r[2].upper() not in ("INTEGER", "FLOAT", "REAL", "BOOLEAN", "NUMERIC")]
+            for col in cols:
+                for old, new in pairs:
+                    cur = con.execute(f'UPDATE "{table}" SET "{col}" = REPLACE("{col}", ?, ?) '
+                                      f'WHERE instr("{col}", ?) > 0', (old, new, old))
+                    changed += cur.rowcount
+        con.commit()
+    finally:
+        con.close()
+    return changed
+
+
+def cmd_relocate(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    from vgen.api import EngineLock
+
+    pairs = []
+    for m in args.map:
+        old, sep, new = m.partition("=")
+        if not sep or not old:
+            print(f"--map must look like OLD=NEW, got {m!r}", file=sys.stderr)
+            return 2
+        pairs.append((old, new))
+    db_path = Path(args.db) if args.db else _settings().db_path
+    lock = EngineLock(db_path.parent / "engine.lock")
+    lock.acquire()
+    try:
+        n = relocate_db(db_path, pairs)
+    finally:
+        lock.release()
+    print(f"rewrote {n} values in {db_path}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -158,6 +205,11 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--model", default="gpt-image-2")
     g.add_argument("--force", action="store_true")
     g.set_defaults(fn=cmd_gen_assets)
+    rl = sub.add_parser("relocate", help="rewrite stored file paths after moving the data dir (server stopped)")
+    rl.add_argument("--map", action="append", required=True, metavar="OLD=NEW",
+                    help="path prefix to replace; repeat, applied in order")
+    rl.add_argument("--db", help="database file (default: the configured data dir's app.db)")
+    rl.set_defaults(fn=cmd_relocate)
     args = p.parse_args(argv)
     return int(args.fn(args) or 0)
 

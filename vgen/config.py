@@ -3,6 +3,9 @@
 TOKENBAY_* values come only from the workspace .env file (the file is the single
 source of truth for the gateway credentials). App-only VGEN_* options may also be
 set in the process environment, which wins over the file.
+
+Public mode (VGEN_PUBLIC=1) is for hosting the app for other people: the operator's
+key is never loaded, and visitors generate with a Tokenbay key they enter themselves.
 """
 
 from __future__ import annotations
@@ -55,6 +58,9 @@ class Settings:
     gen_timeout_s: float
     edit_timeout_s: float
     submit_read_timeout_s: float
+    public: bool = False
+    allowed_hosts: tuple[str, ...] = ()
+    public_max_active_runs: int = 2
 
     @property
     def db_path(self) -> Path:
@@ -98,6 +104,7 @@ def load_settings(env_file: Path | None = None) -> Settings:
         return file_values.get(name, default)
 
     mock = _truthy(vgen("VGEN_MOCK"))
+    public = _truthy(vgen("VGEN_PUBLIC"))
     enabled = [k.strip() for k in (vgen("VGEN_ENDPOINTS", "com") or "com").split(",") if k.strip()]
     trust_env = _truthy(file_values.get("TOKENBAY_HTTP_TRUST_ENV", "true"))
 
@@ -112,10 +119,15 @@ def load_settings(env_file: Path | None = None) -> Settings:
             endpoints[key] = Endpoint(key, name, MOCK_BASE_URL, "sk-mock", rpm=max(rpm, 120), trust_env=False)
             continue
         base_url = (file_values.get(url_var) or "").strip().rstrip("/")
-        api_key = (file_values.get(key_var) or "").strip()
-        if not base_url or not api_key:
+        # public mode never reads the operator's key, even if the file has one
+        api_key = "" if public else (file_values.get(key_var) or "").strip()
+        if public and not base_url:
+            raise ValueError(f"{url_var} must be set in {env_path}")
+        if not public and (not base_url or not api_key):
             raise ValueError(f"{url_var} and {key_var} must be set in {env_path}")
         endpoints[key] = Endpoint(key, name, base_url, api_key, rpm=rpm, trust_env=trust_env)
+    if public and "com" not in endpoints:
+        raise ValueError("public mode needs the 'com' endpoint in VGEN_ENDPOINTS")
 
     # mock runs never share a database (ledger, leaderboard) with real, billed runs
     default_data = ROOT / ("data-mock" if mock else "data")
@@ -140,6 +152,9 @@ def load_settings(env_file: Path | None = None) -> Settings:
         gen_timeout_s=_float(vgen("VGEN_GEN_TIMEOUT_S"), 1200.0),   # Wan 2.7 t2v took 11–14 min (3/3)
         edit_timeout_s=_float(vgen("VGEN_EDIT_TIMEOUT_S"), 900.0),
         submit_read_timeout_s=_float(vgen("VGEN_SUBMIT_READ_TIMEOUT_S"), 150.0),
+        public=public,
+        allowed_hosts=tuple(h.strip() for h in (vgen("VGEN_ALLOWED_HOSTS") or "").split(",") if h.strip()),
+        public_max_active_runs=max(1, int(_float(vgen("VGEN_PUBLIC_MAX_ACTIVE_RUNS"), 2))),
     )
 
 

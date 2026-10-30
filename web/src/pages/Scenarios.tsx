@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "../api";
+import { api, IS_PUBLIC } from "../api";
 import { useI18n } from "../i18n";
 import type { Lang, Pack, RunRequest, Scenarios } from "../types";
 import { cls } from "../util";
@@ -70,7 +70,8 @@ function PackCard({ pack, data, onOpen }: { pack: Pack; data: Scenarios; onOpen:
       </div>
       {pack.missing_assets.length > 0 && (
         <div className="text-xs" style={{ color: "var(--serious)" }}>
-          ⚠ {t("scen.missing", { names: pack.missing_assets.join(", ") })} — {t("scen.gen_hint")}
+          ⚠ {t("scen.missing", { names: pack.missing_assets.join(", ") })}
+          {!IS_PUBLIC && ` — ${t("scen.gen_hint")}`}
         </div>
       )}
       <span className="sr-only">{lang}</span>
@@ -187,7 +188,8 @@ function PackSetup({ pack, data, onClose }: { pack: Pack; data: Scenarios; onClo
                 )}
                 {missing && (
                   <p className="text-xs" style={{ color: "var(--serious)" }}>
-                    ⚠ {t("scen.missing", { names: p.missing_assets.join(", ") })} — {t("scen.gen_hint")}
+                    ⚠ {t("scen.missing", { names: p.missing_assets.join(", ") })}
+                    {!IS_PUBLIC && ` — ${t("scen.gen_hint")}`}
                   </p>
                 )}
                 <p className="text-[12.5px] leading-relaxed text-ink-2">{p.text[promptLang] ?? p.text.en}</p>
@@ -268,6 +270,14 @@ export default function ScenariosPage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("scen.title")}</h1>
         <p className="max-w-3xl text-[13.5px] text-ink-2">{t("scen.intro")}</p>
       </div>
+      {IS_PUBLIC && (
+        <div className="card max-w-3xl space-y-1 p-3 text-[13px] text-ink-2" style={{ borderLeft: "4px solid var(--focus)" }}>
+          <p>{t("public.intro")}</p>
+          <Link className="font-medium text-ink underline" to="/runs">
+            {t("public.examples")} →
+          </Link>
+        </div>
+      )}
       <div className="flex flex-wrap gap-1.5">
         {["all", ...cats].map((c) => (
           <button key={c} className={cls("btn", cat === c && "btn-primary")} onClick={() => setCat(c)}>

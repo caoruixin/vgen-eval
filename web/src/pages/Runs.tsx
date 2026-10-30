@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "../api";
+import { api, IS_PUBLIC } from "../api";
 import { useI18n, type TKey } from "../i18n";
 import { ago, cls, usd } from "../util";
 import { ErrorBox, Spinner, TaskBadge } from "../components/common";
@@ -28,7 +28,7 @@ export default function RunsPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">{t("runs.title")}</h1>
         <div className="seg">
-          {(["", "pack", "compare", "probe"] as const).map((k) => (
+          {(IS_PUBLIC ? (["", "pack", "compare"] as const) : (["", "pack", "compare", "probe"] as const)).map((k) => (
             <button key={k} aria-pressed={kind === k} onClick={() => setKind(k)}>
               {t(`runs.kind.${k || "all"}` as TKey)}
             </button>
@@ -62,6 +62,7 @@ export default function RunsPage() {
                   <TaskBadge task={r.task} />
                   <span className="truncate text-[14px] font-medium">{r.title}</span>
                   {r.kind === "probe" && <span className="chip">{t("runs.probe_chip")}</span>}
+                  {IS_PUBLIC && <span className="chip">{r.mine ? t("runs.yours") : t("runs.example")}</span>}
                 </div>
                 <div className="mt-1 text-xs text-muted">
                   {ago(r.created_at, lang)} · {r.n_prompts} × {r.models.length} · {t("plan.clips", { n: r.n_jobs })}

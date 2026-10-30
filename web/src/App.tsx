@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "./api";
+import { api, IS_PUBLIC } from "./api";
 import { useI18n } from "./i18n";
 import { cls, usd } from "./util";
 import ScenariosPage from "./pages/Scenarios";
@@ -92,7 +92,13 @@ export default function App() {
           </nav>
           <div className="ml-auto flex items-center gap-3">
             {mock && <span className="chip" style={{ borderColor: "var(--warn)", color: "var(--ink)" }}>⚠ {t("mock.badge")}</span>}
-            <SpendPill />
+            {IS_PUBLIC ? (
+              <span className="chip hidden sm:inline-flex" title={t("public.badge_title")}>
+                {t("public.badge")}
+              </span>
+            ) : (
+              <SpendPill />
+            )}
             <div className="seg" role="group" aria-label="language">
               <button aria-pressed={lang === "en"} onClick={() => setLang("en")}>EN</button>
               <button aria-pressed={lang === "zh"} onClick={() => setLang("zh")}>中文</button>
@@ -102,9 +108,11 @@ export default function App() {
               <option value="light">{t("theme.light")}</option>
               <option value="dark">{t("theme.dark")}</option>
             </select>
-            <NavLink to="/settings" className={({ isActive }) => cls("text-[13px]", isActive ? "text-ink" : "text-ink-2 hover:text-ink")}>
-              {t("nav.settings")}
-            </NavLink>
+            {!IS_PUBLIC && (
+              <NavLink to="/settings" className={({ isActive }) => cls("text-[13px]", isActive ? "text-ink" : "text-ink-2 hover:text-ink")}>
+                {t("nav.settings")}
+              </NavLink>
+            )}
           </div>
         </div>
       </header>
@@ -117,7 +125,7 @@ export default function App() {
           <Route path="/runs/:runId" element={<RunBoardPage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/models" element={<ModelsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings" element={IS_PUBLIC ? <Navigate to="/" replace /> : <SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

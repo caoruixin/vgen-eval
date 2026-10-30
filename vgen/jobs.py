@@ -22,6 +22,7 @@ from vgen.db import (ANALYZING, DOWNLOADING, FAILED, IN_PROGRESS, PENDING, QUEUE
                      SUBMITTING, SUCCEEDED, TIMEOUT, Job, Run, session, update_job)
 from vgen.gateway import AUTH, BUSINESS, NOT_FOUND, SAFE_TO_RESEND, Gateway, GatewayError
 from vgen.judge import judge_clip
+from vgen.keys import KeyRing
 from vgen.runs import record_judge_spend, record_unknown_spend, record_video_spend, settle_actual, settle_quota, spent_usd
 
 log = logging.getLogger("vgen.jobs")
@@ -47,10 +48,14 @@ def _sha256_file(path: Path) -> str:
 
 
 class JobEngine:
-    def __init__(self, settings: Settings, registry: Registry, gateways: dict[str, Gateway]):
+    def __init__(self, settings: Settings, registry: Registry, gateways: dict[str, Gateway],
+                 keys: KeyRing | None = None):
         self.settings = settings
         self.registry = registry
         self.gateways = gateways
+        self.keys = keys                         # public mode: visitor keys, one gateway per key
+        self._owners: dict[str, str | None] = {}  # run id -> visitor id (None = operator run); never changes
+        self._last_sweep = 0.0
         self._wake = asyncio.Event()
         self._task: asyncio.Task | None = None
         self._busy: set[str] = set()
@@ -111,26 +116,51 @@ class JobEngine:
                 pass
             self._wake.clear()
 
+    # ------------------------------------------------------------------ gateways
+    def owner(self, run_id: str) -> str | None:
+        if run_id not in self._owners:
+            with session() as s:
+                run = s.get(Run, run_id)
+            self._owners[run_id] = run.owner if run else None
+        return self._owners[run_id]
+
+    def gateway(self, job: Job) -> Gateway | None:
+        """A visitor's run uses the key that visitor entered (None until it is attached); others the endpoint."""
+        if self.owner(job.run_id):
+            return self.keys.for_run(job.run_id) if self.keys else None
+        return self.gateways.get(job.endpoint)
+
+    def waiting_for_key(self, job: Job) -> bool:
+        return bool(self.owner(job.run_id)) and self.gateway(job) is None
+
     # ------------------------------------------------------------------ scheduling
     def _tick(self) -> None:
         now = time.time()
         with session() as s:
             jobs = list(s.exec(select(Job).where(Job.status.in_(
                 [PENDING, SUBMITTING, QUEUED, IN_PROGRESS, DOWNLOADING, ANALYZING])).order_by(Job.created_at)))
-            judge_jobs = list(s.exec(select(Job).where(Job.status == SUCCEEDED, Job.judge_status == "pending")))
-        inflight: dict[str, int] = {}
+            judge_jobs = list(s.exec(select(Job).where(Job.status == SUCCEEDED,
+                                                       Job.judge_status.in_(["pending", "running"]))))
+        if self.keys is not None:
+            self._release_finished_runs({j.run_id for j in jobs} | {j.run_id for j in judge_jobs})
+        # in-flight tasks are limited per gateway: per endpoint, or per visitor key in public mode
+        inflight: dict[int, int] = {}
         for j in jobs:
-            if j.status in (SUBMITTING, QUEUED, IN_PROGRESS, DOWNLOADING):
-                inflight[j.endpoint] = inflight.get(j.endpoint, 0) + 1
+            gw = self.gateway(j)
+            if gw is not None and j.status in (SUBMITTING, QUEUED, IN_PROGRESS, DOWNLOADING):
+                inflight[id(gw)] = inflight.get(id(gw), 0) + 1
         for j in jobs:
             if j.id in self._busy:
                 continue
+            if j.status != ANALYZING and self.waiting_for_key(j):
+                continue                                         # resumes when the visitor re-attaches the key
             if j.status == PENDING:
-                if inflight.get(j.endpoint, 0) >= self.settings.max_inflight:
+                slot = id(self.gateway(j))
+                if inflight.get(slot, 0) >= self.settings.max_inflight:
                     continue
                 if j.next_poll_at and j.next_poll_at > now:      # backoff after a safe failure
                     continue
-                inflight[j.endpoint] = inflight.get(j.endpoint, 0) + 1
+                inflight[slot] = inflight.get(slot, 0) + 1
                 self._busy.add(j.id)
                 self._spawn(self._guard(j.id, self._submit(j.id)))
             elif j.status in (QUEUED, IN_PROGRESS) and (j.next_poll_at or 0) <= now:
@@ -143,9 +173,18 @@ class JobEngine:
                 self._busy.add(j.id)
                 self._spawn(self._guard(j.id, self._analyze(j.id)))
         for j in judge_jobs:
-            if j.id not in self._judging:
+            if j.judge_status == "pending" and j.id not in self._judging and not self.waiting_for_key(j):
                 self._judging.add(j.id)
                 self._spawn(self._judge_guard(j.id))
+
+    def _release_finished_runs(self, busy_runs: set[str]) -> None:
+        """Forget a visitor's key for runs with nothing left to submit, poll, download or judge."""
+        for run_id in self.keys.attached():
+            if run_id not in busy_runs:
+                self.keys.release(run_id)
+        if time.monotonic() - self._last_sweep > 60:
+            self._last_sweep = time.monotonic()
+            self._spawn(self.keys.close_idle())
 
     async def _guard(self, job_id: str, coro) -> None:
         try:
@@ -157,11 +196,16 @@ class JobEngine:
             self._busy.discard(job_id)
             self._wake.set()
 
-    def poll_interval(self, endpoint: str) -> float:
+    def poll_interval(self, job: Job, gw: Gateway) -> float:
+        """Spread polls so that every job sharing this gateway's rate limit fits into ~60% of it."""
+        q = select(Job.id).where(Job.status.in_([QUEUED, IN_PROGRESS]))
+        if self.owner(job.run_id) and self.keys is not None:
+            q = q.where(Job.run_id.in_(self.keys.runs_sharing(job.run_id)))
+        else:
+            q = q.where(Job.endpoint == job.endpoint)
         with session() as s:
-            active = len(list(s.exec(select(Job.id).where(Job.endpoint == endpoint, Job.status.in_([QUEUED, IN_PROGRESS])))))
-        rpm = self.gateways[endpoint].limiter.rpm if endpoint in self.gateways else 15
-        return max(self.settings.poll_min_s, active * 60.0 / (0.6 * rpm))
+            active = len(list(s.exec(q)))
+        return max(self.settings.poll_min_s, active * 60.0 / (0.6 * gw.limiter.rpm))
 
     def _timeout_for(self, job: Job) -> float:
         return self.settings.edit_timeout_s if (job.spec or {}).get("task") in ("v2v_edit", "extend") else self.settings.gen_timeout_s
@@ -179,12 +223,15 @@ class JobEngine:
         job = db.get_job(job_id)
         if job is None or job.status != PENDING:
             return
-        gw = self.gateways.get(job.endpoint)
+        gw = self.gateway(job)
         if gw is None:
-            update_job(job_id, status=FAILED, fail_reason=f"endpoint '{job.endpoint}' is not enabled", done_at=time.time())
+            if not self.owner(job.run_id):
+                update_job(job_id, status=FAILED, fail_reason=f"endpoint '{job.endpoint}' is not enabled",
+                           done_at=time.time())
             return
         cap = self.settings.hard_cap_usd
-        if cap is not None and spent_usd() + (job.est_cost_usd or 0) > cap:
+        visitor_pays = bool(self.owner(job.run_id))
+        if cap is not None and not visitor_pays and spent_usd() + (job.est_cost_usd or 0) > cap:
             update_job(job_id, status=STOPPED, fail_reason=f"hard spend cap ${cap:g} reached; not submitted", done_at=time.time())
             return
         try:
@@ -227,12 +274,13 @@ class JobEngine:
         job = db.get_job(job_id)
         if job is None or job.status not in (QUEUED, IN_PROGRESS) or not job.task_id:
             return
-        gw = self.gateways.get(job.endpoint)
+        gw = self.gateway(job)
         now = time.time()
         if gw is None:
-            update_job(job_id, status=STOPPED, fail_reason="endpoint disabled; polling stopped", done_at=now)
+            if not self.owner(job.run_id):
+                update_job(job_id, status=STOPPED, fail_reason="endpoint disabled; polling stopped", done_at=now)
             return
-        interval = self.poll_interval(job.endpoint)
+        interval = self.poll_interval(job, gw)
         try:
             detail = await gw.get_video(job.task_id)
         except GatewayError as err:
@@ -283,7 +331,12 @@ class JobEngine:
         job = db.get_job(job_id)
         if job is None or job.status != DOWNLOADING:
             return
-        gw = self.gateways[job.endpoint]
+        gw = self.gateway(job)
+        if gw is None:
+            if not self.owner(job.run_id):
+                update_job(job_id, status=STOPPED, fail_reason="endpoint disabled; download stopped",
+                           done_at=time.time())
+            return
         dest = self.settings.videos_dir / job.run_id / f"{job.id}.mp4"
         try:
             await gw.download_video(job.task_id, dest)
@@ -337,7 +390,12 @@ class JobEngine:
         job = db.get_job(job_id)
         if job is None or not job.video_path:
             return
-        gw = self.gateways.get(self.settings.judge_endpoint)
+        if self.owner(job.run_id):
+            gw = self.keys.for_run(job.run_id) if self.keys else None   # the visitor's key pays for the judge too
+            if gw is None:
+                return                                                  # stays pending until the key is back
+        else:
+            gw = self.gateways.get(self.settings.judge_endpoint)
         if gw is None:
             update_job(job_id, judge_status="error", judge={"error": "judge endpoint not enabled"})
             return

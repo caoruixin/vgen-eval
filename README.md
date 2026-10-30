@@ -132,10 +132,49 @@ experimental modes are switched on only after they pass.
 | `VGEN_DATA_DIR` | `data/` (`data-mock/` in mock mode) | database, videos, frames |
 | `VGEN_PORT` | `8765` | web port |
 
+## Hosted demo (public mode)
+
+`VGEN_PUBLIC=1` turns the app into a demo you can share. The server holds **no** Tokenbay key.
+
+- Your existing runs become read-only examples; probe runs are hidden. Visitors can watch, compare and export
+  them, or re-run one with their own key.
+- **To generate, a visitor enters their own Tokenbay API key** in the cost dialog.
+  - It is checked with a free model-list call, then used for every call of that run (submit, poll, download, judge).
+  - The server keeps it in memory only, until the run is finished. It is never written to the database, logs or
+    responses.
+  - The browser keeps it in sessionStorage, or in localStorage if the visitor ticks "remember".
+- Each browser gets an anonymous cookie. Visitors see only the examples plus their own runs and uploads.
+- Limits: `VGEN_PUBLIC_MAX_ACTIVE_RUNS` runs in progress per visitor (default 2), and uploads up to 20 MB.
+- Closed in public mode: settings, the spending ledger, live probes, model refresh and fetching assets from a URL.
+- After a restart the keys are gone. Jobs wait instead of failing, and the visitor's page hands the key back
+  automatically (or asks for it).
+
+| Variable | Meaning |
+|---|---|
+| `VGEN_PUBLIC` | `1` = hosted demo. Only `TOKENBAY_BASE_URL` is read from the env file; a key in it is ignored |
+| `VGEN_ALLOWED_HOSTS` | extra host names to accept, e.g. `video.llm-pro.cn` |
+| `VGEN_PUBLIC_MAX_ACTIVE_RUNS` | runs one visitor may have in progress (default 2) |
+
+To try it locally without spending, run `VGEN_PUBLIC=1 uv run vgen serve --mock --port 8766`. The mock rejects
+keys that start with `sk-bad`.
+
+### Deploying
+
+`deploy/` sets up https://video.llm-pro.cn on the llm-pro host without touching the sites already there:
+
+- a `vgenapp` user, code in `/opt/vgen`, data in `/var/lib/vgen/data` and settings in `/etc/vgen/vgen.env` (no key)
+- a hardened systemd unit, capped at 1 GB and one CPU
+- its own nginx server and Let's Encrypt certificate
+
+```bash
+deploy/deploy.sh         # build the UI, ship the code, provision (idempotent), uv sync, restart, health check
+deploy/upload-data.sh    # one-off: publish the local data/ (runs and clips) as the example runs
+```
+
 ## Development
 
 ```bash
-make test         # 48 tests: adapters, costs, gateway errors, limiter, analysis on synthetic clips, mock end-to-end
+make test         # 56 tests: adapters, costs, gateway errors, limiter, analysis on synthetic clips, mock end-to-end
 make dev          # backend + Vite dev server (http://127.0.0.1:5173, proxies /api)
 uv run vgen models   # which registered models are live on the gateway
 ```
