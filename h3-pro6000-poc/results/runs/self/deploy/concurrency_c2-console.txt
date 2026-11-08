@@ -1,0 +1,17 @@
+{
+  "phase": "concurrency_c2",
+  "results": [
+    {
+      "request_id": "concurrency_c2-self-bf16-T02-3101",
+      "status": "validated",
+      "task_id": "video_gen_2cd68ee612d340e3baf5a0d785082537",
+      "e2e_seconds": 180.16797948395833
+    },
+    {
+      "request_id": "concurrency_c2-self-bf16-F04-3102",
+      "status": "validated",
+      "task_id": "video_gen_bc717b4d187642109f78f6d696258265",
+      "e2e_seconds": 370.30990593275055
+    }
+  ]
+}

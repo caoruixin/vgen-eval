@@ -1,0 +1,479 @@
+{
+  "derived_utc": "2026-11-07T16:40:08.715381+00:00",
+  "kind": "observed_data_only",
+  "baseline_technical_valid": 42,
+  "requested_baseline_n": 42,
+  "self_total_valid": 77,
+  "official_total_valid": 10,
+  "official_generation_tasks": 10,
+  "official_download_recovery_sessions": 1,
+  "official_published_price_estimate_usd": 4.0,
+  "gpu_hour_rate_usd": 13.86666666666667,
+  "disk_hour_rate_usd": 0.13888888888888928,
+  "gpu_disk_hour_rate_usd": 14.00555555555556,
+  "price_source": "instance provider snapshot",
+  "groups": [
+    {
+      "provider": "official_api",
+      "phase": "comparison",
+      "variant": "official-H3",
+      "task": "fl2va",
+      "transport": "async",
+      "n_submitted_attempts": 4,
+      "n_technical_valid": 4,
+      "outcomes": {
+        "technical_valid": 4
+      },
+      "e2e_p50_s": 112.43964104150655,
+      "e2e_p95_s": 114.80224061249173,
+      "e2e_min_s": 111.53248133300804,
+      "e2e_max_s": 115.12025537504815,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "official_api",
+      "phase": "comparison",
+      "variant": "official-H3",
+      "task": "t2va",
+      "transport": "async",
+      "n_submitted_attempts": 6,
+      "n_technical_valid": 6,
+      "outcomes": {
+        "technical_valid": 6
+      },
+      "e2e_p50_s": 99.07481214549625,
+      "e2e_p95_s": 237.09962989452555,
+      "e2e_min_s": 91.84537729097065,
+      "e2e_max_s": 281.77500009536743,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "baseline",
+      "variant": "bf16",
+      "task": "fl2va",
+      "transport": "sync",
+      "n_submitted_attempts": 12,
+      "n_technical_valid": 12,
+      "outcomes": {
+        "technical_valid": 12
+      },
+      "e2e_p50_s": 191.61231891042553,
+      "e2e_p95_s": 191.72444420002867,
+      "e2e_min_s": 191.5013961675577,
+      "e2e_max_s": 191.72800594288856,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "baseline",
+      "variant": "bf16",
+      "task": "t2va",
+      "transport": "sync",
+      "n_submitted_attempts": 30,
+      "n_technical_valid": 30,
+      "outcomes": {
+        "technical_valid": 30
+      },
+      "e2e_p50_s": 178.2311576923821,
+      "e2e_p95_s": 178.4320656509837,
+      "e2e_min_s": 177.94492417108268,
+      "e2e_max_s": 178.5544514739886,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "concurrency_c2",
+      "variant": "bf16",
+      "task": "fl2va",
+      "transport": "async",
+      "n_submitted_attempts": 1,
+      "n_technical_valid": 1,
+      "outcomes": {
+        "technical_valid": 1
+      },
+      "e2e_p50_s": 370.30990593275055,
+      "e2e_p95_s": 370.30990593275055,
+      "e2e_min_s": 370.30990593275055,
+      "e2e_max_s": 370.30990593275055,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "concurrency_c2",
+      "variant": "bf16",
+      "task": "t2va",
+      "transport": "async",
+      "n_submitted_attempts": 1,
+      "n_technical_valid": 1,
+      "outcomes": {
+        "technical_valid": 1
+      },
+      "e2e_p50_s": 180.16797948395833,
+      "e2e_p95_s": 180.16797948395833,
+      "e2e_min_s": 180.16797948395833,
+      "e2e_max_s": 180.16797948395833,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "concurrency_c4",
+      "variant": "bf16",
+      "task": "fl2va",
+      "transport": "async",
+      "n_submitted_attempts": 2,
+      "n_technical_valid": 2,
+      "outcomes": {
+        "technical_valid": 2
+      },
+      "e2e_p50_s": 643.6700187770184,
+      "e2e_p95_s": 729.2527862233343,
+      "e2e_min_s": 548.5780549477786,
+      "e2e_max_s": 738.7619826062582,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "concurrency_c4",
+      "variant": "bf16",
+      "task": "t2va",
+      "transport": "async",
+      "n_submitted_attempts": 2,
+      "n_technical_valid": 2,
+      "outcomes": {
+        "technical_valid": 2
+      },
+      "e2e_p50_s": 268.3100674273446,
+      "e2e_p95_s": 347.6273247520905,
+      "e2e_min_s": 180.1797815109603,
+      "e2e_max_s": 356.44035334372893,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "stability",
+      "variant": "bf16",
+      "task": "fl2va",
+      "transport": "async",
+      "n_submitted_attempts": 8,
+      "n_technical_valid": 7,
+      "outcomes": {
+        "technical_valid": 7,
+        "test_window_cancelled": 1
+      },
+      "e2e_p50_s": 192.17910644272342,
+      "e2e_p95_s": 192.20876872655936,
+      "e2e_min_s": 192.16614553891122,
+      "e2e_max_s": 192.2089482061565,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "stability",
+      "variant": "bf16",
+      "task": "t2va",
+      "transport": "async",
+      "n_submitted_attempts": 12,
+      "n_technical_valid": 12,
+      "outcomes": {
+        "technical_valid": 12
+      },
+      "e2e_p50_s": 180.16470486368053,
+      "e2e_p95_s": 180.30869397888893,
+      "e2e_min_s": 178.13964115222916,
+      "e2e_max_s": 180.34059555409476,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "turbo",
+      "variant": "turbo8",
+      "task": "fl2va",
+      "transport": "async",
+      "n_submitted_attempts": 3,
+      "n_technical_valid": 3,
+      "outcomes": {
+        "technical_valid": 3
+      },
+      "e2e_p50_s": 34.06583613017574,
+      "e2e_p95_s": 35.87383340750821,
+      "e2e_min_s": 34.05280615994707,
+      "e2e_max_s": 36.074721993878484,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": false
+    },
+    {
+      "provider": "self",
+      "phase": "turbo",
+      "variant": "turbo8",
+      "task": "t2va",
+      "transport": "async",
+      "n_submitted_attempts": 3,
+      "n_technical_valid": 3,
+      "outcomes": {
+        "technical_valid": 3
+      },
+      "e2e_p50_s": 32.046631092205644,
+      "e2e_p95_s": 57.536871306132525,
+      "e2e_min_s": 32.044359313324094,
+      "e2e_max_s": 60.36912021879107,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": false
+    },
+    {
+      "provider": "self",
+      "phase": "warmup",
+      "variant": "bf16",
+      "task": "fl2va",
+      "transport": "async",
+      "n_submitted_attempts": 1,
+      "n_technical_valid": 1,
+      "outcomes": {
+        "technical_valid": 1
+      },
+      "e2e_p50_s": 192.16209172457457,
+      "e2e_p95_s": 192.16209172457457,
+      "e2e_min_s": 192.16209172457457,
+      "e2e_max_s": 192.16209172457457,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "warmup",
+      "variant": "bf16",
+      "task": "fl2va",
+      "transport": "sync",
+      "n_submitted_attempts": 1,
+      "n_technical_valid": 1,
+      "outcomes": {
+        "technical_valid": 1
+      },
+      "e2e_p50_s": 194.32819771766663,
+      "e2e_p95_s": 194.32819771766663,
+      "e2e_min_s": 194.32819771766663,
+      "e2e_max_s": 194.32819771766663,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "warmup",
+      "variant": "bf16",
+      "task": "t2va",
+      "transport": "async",
+      "n_submitted_attempts": 1,
+      "n_technical_valid": 1,
+      "outcomes": {
+        "technical_valid": 1
+      },
+      "e2e_p50_s": 180.34607228590176,
+      "e2e_p95_s": 180.34607228590176,
+      "e2e_min_s": 180.34607228590176,
+      "e2e_max_s": 180.34607228590176,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "warmup",
+      "variant": "bf16",
+      "task": "t2va",
+      "transport": "sync",
+      "n_submitted_attempts": 2,
+      "n_technical_valid": 1,
+      "outcomes": {
+        "technical_valid": 1,
+        "confirmed_input_rejection": 1
+      },
+      "e2e_p50_s": 202.9995189937763,
+      "e2e_p95_s": 202.9995189937763,
+      "e2e_min_s": 202.9995189937763,
+      "e2e_max_s": 202.9995189937763,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "deliverable_rate_scope": "explicitly reviewed subset only; not all requests",
+      "turbo_activation_verified": null
+    }
+  ],
+  "phases": [
+    {
+      "provider": "official_api",
+      "phase": "comparison",
+      "n_submitted_attempts": 10,
+      "n_technical_valid": 10,
+      "observed_phase_windows": 4,
+      "complete_for_requested_matrix": true,
+      "window_seconds": 1039.6262842080887,
+      "throughput_success_per_hour": 34.62782785202682,
+      "phase_gpu_disk_cost_estimate_usd": null,
+      "cost_per_technical_success_usd": null,
+      "outcomes": {
+        "technical_valid": 10
+      },
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "baseline",
+      "n_submitted_attempts": 42,
+      "n_technical_valid": 42,
+      "observed_phase_windows": 2,
+      "complete_for_requested_matrix": true,
+      "window_seconds": 7657.7977672950365,
+      "throughput_success_per_hour": 19.744579916401783,
+      "phase_gpu_disk_cost_estimate_usd": 29.79214223973888,
+      "cost_per_technical_success_usd": 0.7093367199937829,
+      "outcomes": {
+        "technical_valid": 42
+      },
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "concurrency_c2",
+      "n_submitted_attempts": 2,
+      "n_technical_valid": 2,
+      "observed_phase_windows": 1,
+      "complete_for_requested_matrix": true,
+      "window_seconds": 370.6727995541878,
+      "throughput_success_per_hour": 19.424139048399336,
+      "phase_gpu_disk_cost_estimate_usd": 1.4420773575248576,
+      "cost_per_technical_success_usd": 0.7210386787624288,
+      "outcomes": {
+        "technical_valid": 2
+      },
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "concurrency_c4",
+      "n_submitted_attempts": 4,
+      "n_technical_valid": 4,
+      "observed_phase_windows": 1,
+      "complete_for_requested_matrix": true,
+      "window_seconds": 738.9873505216092,
+      "throughput_success_per_hour": 19.48612515469427,
+      "phase_gpu_disk_cost_estimate_usd": 2.874980109050891,
+      "cost_per_technical_success_usd": 0.7187450272627227,
+      "outcomes": {
+        "technical_valid": 4
+      },
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "stability",
+      "n_submitted_attempts": 20,
+      "n_technical_valid": 19,
+      "observed_phase_windows": 1,
+      "complete_for_requested_matrix": true,
+      "window_seconds": 3600.0120942960493,
+      "throughput_success_per_hour": 18.999936169207515,
+      "phase_gpu_disk_cost_estimate_usd": 14.005602607593122,
+      "cost_per_technical_success_usd": 0.7371369793470064,
+      "outcomes": {
+        "technical_valid": 19,
+        "test_window_cancelled": 1
+      },
+      "turbo_activation_verified": null
+    },
+    {
+      "provider": "self",
+      "phase": "turbo",
+      "n_submitted_attempts": 6,
+      "n_technical_valid": 6,
+      "observed_phase_windows": 1,
+      "complete_for_requested_matrix": true,
+      "window_seconds": 230.53016200615093,
+      "throughput_success_per_hour": 93.69706684812756,
+      "phase_gpu_disk_cost_estimate_usd": 0.896861942002325,
+      "cost_per_technical_success_usd": 0.14947699033372083,
+      "outcomes": {
+        "technical_valid": 6
+      },
+      "turbo_activation_verified": false
+    },
+    {
+      "provider": "self",
+      "phase": "warmup",
+      "n_submitted_attempts": 5,
+      "n_technical_valid": 4,
+      "observed_phase_windows": 2,
+      "complete_for_requested_matrix": true,
+      "window_seconds": 771.4675858081318,
+      "throughput_success_per_hour": 18.665722662755343,
+      "phase_gpu_disk_cost_estimate_usd": 3.0013422589850323,
+      "cost_per_technical_success_usd": 0.7503355647462581,
+      "outcomes": {
+        "technical_valid": 4,
+        "confirmed_input_rejection": 1
+      },
+      "turbo_activation_verified": null
+    }
+  ],
+  "utilization": [
+    {
+      "utilization": 0.25,
+      "observed_baseline_success_interval_s": 182.32851826892943,
+      "gpu_disk_cost_per_success_usd": 2.8373468799751316,
+      "interpretation": "Demand utilization of allocated service time, not nvidia-smi utilization; cold start, traffic and human labor excluded"
+    },
+    {
+      "utilization": 0.5,
+      "observed_baseline_success_interval_s": 182.32851826892943,
+      "gpu_disk_cost_per_success_usd": 1.4186734399875658,
+      "interpretation": "Demand utilization of allocated service time, not nvidia-smi utilization; cold start, traffic and human labor excluded"
+    },
+    {
+      "utilization": 1,
+      "observed_baseline_success_interval_s": 182.32851826892943,
+      "gpu_disk_cost_per_success_usd": 0.7093367199937829,
+      "interpretation": "Demand utilization of allocated service time, not nvidia-smi utilization; cold start, traffic and human labor excluded"
+    }
+  ],
+  "quality": "Only explicitly locked user scores joined by provider/request_id; missing scores remain blank",
+  "quantile_method": "Linear interpolation at (n-1)*p; small n P95 preliminary",
+  "data_freshness": "Frozen server archive verified locally; independent release confirmed",
+  "turbo_activation_verified": false
+}

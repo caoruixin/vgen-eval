@@ -1,0 +1,468 @@
+{
+  "utc": "2026-11-07T13:32:18.568+00:00",
+  "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/data.py",
+  "source_sha256": "072c04ec4633e4efe163d4403b5e8b350233f443835056ff5f2a899ff132f713",
+  "fields": {
+    "stage_id": {
+      "declaration": "stage_id: int = 0",
+      "line": 822
+    },
+    "model": {
+      "declaration": "model: str | None = None",
+      "line": 824
+    },
+    "model_class_name": {
+      "declaration": "model_class_name: str | None = None",
+      "line": 826
+    },
+    "model_stage": {
+      "declaration": "model_stage: str | None = None",
+      "line": 832
+    },
+    "stage_role": {
+      "declaration": "stage_role: str | None = None",
+      "line": 839
+    },
+    "task_type": {
+      "declaration": "task_type: str | None = None",
+      "line": 843
+    },
+    "dtype": {
+      "declaration": "dtype: torch.dtype = torch.bfloat16",
+      "line": 845
+    },
+    "model_config": {
+      "declaration": "model_config: dict[str, Any] = field(default_factory=dict)",
+      "line": 847
+    },
+    "tf_model_config": {
+      "declaration": "tf_model_config: TransformerConfig = field(default_factory=TransformerConfig)",
+      "line": 848
+    },
+    "diffusion_attention_config": {
+      "declaration": "diffusion_attention_config: 'AttentionConfig' = field(default_factory=lambda: AttentionConfig())",
+      "line": 851
+    },
+    "fa_deterministic": {
+      "declaration": "fa_deterministic: bool = False",
+      "line": 852
+    },
+    "cache_strategy": {
+      "declaration": "cache_strategy: str = 'none'",
+      "line": 861
+    },
+    "parallel_config": {
+      "declaration": "parallel_config: DiffusionParallelConfig = field(default_factory=DiffusionParallelConfig)",
+      "line": 862
+    },
+    "cache_backend": {
+      "declaration": "cache_backend: str | None = 'none'",
+      "line": 865
+    },
+    "cache_config": {
+      "declaration": "cache_config: DiffusionCacheConfig | dict[str, Any] = field(default_factory=dict)",
+      "line": 866
+    },
+    "video_output_transport": {
+      "declaration": "video_output_transport: VideoOutputTransportConfig = field(default_factory=VideoOutputTransportConfig)",
+      "line": 867
+    },
+    "enable_cache_dit_summary": {
+      "declaration": "enable_cache_dit_summary: bool = False",
+      "line": 868
+    },
+    "enable_prompt_embed_cache": {
+      "declaration": "enable_prompt_embed_cache: bool = False",
+      "line": 876
+    },
+    "prompt_embed_cache_size": {
+      "declaration": "prompt_embed_cache_size: int = 32",
+      "line": 877
+    },
+    "enable_session_state_manager": {
+      "declaration": "enable_session_state_manager: bool = False",
+      "line": 884
+    },
+    "distributed_executor_backend": {
+      "declaration": "distributed_executor_backend: str | None = None",
+      "line": 889
+    },
+    "nccl_port": {
+      "declaration": "nccl_port: int | None = None",
+      "line": 890
+    },
+    "weight_transfer_config": {
+      "declaration": "weight_transfer_config: dict[str, Any] | None = None",
+      "line": 896
+    },
+    "engine_backend": {
+      "declaration": "engine_backend: str | type = 'default'",
+      "line": 904
+    },
+    "diffusion_kv_mode": {
+      "declaration": "diffusion_kv_mode: DiffusionKVCacheMode = DiffusionKVCacheMode.DENSE_LEGACY",
+      "line": 907
+    },
+    "enable_prefix_caching": {
+      "declaration": "enable_prefix_caching: bool = False",
+      "line": 910
+    },
+    "diffusion_kv_max_rows_per_request": {
+      "declaration": "diffusion_kv_max_rows_per_request: int | None = None",
+      "line": 913
+    },
+    "diffusion_model_runner_cls": {
+      "declaration": "diffusion_model_runner_cls: str | None = None",
+      "line": 919
+    },
+    "trust_remote_code": {
+      "declaration": "trust_remote_code: bool = False",
+      "line": 922
+    },
+    "revision": {
+      "declaration": "revision: str | None = None",
+      "line": 923
+    },
+    "num_gpus": {
+      "declaration": "num_gpus: int | None = None",
+      "line": 925
+    },
+    "dist_timeout": {
+      "declaration": "dist_timeout: int | None = None",
+      "line": 927
+    },
+    "lora_path": {
+      "declaration": "lora_path: str | list[str] | None = None",
+      "line": 932
+    },
+    "lora_scale": {
+      "declaration": "lora_scale: float | list[float] = 1.0",
+      "line": 933
+    },
+    "lora_backend": {
+      "declaration": "lora_backend: LoRABackend = LoRABackend.PEFT",
+      "line": 934
+    },
+    "max_cpu_loras": {
+      "declaration": "max_cpu_loras: int | None = None",
+      "line": 935
+    },
+    "output_type": {
+      "declaration": "output_type: str = 'pil'",
+      "line": 937
+    },
+    "diffusion_offload_config": {
+      "declaration": "diffusion_offload_config: dict[str, Any] | None = None",
+      "line": 942
+    },
+    "enable_cpu_offload": {
+      "declaration": "enable_cpu_offload: bool = False",
+      "line": 948
+    },
+    "enable_layerwise_offload": {
+      "declaration": "enable_layerwise_offload: bool = False",
+      "line": 950
+    },
+    "enable_distributed_layerwise_offload": {
+      "declaration": "enable_distributed_layerwise_offload: bool = False",
+      "line": 952
+    },
+    "dlo_use_allgather": {
+      "declaration": "dlo_use_allgather: bool = True",
+      "line": 958
+    },
+    "dlo_resident_layers": {
+      "declaration": "dlo_resident_layers: int = 0",
+      "line": 960
+    },
+    "host_weight_runtime_mode": {
+      "declaration": "host_weight_runtime_mode: str = 'disabled'",
+      "line": 964
+    },
+    "host_weight_runtime_root": {
+      "declaration": "host_weight_runtime_root: str | None = None",
+      "line": 965
+    },
+    "dlo_host_registration_limit_gib": {
+      "declaration": "dlo_host_registration_limit_gib: float = 0.0",
+      "line": 968
+    },
+    "pin_cpu_memory": {
+      "declaration": "pin_cpu_memory: bool = True",
+      "line": 970
+    },
+    "vae_use_slicing": {
+      "declaration": "vae_use_slicing: bool = False",
+      "line": 973
+    },
+    "vae_use_tiling": {
+      "declaration": "vae_use_tiling: bool = False",
+      "line": 974
+    },
+    "vae_fast_path": {
+      "declaration": "vae_fast_path: str = 'lossless'",
+      "line": 980
+    },
+    "vae_encode_fast_path": {
+      "declaration": "vae_encode_fast_path: str = 'lossless'",
+      "line": 983
+    },
+    "mask_strategy_file_path": {
+      "declaration": "mask_strategy_file_path: str | None = None",
+      "line": 986
+    },
+    "skip_time_steps": {
+      "declaration": "skip_time_steps: int = 15",
+      "line": 988
+    },
+    "moe_backend": {
+      "declaration": "moe_backend: str = 'auto'",
+      "line": 991
+    },
+    "linear_backend": {
+      "declaration": "linear_backend: str = 'auto'",
+      "line": 992
+    },
+    "enforce_eager": {
+      "declaration": "enforce_eager: bool = False",
+      "line": 995
+    },
+    "enable_cuda_graph_decode": {
+      "declaration": "enable_cuda_graph_decode: bool = True",
+      "line": 1008
+    },
+    "diffusion_compile_granularity": {
+      "declaration": "diffusion_compile_granularity: str = 'regional'",
+      "line": 1011
+    },
+    "diffusion_compile_dynamic": {
+      "declaration": "diffusion_compile_dynamic: bool = True",
+      "line": 1012
+    },
+    "enable_multithread_weight_load": {
+      "declaration": "enable_multithread_weight_load: bool = True",
+      "line": 1015
+    },
+    "enable_broadcast_weight_load": {
+      "declaration": "enable_broadcast_weight_load: bool = False",
+      "line": 1016
+    },
+    "num_weight_load_threads": {
+      "declaration": "num_weight_load_threads: int = 4",
+      "line": 1017
+    },
+    "hsdp_weight_load_strategy": {
+      "declaration": "hsdp_weight_load_strategy: str = 'full'",
+      "line": 1020
+    },
+    "enable_sleep_mode": {
+      "declaration": "enable_sleep_mode: bool = False",
+      "line": 1023
+    },
+    "disable_autocast": {
+      "declaration": "disable_autocast: bool = False",
+      "line": 1025
+    },
+    "VSA_sparsity": {
+      "declaration": "VSA_sparsity: float = 0.0",
+      "line": 1028
+    },
+    "moba_config_path": {
+      "declaration": "moba_config_path: str | None = None",
+      "line": 1031
+    },
+    "master_port": {
+      "declaration": "master_port: int | None = None",
+      "line": 1036
+    },
+    "worker_extension_cls": {
+      "declaration": "worker_extension_cls: str | None = None",
+      "line": 1039
+    },
+    "ray_worker_env": {
+      "declaration": "ray_worker_env: dict[str, str] = field(default_factory=dict, init=False, repr=False)",
+      "line": 1042
+    },
+    "custom_pipeline_args": {
+      "declaration": "custom_pipeline_args: dict[str, Any] | None = None",
+      "line": 1045
+    },
+    "diffusion_load_format": {
+      "declaration": "diffusion_load_format: str = 'default'",
+      "line": 1049
+    },
+    "diffusers_load_kwargs": {
+      "declaration": "diffusers_load_kwargs: dict[str, Any] = field(default_factory=dict)",
+      "line": 1053
+    },
+    "diffusers_call_kwargs": {
+      "declaration": "diffusers_call_kwargs: dict[str, Any] = field(default_factory=dict)",
+      "line": 1055
+    },
+    "diffusers_pipeline_cls": {
+      "declaration": "diffusers_pipeline_cls: type[diffusers.DiffusionPipeline] | None = None",
+      "line": 1057
+    },
+    "host": {
+      "declaration": "host: str | None = None",
+      "line": 1060
+    },
+    "port": {
+      "declaration": "port: int | None = None",
+      "line": 1061
+    },
+    "scheduler_port": {
+      "declaration": "scheduler_port: int = 5555",
+      "line": 1063
+    },
+    "enable_stage_verification": {
+      "declaration": "enable_stage_verification: bool = True",
+      "line": 1066
+    },
+    "prompt_file_path": {
+      "declaration": "prompt_file_path: str | None = None",
+      "line": 1069
+    },
+    "model_paths": {
+      "declaration": "model_paths: dict[str, str] = field(default_factory=dict)",
+      "line": 1072
+    },
+    "model_loaded": {
+      "declaration": "model_loaded: dict[str, bool] = field(default_factory=lambda: {'transformer': True, 'vae': True, 'text_encoder': True, 'vae_encoder': True})",
+      "line": 1073
+    },
+    "override_transformer_cls_name": {
+      "declaration": "override_transformer_cls_name: str | None = None",
+      "line": 1081
+    },
+    "boundary_ratio": {
+      "declaration": "boundary_ratio: float | None = None",
+      "line": 1087
+    },
+    "flow_shift": {
+      "declaration": "flow_shift: float | None = None",
+      "line": 1089
+    },
+    "supports_multimodal_inputs": {
+      "declaration": "supports_multimodal_inputs: bool = False",
+      "line": 1093
+    },
+    "max_multimodal_image_inputs": {
+      "declaration": "max_multimodal_image_inputs: int | None = None",
+      "line": 1094
+    },
+    "supports_mixed_reference_inputs": {
+      "declaration": "supports_mixed_reference_inputs: bool = False",
+      "line": 1095
+    },
+    "log_level": {
+      "declaration": "log_level: str = 'info'",
+      "line": 1097
+    },
+    "omni_kv_config": {
+      "declaration": "omni_kv_config: dict[str, Any] = field(default_factory=dict)",
+      "line": 1100
+    },
+    "kv_transfer_config": {
+      "declaration": "kv_transfer_config: 'KVTransferConfig | None' = None",
+      "line": 1103
+    },
+    "additional_config": {
+      "declaration": "additional_config: dict[str, Any] = field(default_factory=dict)",
+      "line": 1104
+    },
+    "profiler_config": {
+      "declaration": "profiler_config: 'ProfilerConfig | dict[str, Any] | None' = None",
+      "line": 1106
+    },
+    "cfg_kv_collect_func": {
+      "declaration": "cfg_kv_collect_func: Any | None = None",
+      "line": 1109
+    },
+    "stage_input_payload_keys": {
+      "declaration": "stage_input_payload_keys: tuple[str, ...] = ()",
+      "line": 1114
+    },
+    "stage_input_optional_payload_keys": {
+      "declaration": "stage_input_optional_payload_keys: tuple[str, ...] = ()",
+      "line": 1115
+    },
+    "stage_output_payload_keys": {
+      "declaration": "stage_output_payload_keys: tuple[str, ...] = ()",
+      "line": 1119
+    },
+    "quantization_config": {
+      "declaration": "quantization_config: str | QuantizationConfig | dict[str, Any] | None = None",
+      "line": 1124
+    },
+    "quantization_config_is_auto_detected": {
+      "declaration": "quantization_config_is_auto_detected: bool = False",
+      "line": 1126
+    },
+    "force_cutlass_fp8": {
+      "declaration": "force_cutlass_fp8: bool = False",
+      "line": 1130
+    },
+    "diffusion_kv_cache_dtype": {
+      "declaration": "diffusion_kv_cache_dtype: str | None = None",
+      "line": 1134
+    },
+    "diffusion_kv_cache_skip_steps": {
+      "declaration": "diffusion_kv_cache_skip_steps: str | None = None",
+      "line": 1137
+    },
+    "diffusion_kv_cache_skip_layers": {
+      "declaration": "diffusion_kv_cache_skip_layers: str | None = None",
+      "line": 1138
+    },
+    "diffusion_kv_cache_skip_step_indices": {
+      "declaration": "diffusion_kv_cache_skip_step_indices: set[int] | None = None",
+      "line": 1139
+    },
+    "diffusion_kv_cache_skip_layer_indices": {
+      "declaration": "diffusion_kv_cache_skip_layer_indices: set[int] | None = None",
+      "line": 1140
+    },
+    "enable_diffusion_pipeline_profiler": {
+      "declaration": "enable_diffusion_pipeline_profiler: bool = False",
+      "line": 1143
+    },
+    "step_execution": {
+      "declaration": "step_execution: bool = False",
+      "line": 1146
+    },
+    "streaming_output": {
+      "declaration": "streaming_output: bool = False",
+      "line": 1149
+    },
+    "max_num_seqs": {
+      "declaration": "max_num_seqs: int = 1",
+      "line": 1152
+    },
+    "kv_cache_memory_bytes": {
+      "declaration": "kv_cache_memory_bytes: int | None = None",
+      "line": 1157
+    },
+    "gpu_memory_utilization": {
+      "declaration": "gpu_memory_utilization: float = 0.9",
+      "line": 1158
+    },
+    "max_num_batched_tokens": {
+      "declaration": "max_num_batched_tokens: int | None = None",
+      "line": 1159
+    },
+    "max_model_len": {
+      "declaration": "max_model_len: int | None = None",
+      "line": 1160
+    },
+    "request_batch_max_wait_ms": {
+      "declaration": "request_batch_max_wait_ms: float = 0.0",
+      "line": 1166
+    },
+    "extras": {
+      "declaration": "extras: dict[str, Any] = field(default_factory=dict)",
+      "line": 1169
+    }
+  },
+  "interpretation": "Declared defaults only. Actual explicit overrides are in launch-command.json; source/image pinned. Not a dump of the live engine object."
+}

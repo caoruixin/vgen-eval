@@ -1,0 +1,11 @@
+{
+  "utc": "2026-11-07T12:07:04.577+00:00",
+  "pipeline_source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py",
+  "pipeline_source_sha256": "8ba5e0353fa6e7ea5124bf5eb73ad19b21cc95878b1370251f657958eae79e5e",
+  "turbo_validation_without_loading_weights": {
+    "8": "accepted",
+    "9": "OmniClientError: minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors is a 8-step artifact and requires num_inference_steps=8 (9 sigma points produce 8 denoiser evaluations)"
+  },
+  "schedule_points_for_requested_50": 51,
+  "note": "这是已安装源码/调度函数契约检查，不是已执行模型步数或性能实测。每条真实请求仍需日志/返回指标支持。"
+}

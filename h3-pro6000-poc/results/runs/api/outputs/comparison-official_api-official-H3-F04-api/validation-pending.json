@@ -1,0 +1,7 @@
+{
+  "path": "h3-pro6000-poc/runs/api/outputs/comparison-official_api-official-H3-F04-api.mp4",
+  "sha256": "9e2fd346f6b080a25741708fe9af22f62d27b2acb465b5ebb7faea263ac7a9ff",
+  "technical_valid": null,
+  "manual_av_sync": "pending",
+  "reason": "按用户要求，ffprobe 和完整 ffmpeg 解码在服务器执行；此时仅通过 HTTP/Content-Type/ftyp 检查"
+}

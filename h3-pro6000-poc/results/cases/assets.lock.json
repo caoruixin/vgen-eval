@@ -1,0 +1,117 @@
+{
+  "assets": [
+    {
+      "case_id": "F01",
+      "file": "cases/assets/F01.png",
+      "sha256": "53ca106ed107f3ff62b6faf8b93afb8a0c363a8a33ad0356d3015e98ec9e0aa7",
+      "width": 1344,
+      "height": 768,
+      "original_file": "cases/assets/F01-original.jpg",
+      "original_sha256": "f308dcf86c2689b57fc05de32c74be9dc7eaa8a51b813b0b084b7eb62bf7c5bc",
+      "commons_sha1": "23fb74e01217e202fa98d592994c6fd31d6d7c52",
+      "title": "File:Women Portrait Creative Commons.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Women_Portrait_Creative_Commons.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Women_Portrait_Creative_Commons.jpg",
+      "author": "Wendelin Jacober",
+      "license": "CC0",
+      "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "normalization": {
+        "mode": "crop",
+        "centering": [
+          0.5,
+          0.0
+        ],
+        "output": [
+          1344,
+          768
+        ]
+      },
+      "observed_utc": "2026-11-07T09:15:08.764+00:00"
+    },
+    {
+      "case_id": "F02",
+      "file": "cases/assets/F02.png",
+      "sha256": "666c02a413b8aa2e2c9dbe718e3b6aa173a4919dc26f1fd5be199acd14bd0ac4",
+      "width": 1344,
+      "height": 768,
+      "original_file": "cases/assets/F02-original.jpg",
+      "original_sha256": "03c38e0a1e9b13ba4c81d1786943ccc1490c3128afcbdea23e148e804d2b4f43",
+      "commons_sha1": "31a323b46dbe6174aa802aa3b12fccf7891299cc",
+      "title": "File:Perfume Bottle.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Perfume_Bottle.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Perfume_Bottle.jpg",
+      "author": "ChickenFreak",
+      "license": "Public domain",
+      "license_url": "https://commons.wikimedia.org/wiki/File:Perfume_Bottle.jpg",
+      "normalization": {
+        "mode": "contain",
+        "centering": [
+          0.5,
+          0.5
+        ],
+        "output": [
+          1344,
+          768
+        ]
+      },
+      "observed_utc": "2026-11-07T08:59:38.048+00:00"
+    },
+    {
+      "case_id": "F03",
+      "file": "cases/assets/F03.png",
+      "sha256": "1a35a259df98230d630daef1746d74492400a4cd3964013fcc31932de9d06ba8",
+      "width": 1344,
+      "height": 768,
+      "original_file": "cases/assets/F03-original.jpg",
+      "original_sha256": "4d76d3a351bc5362b25514eeeb19d0b0bc11e5765868b217bbeb3703a633ccac",
+      "commons_sha1": "89687ae94e4360d51c640eadbc0ecb60054ad55f",
+      "title": "File:A white cat walking towards the photographer.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:A_white_cat_walking_towards_the_photographer.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/c/c1/A_white_cat_walking_towards_the_photographer.jpg",
+      "author": "Martin Vorel",
+      "license": "CC0",
+      "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "normalization": {
+        "mode": "contain",
+        "centering": [
+          0.5,
+          0.5
+        ],
+        "output": [
+          1344,
+          768
+        ]
+      },
+      "observed_utc": "2026-11-07T08:59:38.589+00:00"
+    },
+    {
+      "case_id": "F04",
+      "file": "cases/assets/F04.png",
+      "sha256": "894d9fd6b3ac2a1eb573198427a7ce0a84d2ae84de3971fe197ff77ea3a9495b",
+      "width": 1344,
+      "height": 768,
+      "original_file": "cases/assets/F04-original.jpg",
+      "original_sha256": "32c63883fbedbd2da1590245b1ccaa55bdb26ffa63bf3328456202356ed307d6",
+      "commons_sha1": "60eab74e7704db6375f1426fb11421ba29d7603e",
+      "title": "File:Lake Mountain Landscape.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Lake_Mountain_Landscape.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Lake_Mountain_Landscape.jpg",
+      "author": "Bonnie Moreland",
+      "license": "CC0",
+      "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "normalization": {
+        "mode": "crop",
+        "centering": [
+          0.5,
+          0.5
+        ],
+        "output": [
+          1344,
+          768
+        ]
+      },
+      "observed_utc": "2026-11-07T08:59:39.225+00:00"
+    }
+  ],
+  "source_metadata_sha256": "04ed7cb8ff1295f359448687b85227f3b97bfd0ddf1a47a9faaf9a9146f259b4"
+}

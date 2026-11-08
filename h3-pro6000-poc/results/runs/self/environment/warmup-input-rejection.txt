@@ -1,0 +1,7 @@
+94aa1e474f26:7242:12294 [0] NCCL INFO [Proxy Service] Device 2 CPU core [0;36m(APIServer pid=6815)[0;0m [31mERROR[0m [90m11-07 12:29:21[0m [90m[inline_stage_diffusion_client.py:193][0m Diffusion request video_sync-899ef2e1932c1f2f-98d89f5c failed: t2va requires an explicit aspect_ratio
+[0;36m(APIServer pid=6815)[0;0m [31mERROR[0m [90m11-07 12:29:21[0m [90m[inline_stage_diffusion_client.py:193][0m vllm_omni.errors.OmniClientError: t2va requires an explicit aspect_ratio
+[0;36m(APIServer pid=6815)[0;0m [31mERROR[0m [90m11-07 12:29:21[0m [90m[async_omni_base.py:268][0m [AsyncOmni] Orchestrator error for req=video_sync-899ef2e1932c1f2f-98d89f5c stage-0: t2va requires an explicit aspect_ratio
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 12:29:21[0m [90m[orchestrator.py:679][0m [Orchestrator] Aborted request(s) ['video_sync-899ef2e1932c1f2f-98d89f5c']
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 12:29:21[0m [90m[async_omni.py:392][0m [AsyncOmni] Request video_sync-899ef2e1932c1f2f-98d89f5c failed (input error): t2va requires an explicit aspect_ratio
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 12:29:21[0m [90m[api_server.py:2838][0m Client error during sync video generation: t2va requires an explicit aspect_ratio
+INFO:     127.0.0.1:44968 - "POST /v1/videos/sync HTTP/1.1" 400 Bad Request

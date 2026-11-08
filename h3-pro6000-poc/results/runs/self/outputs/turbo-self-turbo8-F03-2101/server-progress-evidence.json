@@ -1,0 +1,9 @@
+{
+  "source_log": "/data/h3-pro6000-poc/runs/self/deploy/server-turbo-cpubind.log",
+  "start_byte": 381739,
+  "end_byte": 385931,
+  "excerpt_sha256": "16a5ab35e42430f6e6b22183004ba77574e3bd9b6719ba3eb5f9fa0aa1779792",
+  "actual_denoise_updates_observed": 8,
+  "overlapping_requests": false,
+  "method": "Completed N/N denoising progress inside serial request byte span; not network forward-pass count or configured-step inference"
+}

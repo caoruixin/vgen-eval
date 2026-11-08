@@ -1,0 +1,13 @@
+# Override root runtime exclusions for this frozen, sanitized evidence snapshot.
+!runs/
+!runs/**
+!reports/data/
+!reports/data/**
+!*.log
+
+__pycache__/
+*.pyc
+.env
+.env.*
+private/
+scores-reviewed.*

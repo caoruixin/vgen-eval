@@ -1,0 +1,15 @@
+{
+  "utc": "2026-11-07T12:25:08.879+00:00",
+  "pid": 6281,
+  "pgid": 6281,
+  "command": [
+    "python3",
+    "scripts/launch.py",
+    "--execute",
+    "--mapping",
+    "private/topology-mapping.json",
+    "--out",
+    "runs/self/deploy/bf16"
+  ],
+  "log": "runs/self/deploy/server-bf16.log"
+}

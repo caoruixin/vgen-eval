@@ -1,0 +1,33 @@
+{
+  "utc": "2026-11-07T16:09:44.876294+00:00",
+  "installed_source_excerpts": [
+    {
+      "path": "/usr/local/lib/python3.12/dist-packages/vllm_omni/engine/orchestrator.py",
+      "sha256": "b69672edadcc88963efc87ca04a46c6d493552316e3c3a1e34e91effbd17d7c6",
+      "line_start": 3534,
+      "line_end": 3551,
+      "excerpt": "3534:             final_output_stage_ids=final_output_stage_ids,\n3535:             request_timestamp=float(msg.request_timestamp or _time.time()),\n3536:             mm_features=getattr(prompt, \"mm_features\", None),\n3537:             request_artifact_dirs=set(msg.request_artifact_dirs or ()),\n3538:         )\n3539:         self.request_states[request_id] = req_state\n3540:         self._maybe_attach_native_kv_transfer_params(req_state, prompt)\n3541:         self._register_running_request(req_state)\n3542:         req_state.streaming.enabled = bool(getattr(prompt, \"resumable\", False))\n3543:         enqueue_ts = msg.enqueue_ts\n3544:         if enqueue_ts > 0:\n3545:             req_state.pipeline_timings[\"queue_wait_ms\"] = (_time.perf_counter() - enqueue_ts) * 1000.0\n3546:         preprocess_ms = msg.preprocess_ms\n3547:         if preprocess_ms > 0:\n3548:             req_state.pipeline_timings[\"preprocess_ms\"] = preprocess_ms\n3549:         input_guard = self._stage_input_submission(stage_id) if stage_id != 0 else nullcontext()\n3550:         async with input_guard as mark_submitting:\n3551:             expected_replica_id = None"
+    },
+    {
+      "path": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/omni_base.py",
+      "sha256": "98f27faeb4292042cf6caa86b863207849de2ade1c215837396f0acfd42b1d19",
+      "line_start": 637,
+      "line_end": 659,
+      "excerpt": "637:             for evt in ar_events:\n638:                 if evt.stage_id != stage_id:\n639:                     stage_durations[f\"ar_stage_{evt.stage_id}\"] = evt.stage_gen_time_ms / 1000.0\n640: \n641:         # Merge pipeline timings from Orchestrator into stage_durations\n642:         _m = result.metrics\n643:         if _m is not None and hasattr(_m, \"pipeline_timings\") and _m.pipeline_timings:\n644:             for key, value in _m.pipeline_timings.items():\n645:                 if key not in stage_durations:\n646:                     stage_durations[key] = value\n647: \n648:         # Merge per-stage gen times into stage_durations\n649:         for evt in metrics.stage_events.get(str(req_id), [])[stage_event_cursor:]:\n650:             key = f\"stage_{evt.stage_id}_gen_ms\"\n651:             if key not in stage_durations:\n652:                 stage_durations[key] = evt.stage_gen_time_ms\n653:         # Current stage gen time (not yet in stage_events at this point)\n654:         if _m is not None:\n655:             stage_durations.setdefault(f\"stage_{stage_id}_gen_ms\", _m.stage_gen_time_ms)\n656: \n657:         finished = engine_outputs.finished\n658: \n659:         submit_ts = result.stage_submit_ts"
+    },
+    {
+      "path": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/diffusion_engine.py",
+      "sha256": "1e016a643621b957c593513ae93e7a1146d5fd727dea9514041eb996752ad43f",
+      "line_start": 533,
+      "line_end": 557,
+      "excerpt": "533:             logger.debug(\n534:                 \"DiffusionEngine.step_streaming breakdown: preprocess=%.2f ms, \"\n535:                 \"add_req_and_wait=%.2f ms, output_ready_wait=%.2f ms, \"\n536:                 \"postprocess=%.2f ms, total=%.2f ms\",\n537:                 preprocess_time * 1000,\n538:                 exec_total_time * 1000,\n539:                 output_ready_wait_time * 1000,\n540:                 postprocess_time * 1000,\n541:                 step_total_ms,\n542:             )\n543:             for request_output in formatted_outputs:\n544:                 metrics_update = {\n545:                     \"preprocess_time_ms\": preprocess_time * 1000,\n546:                     \"diffusion_engine_exec_time_ms\": exec_total_time * 1000,\n547:                     \"output_ready_wait_time_ms\": output_ready_wait_time * 1000,\n548:                     \"postprocess_time_ms\": postprocess_time * 1000,\n549:                     **scheduler_metrics,\n550:                 }\n551:                 if request.scheduler_queue_wait_ms is not None:\n552:                     metrics_update[\"scheduler_queue_wait_ms\"] = request.scheduler_queue_wait_ms\n553:                 vae_decode_ms = extract_diffusion_vae_decode_ms(output)\n554:                 if vae_decode_ms is not None:\n555:                     metrics_update[\"vae_decode_time_ms\"] = vae_decode_ms\n556:                 forward_ms = extract_diffusion_denoise_ms(output)\n557:                 if forward_ms is not None:"
+    },
+    {
+      "path": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/sched/base_scheduler.py",
+      "sha256": "36eed744368db25e82efb52d6b57be52a8b75f7d6dc8dd0add5245e743f38f23",
+      "line_start": 248,
+      "line_end": 261,
+      "excerpt": "248:             self._waiting.popleft()\n249:             if request_id == self._native_prefetch_request_id:\n250:                 self._native_prefetch_request_id = None\n251:             was_new_request = state.status == DiffusionRequestStatus.WAITING\n252:             if not self._running:\n253:                 self._running_sampling_params_key = state.sampling_params_key\n254:             state.status = DiffusionRequestStatus.RUNNING\n255:             self._running.append(request_id)\n256:             if was_new_request:\n257:                 state.req.scheduler_queue_wait_ms = max((time.perf_counter() - state.queued_at) * 1000.0, 0.0)\n258:                 scheduled_new_reqs.append(\n259:                     NewRequestData.from_state(\n260:                         state,\n261:                         diffusion_kv_metadata=diffusion_kv_metadata,"
+    }
+  ]
+}

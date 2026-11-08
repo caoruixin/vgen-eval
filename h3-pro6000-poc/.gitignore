@@ -1,0 +1,10 @@
+# Local execution files remain available on this computer. The verified,
+# shareable snapshot under results/ is the canonical Git backup.
+/*
+!/.gitignore
+!/README.md
+!/PLAN.md
+!/RUNBOOK.md
+!/EXECUTION_REVIEW.md
+!/MiniMax_H3_PRO6000_8GPU_PoC_Plan.docx
+!/results/

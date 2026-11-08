@@ -1,0 +1,7 @@
+﻿case_id,task,seed,bf16_e2e_s,eight_step_e2e_s,turbo_activation_verified,observed_e2e_speed_ratio,ratio_status,bf16_transport,eight_step_transport,bf16_actual_updates,eight_step_actual_updates,quality_tradeoff
+F02,fl2va,2101,191.56839353917167,34.05280615994707,False,,withheld because activation is unproved,sync,async,50,8,unmeasured; user review deferred
+T01,t2va,1101,178.5544514739886,60.36912021879107,False,,withheld because activation is unproved,sync,async,50,8,unmeasured; user review deferred
+T06,t2va,1101,178.23715996416286,32.046631092205644,False,,withheld because activation is unproved,sync,async,50,8,unmeasured; user review deferred
+F03,fl2va,2101,191.611503129825,34.06583613017574,False,,withheld because activation is unproved,sync,async,50,8,unmeasured; user review deferred
+T04,t2va,1101,178.2311156783253,32.044359313324094,False,,withheld because activation is unproved,sync,async,50,8,unmeasured; user review deferred
+F01,fl2va,2101,191.72800594288856,36.074721993878484,False,,withheld because activation is unproved,sync,async,50,8,unmeasured; user review deferred

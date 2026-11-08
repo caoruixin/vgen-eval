@@ -1,0 +1,41 @@
+{
+  "phase": "turbo",
+  "results": [
+    {
+      "request_id": "turbo-self-turbo8-T01-1101",
+      "status": "validated",
+      "task_id": "video_gen_c04525229be4416d88024ec2e173b643",
+      "e2e_seconds": 60.36912021879107
+    },
+    {
+      "request_id": "turbo-self-turbo8-T04-1101",
+      "status": "validated",
+      "task_id": "video_gen_a5d26b4afc494ed2856c79c3c0f5b260",
+      "e2e_seconds": 32.044359313324094
+    },
+    {
+      "request_id": "turbo-self-turbo8-T06-1101",
+      "status": "validated",
+      "task_id": "video_gen_27dec4d12d204c58a618e41c3176c906",
+      "e2e_seconds": 32.046631092205644
+    },
+    {
+      "request_id": "turbo-self-turbo8-F01-2101",
+      "status": "validated",
+      "task_id": "video_gen_49459b63bdf344b59531e10a024ec4e7",
+      "e2e_seconds": 36.074721993878484
+    },
+    {
+      "request_id": "turbo-self-turbo8-F02-2101",
+      "status": "validated",
+      "task_id": "video_gen_9441cfeeffbf41d4bee1e2135bb29d8b",
+      "e2e_seconds": 34.05280615994707
+    },
+    {
+      "request_id": "turbo-self-turbo8-F03-2101",
+      "status": "validated",
+      "task_id": "video_gen_bb0a87b3b3894e119310a1ef262fa171",
+      "e2e_seconds": 34.06583613017574
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{"phase": "comparison", "provider": "official_api", "start_utc": "2026-11-07T11:40:50.783+00:00", "end_utc": "2026-11-07T11:42:33.868+00:00", "wall_seconds": 103.082099833, "requests_this_invocation": 1, "concurrency": 1}
+{"phase": "comparison", "provider": "official_api", "start_utc": "2026-11-07T12:16:47.577+00:00", "end_utc": "2026-11-07T12:21:35.093+00:00", "wall_seconds": 287.5102488750126, "requests_this_invocation": 3, "concurrency": 1}
+{"phase": "comparison", "provider": "official_api", "start_utc": "2026-11-07T12:24:35.345+00:00", "end_utc": "2026-11-07T12:24:38.023+00:00", "wall_seconds": 2.6779048750177026, "requests_this_invocation": 1, "concurrency": 1}
+{"phase": "comparison", "provider": "official_api", "start_utc": "2026-11-07T12:27:41.454+00:00", "end_utc": "2026-11-07T12:38:27.823+00:00", "wall_seconds": 646.3560306250583, "requests_this_invocation": 6, "concurrency": 1}

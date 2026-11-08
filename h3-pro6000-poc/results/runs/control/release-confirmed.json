@@ -1,0 +1,27 @@
+{
+  "observed_utc": "2026-11-07T16:35:35.790025+00:00",
+  "final_billing_observed_utc": "2026-11-07T17:10:38.242908+00:00",
+  "instance_id": 59566113,
+  "instance_destroyed_confirmed": true,
+  "instance_count": 0,
+  "unneeded_storage_remaining": false,
+  "volume_count": 0,
+  "current_spending_rate_usd_per_hour": 0,
+  "auto_top_up_enabled": false,
+  "credit_before_rental_usd": 120,
+  "credit_after_release_usd": 55.1,
+  "final_invoice_status": "Vast最新已记账消费与余额观测已取得，正式消费发票及MiniMax实际账单未取得。GPU和磁盘账单时长高于首次页面释放确认的控制窗口，未取得准确计费截止时刻；API为标价估算。Vast摘要比条目高0.01美元，页面提示近期活动可能延迟。",
+  "destroy_execution_evidence": "runs/control/release-execution-result.json",
+  "archive_evidence": [
+    "runs/self/cost/archive-verified.json",
+    "runs/api/cost/archive-verified.json"
+  ],
+  "independent_ui_evidence": [
+    "runs/control/evidence/instance-destroyed.png",
+    "runs/control/evidence/storage-after-release.png",
+    "runs/control/evidence/billing-zero-rate.png"
+  ],
+  "billing_evidence": "runs/control/vast-usage-final.json",
+  "ended_utc_basis": "Conservative independent absence checkpoint after provider accepted DELETE; exact provider stop timestamp unavailable",
+  "ssh_after_destroy": "Connection refused at17:08:37UTC"
+}

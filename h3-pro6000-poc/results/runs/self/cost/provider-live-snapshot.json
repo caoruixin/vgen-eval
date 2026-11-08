@@ -1,0 +1,29 @@
+{
+  "observed_utc": "2026-11-07T13:16:53.763+00:00",
+  "instance_id": 59566113,
+  "source": "provider GET own-instance endpoint; credential fields excluded",
+  "http_status": 200,
+  "fields": {
+    "id": 59566113,
+    "actual_status": "running",
+    "cur_state": "running",
+    "machine_id": 153605,
+    "num_gpus": 8,
+    "gpu_name": "RTX PRO 6000 S",
+    "gpu_ram": 97887,
+    "cpu_ram": 773501,
+    "disk_space": 500.0,
+    "dph_base": 13.86666666666667,
+    "dph_total": 14.00555555555556,
+    "storage_cost": 0.19999999999999998,
+    "inet_up_cost": 0.0026666666666666666,
+    "inet_down_cost": 0.0026666666666666666,
+    "inet_up_billed": 2181038.08,
+    "inet_down_billed": 135266304.0,
+    "start_date": 1794052839.1988504,
+    "end_date": 1794748324.771987,
+    "image_uuid": "vllm/vllm-omni@sha256:6b44ee504a0dc3a21eacf72e7dc5da318b7bcc8ed0e349dc928e67278414430c",
+    "image_runtype": "ssh ssh_direc ssh_proxy"
+  },
+  "identity_matches": true
+}

@@ -1,0 +1,115 @@
+{
+  "utc": "2026-11-07T16:22:09.717+00:00",
+  "harness_provider_source_sha256": "b2a73cffe7ce2e68686f662bbfca842d850754f5995cc76ea6dc5577a91278fe",
+  "requests": [
+    {
+      "request_id": "turbo-self-turbo8-T01-1101",
+      "multipart_fields": {
+        "prompt": "一个连续的写实镜头，时长约五秒。主体是一只毛色纯白的成年短毛猫，全身可见。清晨，一条浅溪旁有细碎石子的小路，柔和自然光。白猫从画面左侧向右侧平稳走三到四步，四肢交替落地，尾巴自然摆动，始终只有一只猫。低机位镜头平滑跟随，不切镜，不突然变焦。声音是清晰但轻柔的猫爪踩碎石声，节奏与每次脚落地一致，背景持续有溪水流动声。没有人声、音乐、字幕或水印。",
+        "width": 1344,
+        "height": 768,
+        "fps": 24,
+        "num_inference_steps": 8,
+        "flow_shift": 6.0,
+        "seed": 1101,
+        "aspect_ratio": "16:9",
+        "short_edge": 768,
+        "return_stage_metrics": "true",
+        "extra_params": "{\"task\": \"t2va\", \"duration\": 5.0, \"audio_flow_shift\": 3.0}",
+        "lora": "{\"name\": \"h3-turbo-8step-v1.0\", \"path\": \"/data/models/h3-turbo/minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors\", \"scale\": 1.0}"
+      },
+      "asset_sha256": null
+    },
+    {
+      "request_id": "turbo-self-turbo8-T04-1101",
+      "multipart_fields": {
+        "prompt": "一个连续的写实中近景，时长约五秒。一位虚构的成年东亚女性，穿纯蓝色衬衫，独自站在安静明亮的室内，面向摄影机，脸和嘴巴清楚可见。镜头固定。她先自然看向镜头，然后只用普通话清晰说一次：\"你好，今天阳光很好。\" 语气自然平和，说完闭嘴微笑。嘴唇运动必须对应这句台词，声音来自这位女性，背景只有轻微室内底噪。始终只有一个人，没有旁白、其他台词、音乐、字幕或水印。",
+        "width": 1344,
+        "height": 768,
+        "fps": 24,
+        "num_inference_steps": 8,
+        "flow_shift": 6.0,
+        "seed": 1101,
+        "aspect_ratio": "16:9",
+        "short_edge": 768,
+        "return_stage_metrics": "true",
+        "extra_params": "{\"task\": \"t2va\", \"duration\": 5.0, \"audio_flow_shift\": 3.0}",
+        "lora": "{\"name\": \"h3-turbo-8step-v1.0\", \"path\": \"/data/models/h3-turbo/minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors\", \"scale\": 1.0}"
+      },
+      "asset_sha256": null
+    },
+    {
+      "request_id": "turbo-self-turbo8-T06-1101",
+      "multipart_fields": {
+        "prompt": "一个连续的写实街景镜头，时长约五秒。傍晚下雨的普通城市街道，湿路面有路灯倒影，摄影机在人行道边固定拍摄。一辆灰色轿车从左向右缓慢驶过画面，轮胎在积水中带起轻微水花，车辆形状和轮胎保持完整。雨滴持续落下，倒影随水面自然变化。声音为持续的雨声，轿车经过时轮胎碾水声从左侧移动到右侧，与可见车辆位置和水花同步。没有喇叭、人声、音乐、文字或水印。",
+        "width": 1344,
+        "height": 768,
+        "fps": 24,
+        "num_inference_steps": 8,
+        "flow_shift": 6.0,
+        "seed": 1101,
+        "aspect_ratio": "16:9",
+        "short_edge": 768,
+        "return_stage_metrics": "true",
+        "extra_params": "{\"task\": \"t2va\", \"duration\": 5.0, \"audio_flow_shift\": 3.0}",
+        "lora": "{\"name\": \"h3-turbo-8step-v1.0\", \"path\": \"/data/models/h3-turbo/minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors\", \"scale\": 1.0}"
+      },
+      "asset_sha256": null
+    },
+    {
+      "request_id": "turbo-self-turbo8-F01-2101",
+      "multipart_fields": {
+        "prompt": "从提供的首帧照片开始，一个连续的写实镜头，时长约五秒。保持首帧中同一位成年女性的身份、发型、服装、光照和背景，保持原构图。她缓慢将头向自己的右侧转约十五度，然后自然眨眼一次，表情放松，动作幅度轻微。摄影机固定，不切镜，不更换场景，不引入其他人物。嘴巴自然闭合，不说话。声音只有与首帧环境相符的轻微环境底噪，没有人声、音乐、夸张动作音效、文字或水印。",
+        "width": 1344,
+        "height": 768,
+        "fps": 24,
+        "num_inference_steps": 8,
+        "flow_shift": 6.0,
+        "seed": 2101,
+        "aspect_ratio": "adaptive",
+        "short_edge": 768,
+        "return_stage_metrics": "true",
+        "extra_params": "{\"task\": \"fl2va\", \"duration\": 5.0, \"audio_flow_shift\": 3.0}",
+        "lora": "{\"name\": \"h3-turbo-8step-v1.0\", \"path\": \"/data/models/h3-turbo/minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors\", \"scale\": 1.0}"
+      },
+      "asset_sha256": "53ca106ed107f3ff62b6faf8b93afb8a0c363a8a33ad0356d3015e98ec9e0aa7"
+    },
+    {
+      "request_id": "turbo-self-turbo8-F02-2101",
+      "multipart_fields": {
+        "prompt": "从提供的首帧照片开始，一个连续的写实产品镜头，时长约五秒。保持照片中同一个透明玻璃小香水瓶及球形瓶塞、木质台面、背景和光线，瓶子保持静止并完整可见。摄影机以极慢速度向前推近，最终比首帧大约放大百分之十，反光平滑变化，玻璃边缘和瓶塞形状不变。无切镜，不拿起、不打开瓶子，不新增标签、文字或物体。声音仅有安静室内的微弱环境底噪，没有音乐、人声、碰撞或倒液体声。",
+        "width": 1344,
+        "height": 768,
+        "fps": 24,
+        "num_inference_steps": 8,
+        "flow_shift": 6.0,
+        "seed": 2101,
+        "aspect_ratio": "adaptive",
+        "short_edge": 768,
+        "return_stage_metrics": "true",
+        "extra_params": "{\"task\": \"fl2va\", \"duration\": 5.0, \"audio_flow_shift\": 3.0}",
+        "lora": "{\"name\": \"h3-turbo-8step-v1.0\", \"path\": \"/data/models/h3-turbo/minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors\", \"scale\": 1.0}"
+      },
+      "asset_sha256": "666c02a413b8aa2e2c9dbe718e3b6aa173a4919dc26f1fd5be199acd14bd0ac4"
+    },
+    {
+      "request_id": "turbo-self-turbo8-F03-2101",
+      "multipart_fields": {
+        "prompt": "从提供的首帧照片开始，一个连续的写实镜头，时长约五秒。保持照片中同一只白猫、原有毛色、体形、光照、地面和背景。白猫沿原本朝向缓慢向摄影机再走两到三步，四肢自然交替落地，尾巴轻微摆动，始终只有一只猫，身体完整可见。摄影机基本固定，仅轻微平滑后退以保持距离，不切镜。声音为低音量环境声和轻微猫爪落地声，脚步节奏与落脚对应。没有叫声、人声、音乐、文字或水印。",
+        "width": 1344,
+        "height": 768,
+        "fps": 24,
+        "num_inference_steps": 8,
+        "flow_shift": 6.0,
+        "seed": 2101,
+        "aspect_ratio": "adaptive",
+        "short_edge": 768,
+        "return_stage_metrics": "true",
+        "extra_params": "{\"task\": \"fl2va\", \"duration\": 5.0, \"audio_flow_shift\": 3.0}",
+        "lora": "{\"name\": \"h3-turbo-8step-v1.0\", \"path\": \"/data/models/h3-turbo/minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors\", \"scale\": 1.0}"
+      },
+      "asset_sha256": "1a35a259df98230d630daef1746d74492400a4cd3964013fcc31932de9d06ba8"
+    }
+  ],
+  "purpose": "Exact fields used by the frozen harness; supplement to loader logs, not a live tensor dump"
+}

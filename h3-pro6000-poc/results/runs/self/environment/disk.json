@@ -1,0 +1,11 @@
+{
+  "command": [
+    "df",
+    "-B1",
+    "/data"
+  ],
+  "exit_code": 0,
+  "stdout": "Filesystem        1B-blocks    Used    Available Use% Mounted on\noverlay        536870912000 8679424 536862232576   1% /\n",
+  "stderr": "",
+  "elapsed_seconds": 0.002118221949785948
+}

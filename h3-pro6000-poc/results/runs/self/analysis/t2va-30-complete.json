@@ -1,0 +1,18 @@
+{
+  "utc": "2026-11-07T14:22:25.534+00:00",
+  "task": "t2va",
+  "phase": "baseline",
+  "n_submitted": 30,
+  "n_technical_valid": 30,
+  "e2e_p50_s": 178.2311576923821,
+  "e2e_p95_s": 178.4320656509837,
+  "e2e_min_s": 177.94492417108268,
+  "e2e_max_s": 178.5544514739886,
+  "observed_denoise_updates": [
+    50
+  ],
+  "spec_deviations": 0,
+  "quality": "pending user review",
+  "client_location": "same server localhost8091; archive transfer excluded",
+  "caution": "n30 preliminary P95, not SLA"
+}

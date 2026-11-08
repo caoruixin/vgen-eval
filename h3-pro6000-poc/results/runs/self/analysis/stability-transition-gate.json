@@ -1,0 +1,1697 @@
+{
+  "utc": "2026-11-07T15:58:53.827+00:00",
+  "passed": true,
+  "active_listed_tasks": [],
+  "drain_wait_seconds": 21.73078103782609,
+  "required_idle_seconds": 20,
+  "window_cutoff_followups": [
+    {
+      "utc": "2026-11-07T15:58:32.095+00:00",
+      "request_id": "stability-self-bf16-F04-4120",
+      "task_id": "video_gen_7dfc9769d115433d8370e58a80325304",
+      "post_cancel_http_status": 404,
+      "post_cancel_response": "{\"error\":{\"message\":\"Video not found\",\"type\":\"Not Found\",\"param\":null,\"code\":404}}"
+    }
+  ],
+  "gpu_drain_observations": [
+    {
+      "utc": "2026-11-07T15:58:32.190+00:00",
+      "exit_code": 0,
+      "cards_index_util_memory_mib": [
+        [
+          0.0,
+          0.0,
+          31865.0
+        ],
+        [
+          1.0,
+          0.0,
+          31929.0
+        ],
+        [
+          2.0,
+          0.0,
+          31865.0
+        ],
+        [
+          3.0,
+          0.0,
+          31929.0
+        ],
+        [
+          4.0,
+          0.0,
+          31895.0
+        ],
+        [
+          5.0,
+          0.0,
+          31959.0
+        ],
+        [
+          6.0,
+          0.0,
+          31895.0
+        ],
+        [
+          7.0,
+          0.0,
+          31959.0
+        ]
+      ]
+    },
+    {
+      "utc": "2026-11-07T15:58:35.282+00:00",
+      "exit_code": 0,
+      "cards_index_util_memory_mib": [
+        [
+          0.0,
+          0.0,
+          31865.0
+        ],
+        [
+          1.0,
+          0.0,
+          31929.0
+        ],
+        [
+          2.0,
+          0.0,
+          31865.0
+        ],
+        [
+          3.0,
+          0.0,
+          31929.0
+        ],
+        [
+          4.0,
+          0.0,
+          31895.0
+        ],
+        [
+          5.0,
+          0.0,
+          31959.0
+        ],
+        [
+          6.0,
+          0.0,
+          31895.0
+        ],
+        [
+          7.0,
+          0.0,
+          31959.0
+        ]
+      ]
+    },
+    {
+      "utc": "2026-11-07T15:58:38.373+00:00",
+      "exit_code": 0,
+      "cards_index_util_memory_mib": [
+        [
+          0.0,
+          0.0,
+          31865.0
+        ],
+        [
+          1.0,
+          0.0,
+          31929.0
+        ],
+        [
+          2.0,
+          0.0,
+          31865.0
+        ],
+        [
+          3.0,
+          0.0,
+          31929.0
+        ],
+        [
+          4.0,
+          0.0,
+          31895.0
+        ],
+        [
+          5.0,
+          0.0,
+          31959.0
+        ],
+        [
+          6.0,
+          0.0,
+          31895.0
+        ],
+        [
+          7.0,
+          0.0,
+          31959.0
+        ]
+      ]
+    },
+    {
+      "utc": "2026-11-07T15:58:41.474+00:00",
+      "exit_code": 0,
+      "cards_index_util_memory_mib": [
+        [
+          0.0,
+          0.0,
+          31865.0
+        ],
+        [
+          1.0,
+          0.0,
+          31929.0
+        ],
+        [
+          2.0,
+          0.0,
+          31865.0
+        ],
+        [
+          3.0,
+          0.0,
+          31929.0
+        ],
+        [
+          4.0,
+          0.0,
+          31895.0
+        ],
+        [
+          5.0,
+          0.0,
+          31959.0
+        ],
+        [
+          6.0,
+          0.0,
+          31895.0
+        ],
+        [
+          7.0,
+          0.0,
+          31959.0
+        ]
+      ]
+    },
+    {
+      "utc": "2026-11-07T15:58:44.562+00:00",
+      "exit_code": 0,
+      "cards_index_util_memory_mib": [
+        [
+          0.0,
+          0.0,
+          31865.0
+        ],
+        [
+          1.0,
+          0.0,
+          31929.0
+        ],
+        [
+          2.0,
+          0.0,
+          31865.0
+        ],
+        [
+          3.0,
+          0.0,
+          31929.0
+        ],
+        [
+          4.0,
+          0.0,
+          31895.0
+        ],
+        [
+          5.0,
+          0.0,
+          31959.0
+        ],
+        [
+          6.0,
+          0.0,
+          31895.0
+        ],
+        [
+          7.0,
+          0.0,
+          31959.0
+        ]
+      ]
+    },
+    {
+      "utc": "2026-11-07T15:58:47.651+00:00",
+      "exit_code": 0,
+      "cards_index_util_memory_mib": [
+        [
+          0.0,
+          0.0,
+          31865.0
+        ],
+        [
+          1.0,
+          0.0,
+          31929.0
+        ],
+        [
+          2.0,
+          0.0,
+          31865.0
+        ],
+        [
+          3.0,
+          0.0,
+          31929.0
+        ],
+        [
+          4.0,
+          0.0,
+          31895.0
+        ],
+        [
+          5.0,
+          0.0,
+          31959.0
+        ],
+        [
+          6.0,
+          0.0,
+          31895.0
+        ],
+        [
+          7.0,
+          0.0,
+          31959.0
+        ]
+      ]
+    },
+    {
+      "utc": "2026-11-07T15:58:50.738+00:00",
+      "exit_code": 0,
+      "cards_index_util_memory_mib": [
+        [
+          0.0,
+          0.0,
+          31865.0
+        ],
+        [
+          1.0,
+          0.0,
+          31929.0
+        ],
+        [
+          2.0,
+          0.0,
+          31865.0
+        ],
+        [
+          3.0,
+          0.0,
+          31929.0
+        ],
+        [
+          4.0,
+          0.0,
+          31895.0
+        ],
+        [
+          5.0,
+          0.0,
+          31959.0
+        ],
+        [
+          6.0,
+          0.0,
+          31895.0
+        ],
+        [
+          7.0,
+          0.0,
+          31959.0
+        ]
+      ]
+    },
+    {
+      "utc": "2026-11-07T15:58:53.823+00:00",
+      "exit_code": 0,
+      "cards_index_util_memory_mib": [
+        [
+          0.0,
+          0.0,
+          31865.0
+        ],
+        [
+          1.0,
+          0.0,
+          31929.0
+        ],
+        [
+          2.0,
+          0.0,
+          31865.0
+        ],
+        [
+          3.0,
+          0.0,
+          31929.0
+        ],
+        [
+          4.0,
+          0.0,
+          31895.0
+        ],
+        [
+          5.0,
+          0.0,
+          31959.0
+        ],
+        [
+          6.0,
+          0.0,
+          31895.0
+        ],
+        [
+          7.0,
+          0.0,
+          31959.0
+        ]
+      ]
+    }
+  ],
+  "read_only_task_list": {
+    "first_id": "video_gen_2eeae0d324324c85bcab5816499011f0",
+    "last_id": "video_gen_6adbd1bfb73149c4b572bec51e2bf62b",
+    "has_more": false,
+    "data": [
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "从提供的首帧照片开始，一个连续的写实镜头，时长约五秒。保持照片中同一只白猫、原有毛色、体形、光照、地面和背景。白猫沿原本朝向缓慢向摄影机再走两到三步，四肢自然交替落地，尾巴轻微摆动，始终只有一只猫，身体完整可见。摄影机基本固定，仅轻微平滑后退以保持距离，不切镜。声音为低音量环境声和轻微猫爪落地声，脚步节奏与落脚对应。没有叫声、人声、音乐、文字或水印。",
+        "id": "video_gen_2eeae0d324324c85bcab5816499011f0",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794066973,
+        "created_at": 1794066781,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_2eeae0d324324c85bcab5816499011f0.mp4",
+        "inference_time_s": 191.52422375790775,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 191270.48587799072,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 191270.83611488342,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.2656988799571991,
+          "stage_0_gen_ms": 191270.48587799072
+        },
+        "peak_memory_mb": 30902.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "从提供的首帧照片开始，一个连续的写实产品镜头，时长约五秒。保持照片中同一个透明玻璃小香水瓶及球形瓶塞、木质台面、背景和光线，瓶子保持静止并完整可见。摄影机以极慢速度向前推近，最终比首帧大约放大百分之十，反光平滑变化，玻璃边缘和瓶塞形状不变。无切镜，不拿起、不打开瓶子，不新增标签、文字或物体。声音仅有安静室内的微弱环境底噪，没有音乐、人声、碰撞或倒液体声。",
+        "id": "video_gen_2703346ac5f64867a1ee783d2b21d84a",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794066780,
+        "created_at": 1794066589,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_2703346ac5f64867a1ee783d2b21d84a.mp4",
+        "inference_time_s": 191.38590525090694,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 191153.0728340149,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 191153.44214439392,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.2969191409647465,
+          "stage_0_gen_ms": 191153.0728340149
+        },
+        "peak_memory_mb": 30902.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "从提供的首帧照片开始，一个连续的写实镜头，时长约五秒。保持首帧中同一位成年女性的身份、发型、服装、光照和背景，保持原构图。她缓慢将头向自己的右侧转约十五度，然后自然眨眼一次，表情放松，动作幅度轻微。摄影机固定，不切镜，不更换场景，不引入其他人物。嘴巴自然闭合，不说话。声音只有与首帧环境相符的轻微环境底噪，没有人声、音乐、夸张动作音效、文字或水印。",
+        "id": "video_gen_f4ddb927ba774f4e917544abd4b8204b",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794066588,
+        "created_at": 1794066396,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_f4ddb927ba774f4e917544abd4b8204b.mp4",
+        "inference_time_s": 191.68040992412716,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 191460.81709861755,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 191461.09294891357,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.21571898832917213,
+          "stage_0_gen_ms": 191460.81709861755
+        },
+        "peak_memory_mb": 30902.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实街景镜头，时长约五秒。傍晚下雨的普通城市街道，湿路面有路灯倒影，摄影机在人行道边固定拍摄。一辆灰色轿车从左向右缓慢驶过画面，轮胎在积水中带起轻微水花，车辆形状和轮胎保持完整。雨滴持续落下，倒影随水面自然变化。声音为持续的雨声，轿车经过时轮胎碾水声从左侧移动到右侧，与可见车辆位置和水花同步。没有喇叭、人声、音乐、文字或水印。",
+        "id": "video_gen_741101bf91724da3af69108ee6bfc159",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794066394,
+        "created_at": 1794066216,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_741101bf91724da3af69108ee6bfc159.mp4",
+        "inference_time_s": 178.22488388605416,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178015.42448997498,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178015.68245887756,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.20551029592752457,
+          "stage_0_gen_ms": 178015.42448997498
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实双人中景，时长约五秒，镜头固定，画面中两位虚构的成年人上半身及嘴巴始终清晰可见。左边女性穿白色上衣，右边男性穿深绿色上衣，两人面对面坐在安静室内。开始时左边女性看着右边男性，只用普通话说：\"准备好了吗？\" 她说完闭嘴；随后右边男性点一下头，只用普通话回答：\"准备好了。\" 两人不得同时说话，未说话的人嘴巴保持自然闭合，各自口型对应各自台词。声音只来自这两个人，背景为轻微室内底噪。全程不切镜，没有第三个人、旁白、音乐、字幕或水印。",
+        "id": "video_gen_cd81858ce4e54d6b91d12476e1b45c52",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794066214,
+        "created_at": 1794066035,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_cd81858ce4e54d6b91d12476e1b45c52.mp4",
+        "inference_time_s": 178.42109407205135,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178203.15384864807,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178203.57203483582,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.3049001097679138,
+          "stage_0_gen_ms": 178203.15384864807
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实中近景，时长约五秒。一位虚构的成年东亚女性，穿纯蓝色衬衫，独自站在安静明亮的室内，面向摄影机，脸和嘴巴清楚可见。镜头固定。她先自然看向镜头，然后只用普通话清晰说一次：\"你好，今天阳光很好。\" 语气自然平和，说完闭嘴微笑。嘴唇运动必须对应这句台词，声音来自这位女性，背景只有轻微室内底噪。始终只有一个人，没有旁白、其他台词、音乐、字幕或水印。",
+        "id": "video_gen_9357a946ac2c472db938aeaa64e2e2d6",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794066033,
+        "created_at": 1794065855,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_9357a946ac2c472db938aeaa64e2e2d6.mp4",
+        "inference_time_s": 178.16190001927316,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 177941.54405593872,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 177941.8604373932,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.23919856175780296,
+          "stage_0_gen_ms": 177941.54405593872
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实商业产品镜头，时长约五秒。白色哑光台面中央只有一个无品牌透明方形玻璃香水瓶，里面有浅琥珀色液体，顶部是黑色长方体瓶盖。浅灰摄影棚背景，左上方柔光。香水瓶保持静止，摄影机缓慢向右环绕约十五度，玻璃反光随视角平滑改变，瓶身、瓶盖和液面几何保持稳定。全程不切镜、不加入文字。声音仅有安静摄影棚的低音量室内环境底噪，没有说话、音乐、碰撞或开盖声。",
+        "id": "video_gen_caa3343281d04a60aba4aa3be90a2dcb",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794065853,
+        "created_at": 1794065674,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_caa3343281d04a60aba4aa3be90a2dcb.mp4",
+        "inference_time_s": 178.22687623184174,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178005.04612922668,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178005.41520118713,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.2795988693833351,
+          "stage_0_gen_ms": 178005.04612922668
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实航拍镜头，时长约五秒。清晨薄雾中的绿色针叶森林，远处有低缓山脊。无人机以恒定速度向前飞行，略微越过树梢，树冠位置关系和山脊保持连续，风吹树梢轻轻摇动。镜头稳定，无剪辑、无旋转、无突然加速。声音为轻微高处风声，近远分明的两三声鸟鸣，音量自然。没有无人机电机轰鸣、台词、音乐、文字或水印。",
+        "id": "video_gen_60cf05977a4248bd9a87315437ec6495",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794065672,
+        "created_at": 1794065494,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_60cf05977a4248bd9a87315437ec6495.mp4",
+        "inference_time_s": 178.13545136526227,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 177887.1066570282,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 177887.4385356903,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.2540997229516506,
+          "stage_0_gen_ms": 177887.1066570282
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实镜头，时长约五秒。主体是一只毛色纯白的成年短毛猫，全身可见。清晨，一条浅溪旁有细碎石子的小路，柔和自然光。白猫从画面左侧向右侧平稳走三到四步，四肢交替落地，尾巴自然摆动，始终只有一只猫。低机位镜头平滑跟随，不切镜，不突然变焦。声音是清晰但轻柔的猫爪踩碎石声，节奏与每次脚落地一致，背景持续有溪水流动声。没有人声、音乐、字幕或水印。",
+        "id": "video_gen_d6ede40766fc4ab7a8a923c259c4c24d",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794065492,
+        "created_at": 1794065313,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_d6ede40766fc4ab7a8a923c259c4c24d.mp4",
+        "inference_time_s": 178.4128429419361,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178185.21213531494,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178185.54258346558,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.24593016132712364,
+          "stage_0_gen_ms": 178185.21213531494
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "从提供的首帧山湖风景照片开始，一个连续的写实镜头，时长约五秒。保持首帧中的山体、树林、湖面、岸线、光线和构图关系。摄影机缓慢向右平移，幅度很小，湖面出现细小自然涟漪，远处树梢被微风轻轻吹动，山体保持稳定。无切镜、无突然拉近、无新增建筑、人物或船只。声音是柔和风声和轻微湖水拍岸声，没有人声、音乐、文字或水印。",
+        "id": "video_gen_9211beff54924e8d9cee4d2168f85b78",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794065313,
+        "created_at": 1794065121,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_9211beff54924e8d9cee4d2168f85b78.mp4",
+        "inference_time_s": 191.6799637088552,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 191429.17037010193,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 191429.66651916504,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.4152590408921242,
+          "stage_0_gen_ms": 191429.17037010193
+        },
+        "peak_memory_mb": 30902.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "从提供的首帧照片开始，一个连续的写实镜头，时长约五秒。保持照片中同一只白猫、原有毛色、体形、光照、地面和背景。白猫沿原本朝向缓慢向摄影机再走两到三步，四肢自然交替落地，尾巴轻微摆动，始终只有一只猫，身体完整可见。摄影机基本固定，仅轻微平滑后退以保持距离，不切镜。声音为低音量环境声和轻微猫爪落地声，脚步节奏与落脚对应。没有叫声、人声、音乐、文字或水印。",
+        "id": "video_gen_c90676511d794cc099296ad8d4306ecd",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794065120,
+        "created_at": 1794064928,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_c90676511d794cc099296ad8d4306ecd.mp4",
+        "inference_time_s": 191.53625397803262,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 191331.7620754242,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 191332.05127716064,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.20335987210273743,
+          "stage_0_gen_ms": 191331.7620754242
+        },
+        "peak_memory_mb": 30902.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "从提供的首帧照片开始，一个连续的写实产品镜头，时长约五秒。保持照片中同一个透明玻璃小香水瓶及球形瓶塞、木质台面、背景和光线，瓶子保持静止并完整可见。摄影机以极慢速度向前推近，最终比首帧大约放大百分之十，反光平滑变化，玻璃边缘和瓶塞形状不变。无切镜，不拿起、不打开瓶子，不新增标签、文字或物体。声音仅有安静室内的微弱环境底噪，没有音乐、人声、碰撞或倒液体声。",
+        "id": "video_gen_6b765d8b10e74bd68b0105a41cda9b65",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794064928,
+        "created_at": 1794064736,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_6b765d8b10e74bd68b0105a41cda9b65.mp4",
+        "inference_time_s": 191.60396038228646,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 191438.31157684326,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 191438.57216835022,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.17343880608677864,
+          "stage_0_gen_ms": 191438.31157684326
+        },
+        "peak_memory_mb": 30902.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "从提供的首帧照片开始，一个连续的写实镜头，时长约五秒。保持首帧中同一位成年女性的身份、发型、服装、光照和背景，保持原构图。她缓慢将头向自己的右侧转约十五度，然后自然眨眼一次，表情放松，动作幅度轻微。摄影机固定，不切镜，不更换场景，不引入其他人物。嘴巴自然闭合，不说话。声音只有与首帧环境相符的轻微环境底噪，没有人声、音乐、夸张动作音效、文字或水印。",
+        "id": "video_gen_ba1ea551e2044c5db9d38c127ce3b19a",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794064735,
+        "created_at": 1794064544,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_ba1ea551e2044c5db9d38c127ce3b19a.mp4",
+        "inference_time_s": 191.60592429991812,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 191412.9500389099,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 191413.19251060486,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.17334986478090286,
+          "stage_0_gen_ms": 191412.9500389099
+        },
+        "peak_memory_mb": 30902.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实街景镜头，时长约五秒。傍晚下雨的普通城市街道，湿路面有路灯倒影，摄影机在人行道边固定拍摄。一辆灰色轿车从左向右缓慢驶过画面，轮胎在积水中带起轻微水花，车辆形状和轮胎保持完整。雨滴持续落下，倒影随水面自然变化。声音为持续的雨声，轿车经过时轮胎碾水声从左侧移动到右侧，与可见车辆位置和水花同步。没有喇叭、人声、音乐、文字或水印。",
+        "id": "video_gen_b6d97cc128a34ff3a7376a7437adede3",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794064542,
+        "created_at": 1794064363,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_b6d97cc128a34ff3a7376a7437adede3.mp4",
+        "inference_time_s": 178.38356835627928,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178154.7954082489,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178155.03239631653,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.17776014283299446,
+          "stage_0_gen_ms": 178154.7954082489
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实双人中景，时长约五秒，镜头固定，画面中两位虚构的成年人上半身及嘴巴始终清晰可见。左边女性穿白色上衣，右边男性穿深绿色上衣，两人面对面坐在安静室内。开始时左边女性看着右边男性，只用普通话说：\"准备好了吗？\" 她说完闭嘴；随后右边男性点一下头，只用普通话回答：\"准备好了。\" 两人不得同时说话，未说话的人嘴巴保持自然闭合，各自口型对应各自台词。声音只来自这两个人，背景为轻微室内底噪。全程不切镜，没有第三个人、旁白、音乐、字幕或水印。",
+        "id": "video_gen_28a304bd651440668497016e23fcc25d",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794064361,
+        "created_at": 1794064183,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_28a304bd651440668497016e23fcc25d.mp4",
+        "inference_time_s": 178.27197684673592,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178057.2428703308,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178057.4803352356,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.17899926751852036,
+          "stage_0_gen_ms": 178057.2428703308
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实中近景，时长约五秒。一位虚构的成年东亚女性，穿纯蓝色衬衫，独自站在安静明亮的室内，面向摄影机，脸和嘴巴清楚可见。镜头固定。她先自然看向镜头，然后只用普通话清晰说一次：\"你好，今天阳光很好。\" 语气自然平和，说完闭嘴微笑。嘴唇运动必须对应这句台词，声音来自这位女性，背景只有轻微室内底噪。始终只有一个人，没有旁白、其他台词、音乐、字幕或水印。",
+        "id": "video_gen_4e8a6c8cba6a4518997cf242a8a8a4d5",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794064181,
+        "created_at": 1794064002,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_4e8a6c8cba6a4518997cf242a8a8a4d5.mp4",
+        "inference_time_s": 178.6858583278954,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178466.10164642334,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178466.37225151062,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.20819995552301407,
+          "stage_0_gen_ms": 178466.10164642334
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实商业产品镜头，时长约五秒。白色哑光台面中央只有一个无品牌透明方形玻璃香水瓶，里面有浅琥珀色液体，顶部是黑色长方体瓶盖。浅灰摄影棚背景，左上方柔光。香水瓶保持静止，摄影机缓慢向右环绕约十五度，玻璃反光随视角平滑改变，瓶身、瓶盖和液面几何保持稳定。全程不切镜、不加入文字。声音仅有安静摄影棚的低音量室内环境底噪，没有说话、音乐、碰撞或开盖声。",
+        "id": "video_gen_d10c56908e464765bfa85fce5c5a30f7",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794064000,
+        "created_at": 1794063822,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_d10c56908e464765bfa85fce5c5a30f7.mp4",
+        "inference_time_s": 178.2707250281237,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178054.16536331177,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178054.51655387878,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.2586790360510349,
+          "stage_0_gen_ms": 178054.16536331177
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实航拍镜头，时长约五秒。清晨薄雾中的绿色针叶森林，远处有低缓山脊。无人机以恒定速度向前飞行，略微越过树梢，树冠位置关系和山脊保持连续，风吹树梢轻轻摇动。镜头稳定，无剪辑、无旋转、无突然加速。声音为轻微高处风声，近远分明的两三声鸟鸣，音量自然。没有无人机电机轰鸣、台词、音乐、文字或水印。",
+        "id": "video_gen_4ac7e6e599a64542a3ec6c70ce7f489a",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794063821,
+        "created_at": 1794063643,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_4ac7e6e599a64542a3ec6c70ce7f489a.mp4",
+        "inference_time_s": 177.99876832216978,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 177766.58082008362,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 177766.82019233704,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.18469011411070824,
+          "stage_0_gen_ms": 177766.58082008362
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实镜头，时长约五秒。主体是一只毛色纯白的成年短毛猫，全身可见。清晨，一条浅溪旁有细碎石子的小路，柔和自然光。白猫从画面左侧向右侧平稳走三到四步，四肢交替落地，尾巴自然摆动，始终只有一只猫。低机位镜头平滑跟随，不切镜，不突然变焦。声音是清晰但轻柔的猫爪踩碎石声，节奏与每次脚落地一致，背景持续有溪水流动声。没有人声、音乐、字幕或水印。",
+        "id": "video_gen_702e7cc95c8a4eaa956d5e6e5ab4b140",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794063641,
+        "created_at": 1794063463,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_702e7cc95c8a4eaa956d5e6e5ab4b140.mp4",
+        "inference_time_s": 178.29581975191832,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178075.55985450745,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178075.80471038818,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.17928984016180038,
+          "stage_0_gen_ms": 178075.55985450745
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "从提供的首帧照片开始，一个连续的写实镜头，时长约五秒。保持首帧中同一位成年女性的身份、发型、服装、光照和背景，保持原构图。她缓慢将头向自己的右侧转约十五度，然后自然眨眼一次，表情放松，动作幅度轻微。摄影机固定，不切镜，不更换场景，不引入其他人物。嘴巴自然闭合，不说话。声音只有与首帧环境相符的轻微环境底噪，没有人声、音乐、夸张动作音效、文字或水印。",
+        "id": "video_gen_242cd87906d9486082e2e716a15befc2",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794055604,
+        "created_at": 1794055412,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_242cd87906d9486082e2e716a15befc2.mp4",
+        "inference_time_s": 191.54296736232936,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 191313.85040283203,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 191314.19348716736,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.2574389800429344,
+          "stage_0_gen_ms": 191313.85040283203
+        },
+        "peak_memory_mb": 30902.0,
+        "action": null
+      },
+      {
+        "model": "/data/models/MiniMax-H3/FL2VA",
+        "prompt": "一个连续的写实镜头，时长约五秒。主体是一只毛色纯白的成年短毛猫，全身可见。清晨，一条浅溪旁有细碎石子的小路，柔和自然光。白猫从画面左侧向右侧平稳走三到四步，四肢交替落地，尾巴自然摆动，始终只有一只猫。低机位镜头平滑跟随，不切镜，不突然变焦。声音是清晰但轻柔的猫爪踩碎石声，节奏与每次脚落地一致，背景持续有溪水流动声。没有人声、音乐、字幕或水印。",
+        "id": "video_gen_6adbd1bfb73149c4b572bec51e2bf62b",
+        "object": "video",
+        "status": "completed",
+        "size": null,
+        "progress": 100,
+        "seconds": "4",
+        "quality": "default",
+        "completed_at": 1794055215,
+        "created_at": 1794055037,
+        "remixed_from_video_id": null,
+        "error": null,
+        "media_type": "video/mp4",
+        "expires_at": null,
+        "file_name": "video_gen_6adbd1bfb73149c4b572bec51e2bf62b.mp4",
+        "inference_time_s": 178.3143666908145,
+        "fps": 24.0,
+        "num_frames": 124,
+        "duration_s": 5.166666666666667,
+        "metrics": {
+          "stage_metrics": {
+            "0": {
+              "stage_id": 0,
+              "final_output_type": "video",
+              "finish_reason": null,
+              "num_tokens_in": 0,
+              "num_tokens_out": 0,
+              "stage_gen_time_ms": 178072.67665863037,
+              "postprocess_time_ms": 0.0,
+              "audio_frames": 165600,
+              "audio_sample_rate": 32000,
+              "audio_duration_s": 5.175,
+              "image_pixels": 0,
+              "denoise_step_latency_ms": 0.0,
+              "output_unit_type": "video",
+              "output_unit_count": 1,
+              "serving_time_to_first_output_ms": 178072.90148735046,
+              "image_time_to_first_output_ms": 0.0,
+              "time_per_output_unit_ms": 0.0,
+              "inter_output_latency_ms": 0.0,
+              "inter_output_latencies_ms": [],
+              "vllm_ttft_ms": 0.0,
+              "vllm_tpot_ms": 0.0,
+              "vllm_itl_ms": 0.0,
+              "vllm_itls_ms": [],
+              "stage_name": "diffusion"
+            }
+          },
+          "stage_id": 0,
+          "final_output_type": "video",
+          "num_tokens_in": 0,
+          "num_tokens_out": 0
+        },
+        "stage_durations": {
+          "queue_wait_ms": 0.17789890989661217,
+          "stage_0_gen_ms": 178072.67665863037
+        },
+        "peak_memory_mb": 30856.0,
+        "action": null
+      }
+    ],
+    "object": "list"
+  },
+  "note": "No inference submission or retry; 20-second sampled idle plus health/list as transition evidence, not production availability guarantee"
+}

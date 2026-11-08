@@ -1,0 +1,3 @@
+{"utc": "2026-11-07T16:19:24.573+00:00", "pid": 51700, "pgid": 51700, "command": ["/usr/bin/python3", "scripts/launch.py", "--execute", "--turbo", "--numa-mode", "cpu-bind", "--mapping", "private/topology-mapping.json", "--out", "runs/self/deploy/turbo-cpubind"], "log": "/data/h3-pro6000-poc/runs/self/deploy/server-turbo-cpubind.log"}
+{"utc": "2026-11-07T16:22:09.710+00:00", "pid": 57237, "pgid": 57237, "command": ["/usr/bin/python3", "control/fatal_watch.py"], "log": "/data/h3-pro6000-poc/runs/self/cost/fatal-watch-turbo-console.txt"}
+{"turbo_session_outcome": "results_require_activation_review", "error": null, "elapsed_seconds": 443.74345258483663}

@@ -1,0 +1,135 @@
+{
+  "python": "3.12.3",
+  "torch": "2.13.0+cu130",
+  "torch_cuda": "13.0",
+  "cudnn": 92000,
+  "nccl": [
+    2,
+    29,
+    7
+  ],
+  "packages": {
+    "vllm": "0.32.0",
+    "vllm-omni": "0.32.0",
+    "huggingface-hub": "1.33.0",
+    "diffusers": "0.40.0",
+    "transformers": "5.19.0",
+    "peft": "0.21.2"
+  },
+  "peer_access": [
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  ],
+  "capability": [
+    [
+      12,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      12,
+      0
+    ]
+  ]
+}

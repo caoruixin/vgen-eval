@@ -1,0 +1,8 @@
+{"phase": "warmup", "provider": "self", "start_utc": "2026-11-07T12:29:21.531+00:00", "end_utc": "2026-11-07T12:29:21.993+00:00", "wall_seconds": 0.46263583609834313, "requests_this_invocation": 1, "concurrency": 1}
+{"phase": "warmup", "provider": "self", "start_utc": "2026-11-07T12:33:54.033+00:00", "end_utc": "2026-11-07T12:46:45.038+00:00", "wall_seconds": 771.0049499720335, "requests_this_invocation": 4, "concurrency": 1}
+{"phase": "baseline", "provider": "self", "start_utc": "2026-11-07T12:50:05.010+00:00", "end_utc": "2026-11-07T14:51:18.786+00:00", "wall_seconds": 7273.776041687932, "requests_this_invocation": 40, "concurrency": 1}
+{"phase": "baseline", "provider": "self", "start_utc": "2026-11-07T14:51:18.929+00:00", "end_utc": "2026-11-07T14:57:42.950+00:00", "wall_seconds": 384.0217256071046, "requests_this_invocation": 2, "concurrency": 1}
+{"phase": "stability", "provider": "self", "start_utc": "2026-11-07T14:57:43.081+00:00", "end_utc": "2026-11-07T15:57:43.093+00:00", "wall_seconds": 3600.0120942960493, "requests_this_invocation": 20, "concurrency": 1}
+{"phase": "concurrency_c2", "provider": "self", "start_utc": "2026-11-07T15:59:07.073+00:00", "end_utc": "2026-11-07T16:05:17.746+00:00", "wall_seconds": 370.6727995541878, "requests_this_invocation": 2, "concurrency": 2}
+{"phase": "concurrency_c4", "provider": "self", "start_utc": "2026-11-07T16:05:17.907+00:00", "end_utc": "2026-11-07T16:17:36.894+00:00", "wall_seconds": 738.9873505216092, "requests_this_invocation": 4, "concurrency": 4}
+{"phase": "turbo", "provider": "self", "start_utc": "2026-11-07T16:22:09.842+00:00", "end_utc": "2026-11-07T16:26:00.373+00:00", "wall_seconds": 230.53016200615093, "requests_this_invocation": 6, "concurrency": 1}

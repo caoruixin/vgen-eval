@@ -1,0 +1,580 @@
+[
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/api_server.py",
+    "sha256": "70f9f0d93a6505f0560f77a0183bf58a0329d3e5f5e518ff771c688f7e78dea5",
+    "matches": [
+      {
+        "line": 70,
+        "text": "from vllm.entrypoints.serve.utils.api_utils import (\n    load_aware_call,\n    process_lora_modules,\n    validate_json_request,\n    with_cancellation,\n)"
+      },
+      {
+        "line": 149,
+        "text": "    _update_if_not_none,\n)\nfrom vllm_omni.entrypoints.openai.lora import _get_lora_from_json_str, _parse_lora_request\nfrom vllm_omni.entrypoints.openai.models import serving as openai_models_serving\nfrom vllm_omni.entrypoints.openai.protocol.audio import (\n    BatchSpeechRequest,"
+      },
+      {
+        "line": 725,
+        "text": "        engine_client=engine_client,  # type: ignore[arg-type]\n        base_model_paths=base_model_paths,\n        lora_modules=None,\n    )\n    state.serving_tokenization = None\n    state.serving_tokens = None"
+      },
+      {
+        "line": 1028,
+        "text": "        tool_server = None\n\n    # Merge default_mm_loras into the static lora_modules\n    default_mm_loras = (\n        vllm_config.lora_config.default_mm_loras\n        if vllm_config is not None and vllm_config.lora_config is not None"
+      },
+      {
+        "line": 1029,
+        "text": "\n    # Merge default_mm_loras into the static lora_modules\n    default_mm_loras = (\n        vllm_config.lora_config.default_mm_loras\n        if vllm_config is not None and vllm_config.lora_config is not None\n        else {}"
+      },
+      {
+        "line": 1030,
+        "text": "    # Merge default_mm_loras into the static lora_modules\n    default_mm_loras = (\n        vllm_config.lora_config.default_mm_loras\n        if vllm_config is not None and vllm_config.lora_config is not None\n        else {}\n    )"
+      },
+      {
+        "line": 1031,
+        "text": "    default_mm_loras = (\n        vllm_config.lora_config.default_mm_loras\n        if vllm_config is not None and vllm_config.lora_config is not None\n        else {}\n    )\n    lora_modules = process_lora_modules(args.lora_modules, default_mm_loras)"
+      },
+      {
+        "line": 1034,
+        "text": "        else {}\n    )\n    lora_modules = process_lora_modules(args.lora_modules, default_mm_loras)\n\n    # Ensure `input_processor` and `model_config` exist on the engine client\n    # for OpenAIServingModels compatibility."
+      },
+      {
+        "line": 1078,
+        "text": "        engine_client=engine_client,\n        base_model_paths=base_model_paths,\n        lora_modules=lora_modules,\n    )\n    await state.openai_serving_models.init_static_loras()\n"
+      },
+      {
+        "line": 1080,
+        "text": "        lora_modules=lora_modules,\n    )\n    await state.openai_serving_models.init_static_loras()\n\n    _init_chat_services(\n        engine_client,"
+      },
+      {
+        "line": 2168,
+        "text": "            if request.generator_device is not None:\n                extra_body[\"generator_device\"] = request.generator_device\n            if request.lora is not None:\n                # Keep /images validation semantics: invalid LoRA should fail with 400.\n                _parse_lora_request(request.lora)\n                extra_body[\"lora\"] = request.lora"
+      },
+      {
+        "line": 2169,
+        "text": "                extra_body[\"generator_device\"] = request.generator_device\n            if request.lora is not None:\n                # Keep /images validation semantics: invalid LoRA should fail with 400.\n                _parse_lora_request(request.lora)\n                extra_body[\"lora\"] = request.lora\n            if request.bot_task is not None:"
+      },
+      {
+        "line": 2170,
+        "text": "            if request.lora is not None:\n                # Keep /images validation semantics: invalid LoRA should fail with 400.\n                _parse_lora_request(request.lora)\n                extra_body[\"lora\"] = request.lora\n            if request.bot_task is not None:\n                extra_body[\"bot_task\"] = request.bot_task"
+      },
+      {
+        "line": 2171,
+        "text": "                # Keep /images validation semantics: invalid LoRA should fail with 400.\n                _parse_lora_request(request.lora)\n                extra_body[\"lora\"] = request.lora\n            if request.bot_task is not None:\n                extra_body[\"bot_task\"] = request.bot_task\n            if request.use_system_prompt is not None:"
+      },
+      {
+        "line": 2220,
+        "text": "        if extra_args:\n            gen_params.extra_args = extra_args\n        # Parse per-request LoRA (compatible with chat's extra_body.lora shape).\n        lora_request, lora_scale = _parse_lora_request(request.lora) if request.lora is not None else (None, None)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)\n        _update_if_not_none(gen_params, \"lora_scale\", lora_scale)"
+      },
+      {
+        "line": 2221,
+        "text": "            gen_params.extra_args = extra_args\n        # Parse per-request LoRA (compatible with chat's extra_body.lora shape).\n        lora_request, lora_scale = _parse_lora_request(request.lora) if request.lora is not None else (None, None)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)\n        _update_if_not_none(gen_params, \"lora_scale\", lora_scale)\n"
+      },
+      {
+        "line": 2222,
+        "text": "        # Parse per-request LoRA (compatible with chat's extra_body.lora shape).\n        lora_request, lora_scale = _parse_lora_request(request.lora) if request.lora is not None else (None, None)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)\n        _update_if_not_none(gen_params, \"lora_scale\", lora_scale)\n\n        # Parse and add size if provided"
+      },
+      {
+        "line": 2223,
+        "text": "        lora_request, lora_scale = _parse_lora_request(request.lora) if request.lora is not None else (None, None)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)\n        _update_if_not_none(gen_params, \"lora_scale\", lora_scale)\n\n        # Parse and add size if provided\n        if request.size:"
+      },
+      {
+        "line": 2357,
+        "text": "    seed: int | None = Form(None),\n    generator_device: str | None = Form(None),\n    # vllm-omni extension for per-request LoRA.\n    lora: str | None = Form(None),  # Json string\n    # vllm-omni extension for layered models (e.g., Qwen-Image-Layered)\n    layers: int | None = Form(None),"
+      },
+      {
+        "line": 2358,
+        "text": "    generator_device: str | None = Form(None),\n    # vllm-omni extension for per-request LoRA.\n    lora: str | None = Form(None),  # Json string\n    # vllm-omni extension for layered models (e.g., Qwen-Image-Layered)\n    layers: int | None = Form(None),\n    resolution: int | None = Form(None),  # See SUPPORTED_LAYERED_RESOLUTIONS"
+      },
+      {
+        "line": 2461,
+        "text": "        )\n        _update_if_not_none(gen_params, \"num_outputs_per_prompt\", n)\n        # 3.1 Parse per-request LoRA (compatible with chat's extra_body.lora shape).\n        lora_dict = _get_lora_from_json_str(lora)\n        lora_request, lora_scale = _parse_lora_request(lora_dict)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)"
+      },
+      {
+        "line": 2462,
+        "text": "        _update_if_not_none(gen_params, \"num_outputs_per_prompt\", n)\n        # 3.1 Parse per-request LoRA (compatible with chat's extra_body.lora shape).\n        lora_dict = _get_lora_from_json_str(lora)\n        lora_request, lora_scale = _parse_lora_request(lora_dict)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)\n        _update_if_not_none(gen_params, \"lora_scale\", lora_scale)"
+      },
+      {
+        "line": 2463,
+        "text": "        # 3.1 Parse per-request LoRA (compatible with chat's extra_body.lora shape).\n        lora_dict = _get_lora_from_json_str(lora)\n        lora_request, lora_scale = _parse_lora_request(lora_dict)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)\n        _update_if_not_none(gen_params, \"lora_scale\", lora_scale)\n        # 3.2 Validate resolution if provided"
+      },
+      {
+        "line": 2464,
+        "text": "        lora_dict = _get_lora_from_json_str(lora)\n        lora_request, lora_scale = _parse_lora_request(lora_dict)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)\n        _update_if_not_none(gen_params, \"lora_scale\", lora_scale)\n        # 3.2 Validate resolution if provided\n        if resolution is not None and resolution not in SUPPORTED_LAYERED_RESOLUTIONS:"
+      },
+      {
+        "line": 2465,
+        "text": "        lora_request, lora_scale = _parse_lora_request(lora_dict)\n        _update_if_not_none(gen_params, \"lora_request\", lora_request)\n        _update_if_not_none(gen_params, \"lora_scale\", lora_scale)\n        # 3.2 Validate resolution if provided\n        if resolution is not None and resolution not in SUPPORTED_LAYERED_RESOLUTIONS:\n            raise HTTPException("
+      },
+      {
+        "line": 2598,
+        "text": "            if resolution is not None:\n                extra_body[\"resolution\"] = resolution\n            if lora is not None:\n                # Validate LoRA, then pass through.\n                lora_dict = _get_lora_from_json_str(lora)\n                _parse_lora_request(lora_dict)"
+      },
+      {
+        "line": 2599,
+        "text": "                extra_body[\"resolution\"] = resolution\n            if lora is not None:\n                # Validate LoRA, then pass through.\n                lora_dict = _get_lora_from_json_str(lora)\n                _parse_lora_request(lora_dict)\n                extra_body[\"lora\"] = lora_dict"
+      },
+      {
+        "line": 2600,
+        "text": "            if lora is not None:\n                # Validate LoRA, then pass through.\n                lora_dict = _get_lora_from_json_str(lora)\n                _parse_lora_request(lora_dict)\n                extra_body[\"lora\"] = lora_dict\n            if bot_task is not None:"
+      },
+      {
+        "line": 2601,
+        "text": "                # Validate LoRA, then pass through.\n                lora_dict = _get_lora_from_json_str(lora)\n                _parse_lora_request(lora_dict)\n                extra_body[\"lora\"] = lora_dict\n            if bot_task is not None:\n                extra_body[\"bot_task\"] = bot_task"
+      },
+      {
+        "line": 2602,
+        "text": "                lora_dict = _get_lora_from_json_str(lora)\n                _parse_lora_request(lora_dict)\n                extra_body[\"lora\"] = lora_dict\n            if bot_task is not None:\n                extra_body[\"bot_task\"] = bot_task\n            if sys_type is not None:"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/lora.py",
+    "sha256": "390c5b78a06794bb893c7cf1de63f9a81332f595fa77ceb56d75f09794c5cbee",
+    "matches": [
+      {
+        "line": 3,
+        "text": "# SPDX-License-Identifier: Apache-2.0\n# SPDX-FileCopyrightText: Copyright contributors to the vLLM-Omni project\n\"\"\"OpenAI LoRA request helpers.\n\nUse this module for HTTP-facing LoRA parsing shared by OpenAI-compatible\nendpoint families.\"\"\""
+      },
+      {
+        "line": 5,
+        "text": "\"\"\"OpenAI LoRA request helpers.\n\nUse this module for HTTP-facing LoRA parsing shared by OpenAI-compatible\nendpoint families.\"\"\"\n\nimport json"
+      },
+      {
+        "line": 14,
+        "text": "from fastapi import HTTPException\n\nfrom vllm_omni.entrypoints.openai.utils import parse_lora_request\n\n\ndef _get_lora_from_json_str(lora_body):"
+      },
+      {
+        "line": 17,
+        "text": "\n\ndef _get_lora_from_json_str(lora_body):\n    if lora_body is None:\n        return None\n    try:"
+      },
+      {
+        "line": 18,
+        "text": "\ndef _get_lora_from_json_str(lora_body):\n    if lora_body is None:\n        return None\n    try:\n        lora_dict = json.loads(lora_body)"
+      },
+      {
+        "line": 21,
+        "text": "        return None\n    try:\n        lora_dict = json.loads(lora_body)\n    except json.JSONDecodeError:\n        raise HTTPException(status_code=400, detail=\"Invalid LoRA JSON string\")\n"
+      },
+      {
+        "line": 23,
+        "text": "        lora_dict = json.loads(lora_body)\n    except json.JSONDecodeError:\n        raise HTTPException(status_code=400, detail=\"Invalid LoRA JSON string\")\n\n    if not isinstance(lora_dict, dict):\n        raise HTTPException(status_code=400, detail=\"LoRA must be a JSON object\")"
+      },
+      {
+        "line": 25,
+        "text": "        raise HTTPException(status_code=400, detail=\"Invalid LoRA JSON string\")\n\n    if not isinstance(lora_dict, dict):\n        raise HTTPException(status_code=400, detail=\"LoRA must be a JSON object\")\n\n    return lora_dict"
+      },
+      {
+        "line": 26,
+        "text": "\n    if not isinstance(lora_dict, dict):\n        raise HTTPException(status_code=400, detail=\"LoRA must be a JSON object\")\n\n    return lora_dict\n"
+      },
+      {
+        "line": 28,
+        "text": "        raise HTTPException(status_code=400, detail=\"LoRA must be a JSON object\")\n\n    return lora_dict\n\n\ndef _parse_lora_request(lora_body: dict[str, Any]):"
+      },
+      {
+        "line": 31,
+        "text": "\n\ndef _parse_lora_request(lora_body: dict[str, Any]):\n    try:\n        return parse_lora_request(lora_body)\n    except ValueError as e:"
+      },
+      {
+        "line": 33,
+        "text": "def _parse_lora_request(lora_body: dict[str, Any]):\n    try:\n        return parse_lora_request(lora_body)\n    except ValueError as e:\n        raise HTTPException(\n            status_code=HTTPStatus.BAD_REQUEST.value,"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/serving_chat.py",
+    "sha256": "676c13420bd374040ef88a972a8b7d98bc9c4496f7dd6141cb1bc474df0c0ed6",
+    "matches": [
+      {
+        "line": 153,
+        "text": "    is_image_generation_stage,\n    is_single_stage_diffusion,\n    parse_lora_request,\n    resolve_diffusion_od_config,\n)\nfrom vllm_omni.errors import OmniClientError"
+      },
+      {
+        "line": 157,
+        "text": ")\nfrom vllm_omni.errors import OmniClientError\nfrom vllm_omni.lora.request import LoRARequest\nfrom vllm_omni.outputs import OmniRequestOutput\nfrom vllm_omni.outputs.output_metadata import DiffusionMetadataMapping, DiffusionMetadataValue\nfrom vllm_omni.utils.audio import audio_chunk_pcm_bytes, audio_chunk_sample_rate"
+      },
+      {
+        "line": 212,
+        "text": "            \"size\",\n            \"negative_prompt\",\n            \"lora\",\n            \"modalities\",\n        }\n    )"
+      },
+      {
+        "line": 624,
+        "text": "\n        try:\n            lora_request = self._maybe_get_adapters(request, supports_default_mm_loras=True)\n\n            model_name = self.models.model_name(lora_request)\n"
+      },
+      {
+        "line": 626,
+        "text": "            lora_request = self._maybe_get_adapters(request, supports_default_mm_loras=True)\n\n            model_name = self.models.model_name(lora_request)\n\n            # A request that bypasses stage 0 is rendered with the tokenizer and\n            # chat template of the stage it enters at."
+      },
+      {
+        "line": 923,
+        "text": "                    engine_prompt,\n                    params_list=sampling_params_list,\n                    lora_request=lora_request,\n                )\n\n                generator = self.engine_client.generate("
+      },
+      {
+        "line": 932,
+        "text": "                    output_modalities=output_modalities,\n                    arrival_time=request_timestamp,\n                    lora_request=lora_request,\n                    entry_stage_id=entry_stage_id,\n                )\n"
+      },
+      {
+        "line": 1566,
+        "text": "        inputs: PromptType | TokPrompt,\n        params_list: list[SamplingParams] | None,\n        lora_request: LoRARequest | None,\n    ) -> None:\n        if self.request_logger is None:\n            return"
+      },
+      {
+        "line": 1577,
+        "text": "            components.embeds,\n            params=params_list,\n            lora_request=lora_request,\n        )\n\n    async def chat_completion_stream_generator("
+      },
+      {
+        "line": 3219,
+        "text": "        num_frames = extra_body.get(\"num_frames\")\n        guidance_scale_2 = extra_body.get(\"guidance_scale_2\")\n        lora_body = extra_body.get(\"lora\")\n        layers = extra_body.get(\"layers\")\n        resolution = extra_body.get(\"resolution\")\n        bot_task = extra_body.get(\"bot_task\")"
+      },
+      {
+        "line": 3427,
+        "text": "                    extra_body,\n                )\n                if lora_body and isinstance(lora_body, dict):\n                    try:\n                        lora_req, lora_scale = parse_lora_request(lora_body)\n                        if lora_req is not None:"
+      },
+      {
+        "line": 3429,
+        "text": "                if lora_body and isinstance(lora_body, dict):\n                    try:\n                        lora_req, lora_scale = parse_lora_request(lora_body)\n                        if lora_req is not None:\n                            default_stage_params.lora_request = lora_req\n                            if lora_scale is not None:"
+      },
+      {
+        "line": 3430,
+        "text": "                    try:\n                        lora_req, lora_scale = parse_lora_request(lora_body)\n                        if lora_req is not None:\n                            default_stage_params.lora_request = lora_req\n                            if lora_scale is not None:\n                                default_stage_params.lora_scale = lora_scale"
+      },
+      {
+        "line": 3431,
+        "text": "                        lora_req, lora_scale = parse_lora_request(lora_body)\n                        if lora_req is not None:\n                            default_stage_params.lora_request = lora_req\n                            if lora_scale is not None:\n                                default_stage_params.lora_scale = lora_scale\n                    except Exception as e:  # pragma: no cover - safeguard"
+      },
+      {
+        "line": 3432,
+        "text": "                        if lora_req is not None:\n                            default_stage_params.lora_request = lora_req\n                            if lora_scale is not None:\n                                default_stage_params.lora_scale = lora_scale\n                    except Exception as e:  # pragma: no cover - safeguard\n                        logger.warning(\"Failed to parse LoRA request: %s\", e)"
+      },
+      {
+        "line": 3433,
+        "text": "                            default_stage_params.lora_request = lora_req\n                            if lora_scale is not None:\n                                default_stage_params.lora_scale = lora_scale\n                    except Exception as e:  # pragma: no cover - safeguard\n                        logger.warning(\"Failed to parse LoRA request: %s\", e)\n            elif stage_type == \"llm\" and idx > 0 and is_image_generation_stage(stage_cfg):"
+      },
+      {
+        "line": 3435,
+        "text": "                                default_stage_params.lora_scale = lora_scale\n                    except Exception as e:  # pragma: no cover - safeguard\n                        logger.warning(\"Failed to parse LoRA request: %s\", e)\n            elif stage_type == \"llm\" and idx > 0 and is_image_generation_stage(stage_cfg):\n                if num_outputs_per_prompt is not None and num_outputs_per_prompt > 1:\n                    raise ValueError("
+      },
+      {
+        "line": 3478,
+        "text": "        negative_prompt = extra_body.get(\"negative_prompt\")\n        num_outputs_per_prompt = extra_body.get(\"num_outputs_per_prompt\", 1)\n        lora_body = extra_body.get(\"lora\")\n\n        pil_images: list[Image.Image] = []\n        for img_b64 in reference_images:"
+      },
+      {
+        "line": 3509,
+        "text": "        )\n\n        if lora_body and isinstance(lora_body, dict):\n            try:\n                lora_req, lora_scale = parse_lora_request(lora_body)\n                if lora_req is not None:"
+      },
+      {
+        "line": 3511,
+        "text": "        if lora_body and isinstance(lora_body, dict):\n            try:\n                lora_req, lora_scale = parse_lora_request(lora_body)\n                if lora_req is not None:\n                    gen_params.lora_request = lora_req\n                    if lora_scale is not None:"
+      },
+      {
+        "line": 3512,
+        "text": "            try:\n                lora_req, lora_scale = parse_lora_request(lora_body)\n                if lora_req is not None:\n                    gen_params.lora_request = lora_req\n                    if lora_scale is not None:\n                        gen_params.lora_scale = lora_scale"
+      },
+      {
+        "line": 3513,
+        "text": "                lora_req, lora_scale = parse_lora_request(lora_body)\n                if lora_req is not None:\n                    gen_params.lora_request = lora_req\n                    if lora_scale is not None:\n                        gen_params.lora_scale = lora_scale\n            except Exception as e:  # pragma: no cover - safeguard"
+      },
+      {
+        "line": 3514,
+        "text": "                if lora_req is not None:\n                    gen_params.lora_request = lora_req\n                    if lora_scale is not None:\n                        gen_params.lora_scale = lora_scale\n            except Exception as e:  # pragma: no cover - safeguard\n                logger.warning(\"Failed to parse LoRA request: %s\", e)"
+      },
+      {
+        "line": 3515,
+        "text": "                    gen_params.lora_request = lora_req\n                    if lora_scale is not None:\n                        gen_params.lora_scale = lora_scale\n            except Exception as e:  # pragma: no cover - safeguard\n                logger.warning(\"Failed to parse LoRA request: %s\", e)\n"
+      },
+      {
+        "line": 3517,
+        "text": "                        gen_params.lora_scale = lora_scale\n            except Exception as e:  # pragma: no cover - safeguard\n                logger.warning(\"Failed to parse LoRA request: %s\", e)\n\n        gen_prompt: OmniTextPrompt = OmniTextPrompt(\n            prompt=prompt,"
+      },
+      {
+        "line": 3845,
+        "text": "            num_frames = extra_body.get(\"num_frames\")\n            guidance_scale_2 = extra_body.get(\"guidance_scale_2\")\n            lora_body = extra_body.get(\"lora\")\n\n            # Qwen-Image-Layered parameters\n            layers = extra_body.get(\"layers\")"
+      },
+      {
+        "line": 3911,
+        "text": "                gen_params.resolution = resolution\n\n            # Parse per-request LoRA.\n            if lora_body and isinstance(lora_body, dict):\n                try:\n                    lora_req, lora_scale = parse_lora_request(lora_body)"
+      },
+      {
+        "line": 3912,
+        "text": "\n            # Parse per-request LoRA.\n            if lora_body and isinstance(lora_body, dict):\n                try:\n                    lora_req, lora_scale = parse_lora_request(lora_body)\n                    if lora_req is not None:"
+      },
+      {
+        "line": 3914,
+        "text": "            if lora_body and isinstance(lora_body, dict):\n                try:\n                    lora_req, lora_scale = parse_lora_request(lora_body)\n                    if lora_req is not None:\n                        gen_params.lora_request = lora_req\n                        if lora_scale is not None:"
+      },
+      {
+        "line": 3915,
+        "text": "                try:\n                    lora_req, lora_scale = parse_lora_request(lora_body)\n                    if lora_req is not None:\n                        gen_params.lora_request = lora_req\n                        if lora_scale is not None:\n                            gen_params.lora_scale = lora_scale"
+      },
+      {
+        "line": 3916,
+        "text": "                    lora_req, lora_scale = parse_lora_request(lora_body)\n                    if lora_req is not None:\n                        gen_params.lora_request = lora_req\n                        if lora_scale is not None:\n                            gen_params.lora_scale = lora_scale\n                except Exception as exc:  # pragma: no cover - safeguard"
+      },
+      {
+        "line": 3917,
+        "text": "                    if lora_req is not None:\n                        gen_params.lora_request = lora_req\n                        if lora_scale is not None:\n                            gen_params.lora_scale = lora_scale\n                except Exception as exc:  # pragma: no cover - safeguard\n                    logger.warning(\"Failed to parse LoRA request: %s\", exc)"
+      },
+      {
+        "line": 3918,
+        "text": "                        gen_params.lora_request = lora_req\n                        if lora_scale is not None:\n                            gen_params.lora_scale = lora_scale\n                except Exception as exc:  # pragma: no cover - safeguard\n                    logger.warning(\"Failed to parse LoRA request: %s\", exc)\n"
+      },
+      {
+        "line": 3920,
+        "text": "                            gen_params.lora_scale = lora_scale\n                except Exception as exc:  # pragma: no cover - safeguard\n                    logger.warning(\"Failed to parse LoRA request: %s\", exc)\n\n            # Route text modality for single-stage diffusion (img2text / text2text)\n            requested_modalities = extra_body.get(\"modalities\") or []"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/serving_video.py",
+    "sha256": "c4f5ea1c144d389c9d25b026b44005aa5c1364ba1478a9a1c80a4a0ecfa47570",
+    "matches": [
+      {
+        "line": 36,
+        "text": "    get_default_sampling_params_list,\n)\nfrom vllm_omni.entrypoints.openai.utils import get_stage_type, is_video_generation_pipeline, parse_lora_request\nfrom vllm_omni.entrypoints.openai.video_api_utils import (\n    _encode_video_bytes,\n    _PlanarFrameConverter,"
+      },
+      {
+        "line": 519,
+        "text": "            logger.info(\"Applied extra_params: %s\", loggable)\n\n        self._apply_lora(request.lora, gen_params)\n\n        logger.info(\n            \"Video sampling params: steps=%s guidance=%s guidance_2=%s seed=%s\","
+      },
+      {
+        "line": 722,
+        "text": "\n    @staticmethod\n    def _apply_lora(lora_body: Any, gen_params: OmniDiffusionSamplingParams) -> None:\n        try:\n            lora_request, lora_scale = parse_lora_request(lora_body)\n        except ValueError as e:"
+      },
+      {
+        "line": 724,
+        "text": "    def _apply_lora(lora_body: Any, gen_params: OmniDiffusionSamplingParams) -> None:\n        try:\n            lora_request, lora_scale = parse_lora_request(lora_body)\n        except ValueError as e:\n            raise HTTPException(\n                status_code=HTTPStatus.BAD_REQUEST.value,"
+      },
+      {
+        "line": 731,
+        "text": "            ) from e\n\n        if lora_request is None:\n            return\n\n        gen_params.lora_request = lora_request"
+      },
+      {
+        "line": 734,
+        "text": "            return\n\n        gen_params.lora_request = lora_request\n        if lora_scale is not None:\n            gen_params.lora_scale = lora_scale\n"
+      },
+      {
+        "line": 735,
+        "text": "\n        gen_params.lora_request = lora_request\n        if lora_scale is not None:\n            gen_params.lora_scale = lora_scale\n\n    async def _run_generation("
+      },
+      {
+        "line": 736,
+        "text": "        gen_params.lora_request = lora_request\n        if lora_scale is not None:\n            gen_params.lora_scale = lora_scale\n\n    async def _run_generation(\n        self,"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/serving_video_output_stream.py",
+    "sha256": "a6bc24cba7b62a6d74ea73b0410d5766d2191fd16ff7d30b5bb03d8bfb4293be",
+    "matches": [
+      {
+        "line": 58,
+        "text": "    get_default_sampling_params_list,\n)\nfrom vllm_omni.entrypoints.openai.utils import is_video_generation_pipeline, parse_lora_request\nfrom vllm_omni.entrypoints.openai.video_api_utils import (\n    StreamingVideoFormat,\n    create_streaming_video_encoder,"
+      },
+      {
+        "line": 955,
+        "text": "            gen_params.extra_args.update(request.extra_params)\n\n        self._apply_lora(request.lora, gen_params)\n        return prompt, gen_params, vp\n\n    @staticmethod"
+      },
+      {
+        "line": 986,
+        "text": "\n    @staticmethod\n    def _apply_lora(lora_body: Any, gen_params: OmniDiffusionSamplingParams) -> None:\n        try:\n            lora_request, lora_scale = parse_lora_request(lora_body)\n        except ValueError as e:"
+      },
+      {
+        "line": 988,
+        "text": "    def _apply_lora(lora_body: Any, gen_params: OmniDiffusionSamplingParams) -> None:\n        try:\n            lora_request, lora_scale = parse_lora_request(lora_body)\n        except ValueError as e:\n            raise HTTPException(\n                status_code=HTTPStatus.BAD_REQUEST.value,"
+      },
+      {
+        "line": 995,
+        "text": "            ) from e\n\n        if lora_request is None:\n            return\n\n        gen_params.lora_request = lora_request"
+      },
+      {
+        "line": 998,
+        "text": "            return\n\n        gen_params.lora_request = lora_request\n        if lora_scale is not None:\n            gen_params.lora_scale = lora_scale\n"
+      },
+      {
+        "line": 999,
+        "text": "\n        gen_params.lora_request = lora_request\n        if lora_scale is not None:\n            gen_params.lora_scale = lora_scale\n\n    async def _iter_generation_outputs("
+      },
+      {
+        "line": 1000,
+        "text": "        gen_params.lora_request = lora_request\n        if lora_scale is not None:\n            gen_params.lora_scale = lora_scale\n\n    async def _iter_generation_outputs(\n        self,"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/utils.py",
+    "sha256": "2b04b859cfb0899de3363593ceae35b73c495d78592a9fa79450acef8b18fd4f",
+    "matches": [
+      {
+        "line": 6,
+        "text": "\nPUT HERE:\n  - Cross-cutting stage-config / LoRA / pipeline helpers reused by multiple\n    OpenAI serving paths (not owned by a single endpoint family).\n\nDO NOT PUT HERE:"
+      },
+      {
+        "line": 25,
+        "text": "from typing import Any\n\nfrom vllm_omni.lora.request import LoRARequest\nfrom vllm_omni.lora.utils import stable_lora_int_id\n\n"
+      },
+      {
+        "line": 26,
+        "text": "\nfrom vllm_omni.lora.request import LoRARequest\nfrom vllm_omni.lora.utils import stable_lora_int_id\n\n\ndef get_stage_type(stage_cfg: Any) -> str:"
+      },
+      {
+        "line": 90,
+        "text": "\n\ndef parse_lora_request(lora_body: Any) -> tuple[LoRARequest | None, float | None]:\n    \"\"\"Parse a request-level LoRA object into a LoRARequest and optional scale.\n\n    Raises:"
+      },
+      {
+        "line": 91,
+        "text": "\ndef parse_lora_request(lora_body: Any) -> tuple[LoRARequest | None, float | None]:\n    \"\"\"Parse a request-level LoRA object into a LoRARequest and optional scale.\n\n    Raises:\n        ValueError: If the object shape is invalid or required fields are missing."
+      },
+      {
+        "line": 96,
+        "text": "        ValueError: If the object shape is invalid or required fields are missing.\n    \"\"\"\n    if lora_body is None:\n        return None, None\n\n    if not isinstance(lora_body, dict):"
+      },
+      {
+        "line": 99,
+        "text": "        return None, None\n\n    if not isinstance(lora_body, dict):\n        raise ValueError(\"Invalid lora field: expected an object.\")\n\n    lora_name = lora_body.get(\"name\") or lora_body.get(\"lora_name\") or lora_body.get(\"adapter\")"
+      },
+      {
+        "line": 100,
+        "text": "\n    if not isinstance(lora_body, dict):\n        raise ValueError(\"Invalid lora field: expected an object.\")\n\n    lora_name = lora_body.get(\"name\") or lora_body.get(\"lora_name\") or lora_body.get(\"adapter\")\n    lora_path = ("
+      },
+      {
+        "line": 102,
+        "text": "        raise ValueError(\"Invalid lora field: expected an object.\")\n\n    lora_name = lora_body.get(\"name\") or lora_body.get(\"lora_name\") or lora_body.get(\"adapter\")\n    lora_path = (\n        lora_body.get(\"local_path\")\n        or lora_body.get(\"path\")"
+      },
+      {
+        "line": 103,
+        "text": "\n    lora_name = lora_body.get(\"name\") or lora_body.get(\"lora_name\") or lora_body.get(\"adapter\")\n    lora_path = (\n        lora_body.get(\"local_path\")\n        or lora_body.get(\"path\")\n        or lora_body.get(\"lora_path\")"
+      },
+      {
+        "line": 104,
+        "text": "    lora_name = lora_body.get(\"name\") or lora_body.get(\"lora_name\") or lora_body.get(\"adapter\")\n    lora_path = (\n        lora_body.get(\"local_path\")\n        or lora_body.get(\"path\")\n        or lora_body.get(\"lora_path\")\n        or lora_body.get(\"lora_local_path\")"
+      },
+      {
+        "line": 105,
+        "text": "    lora_path = (\n        lora_body.get(\"local_path\")\n        or lora_body.get(\"path\")\n        or lora_body.get(\"lora_path\")\n        or lora_body.get(\"lora_local_path\")\n    )"
+      },
+      {
+        "line": 106,
+        "text": "        lora_body.get(\"local_path\")\n        or lora_body.get(\"path\")\n        or lora_body.get(\"lora_path\")\n        or lora_body.get(\"lora_local_path\")\n    )\n    lora_scale = lora_body.get(\"scale\")"
+      },
+      {
+        "line": 107,
+        "text": "        or lora_body.get(\"path\")\n        or lora_body.get(\"lora_path\")\n        or lora_body.get(\"lora_local_path\")\n    )\n    lora_scale = lora_body.get(\"scale\")\n    if lora_scale is None:"
+      },
+      {
+        "line": 109,
+        "text": "        or lora_body.get(\"lora_local_path\")\n    )\n    lora_scale = lora_body.get(\"scale\")\n    if lora_scale is None:\n        lora_scale = lora_body.get(\"lora_scale\")\n    lora_int_id = lora_body.get(\"int_id\")"
+      },
+      {
+        "line": 110,
+        "text": "    )\n    lora_scale = lora_body.get(\"scale\")\n    if lora_scale is None:\n        lora_scale = lora_body.get(\"lora_scale\")\n    lora_int_id = lora_body.get(\"int_id\")\n    if lora_int_id is None:"
+      },
+      {
+        "line": 111,
+        "text": "    lora_scale = lora_body.get(\"scale\")\n    if lora_scale is None:\n        lora_scale = lora_body.get(\"lora_scale\")\n    lora_int_id = lora_body.get(\"int_id\")\n    if lora_int_id is None:\n        lora_int_id = lora_body.get(\"lora_int_id\")"
+      },
+      {
+        "line": 112,
+        "text": "    if lora_scale is None:\n        lora_scale = lora_body.get(\"lora_scale\")\n    lora_int_id = lora_body.get(\"int_id\")\n    if lora_int_id is None:\n        lora_int_id = lora_body.get(\"lora_int_id\")\n    if lora_int_id is None and lora_path:"
+      },
+      {
+        "line": 113,
+        "text": "        lora_scale = lora_body.get(\"lora_scale\")\n    lora_int_id = lora_body.get(\"int_id\")\n    if lora_int_id is None:\n        lora_int_id = lora_body.get(\"lora_int_id\")\n    if lora_int_id is None and lora_path:\n        lora_int_id = stable_lora_int_id(str(lora_path))"
+      },
+      {
+        "line": 114,
+        "text": "    lora_int_id = lora_body.get(\"int_id\")\n    if lora_int_id is None:\n        lora_int_id = lora_body.get(\"lora_int_id\")\n    if lora_int_id is None and lora_path:\n        lora_int_id = stable_lora_int_id(str(lora_path))\n"
+      },
+      {
+        "line": 115,
+        "text": "    if lora_int_id is None:\n        lora_int_id = lora_body.get(\"lora_int_id\")\n    if lora_int_id is None and lora_path:\n        lora_int_id = stable_lora_int_id(str(lora_path))\n\n    if not lora_name or not lora_path:"
+      },
+      {
+        "line": 116,
+        "text": "        lora_int_id = lora_body.get(\"lora_int_id\")\n    if lora_int_id is None and lora_path:\n        lora_int_id = stable_lora_int_id(str(lora_path))\n\n    if not lora_name or not lora_path:\n        raise ValueError(\"Invalid lora object: both name and path are required.\")"
+      },
+      {
+        "line": 118,
+        "text": "        lora_int_id = stable_lora_int_id(str(lora_path))\n\n    if not lora_name or not lora_path:\n        raise ValueError(\"Invalid lora object: both name and path are required.\")\n\n    scale = float(lora_scale) if lora_scale is not None else None"
+      },
+      {
+        "line": 119,
+        "text": "\n    if not lora_name or not lora_path:\n        raise ValueError(\"Invalid lora object: both name and path are required.\")\n\n    scale = float(lora_scale) if lora_scale is not None else None\n    return LoRARequest(str(lora_name), int(lora_int_id), str(lora_path)), scale"
+      },
+      {
+        "line": 121,
+        "text": "        raise ValueError(\"Invalid lora object: both name and path are required.\")\n\n    scale = float(lora_scale) if lora_scale is not None else None\n    return LoRARequest(str(lora_name), int(lora_int_id), str(lora_path)), scale\n\n"
+      },
+      {
+        "line": 122,
+        "text": "\n    scale = float(lora_scale) if lora_scale is not None else None\n    return LoRARequest(str(lora_name), int(lora_int_id), str(lora_path)), scale\n\n\ndef resolve_diffusion_od_config(engine_client: Any, diffusion_engine: Any = None) -> Any:"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/protocol/images.py",
+    "sha256": "2c4b6e7f715454919f77012030bb8ea499c6f93f3c9c0b074c6462e3dbc3d6b9",
+    "matches": [
+      {
+        "line": 169,
+        "text": "    )\n\n    # vllm-omni extension for per-request LoRA.\n    # This mirrors the `extra_body.lora` convention in /v1/chat/completions.\n    lora: dict[str, Any] | None = Field(\n        default=None,"
+      },
+      {
+        "line": 170,
+        "text": "\n    # vllm-omni extension for per-request LoRA.\n    # This mirrors the `extra_body.lora` convention in /v1/chat/completions.\n    lora: dict[str, Any] | None = Field(\n        default=None,\n        description=("
+      },
+      {
+        "line": 171,
+        "text": "    # vllm-omni extension for per-request LoRA.\n    # This mirrors the `extra_body.lora` convention in /v1/chat/completions.\n    lora: dict[str, Any] | None = Field(\n        default=None,\n        description=(\n            \"Optional LoRA adapter for this request. Expected shape: \""
+      },
+      {
+        "line": 174,
+        "text": "        default=None,\n        description=(\n            \"Optional LoRA adapter for this request. Expected shape: \"\n            \"{name/path/scale/int_id}. Field names are flexible \"\n            \"(e.g. name|lora_name|adapter, path|lora_path|local_path, \"\n            \"scale|lora_scale, int_id|lora_int_id).\""
+      },
+      {
+        "line": 176,
+        "text": "            \"Optional LoRA adapter for this request. Expected shape: \"\n            \"{name/path/scale/int_id}. Field names are flexible \"\n            \"(e.g. name|lora_name|adapter, path|lora_path|local_path, \"\n            \"scale|lora_scale, int_id|lora_int_id).\"\n        ),\n    )"
+      },
+      {
+        "line": 177,
+        "text": "            \"{name/path/scale/int_id}. Field names are flexible \"\n            \"(e.g. name|lora_name|adapter, path|lora_path|local_path, \"\n            \"scale|lora_scale, int_id|lora_int_id).\"\n        ),\n    )\n"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/protocol/videos.py",
+    "sha256": "1ec725403d9892188bb1cf8515cf6e00d88bc0584fadcf59f65e59e83f84cfa8",
+    "matches": [
+      {
+        "line": 359,
+        "text": "    )\n\n    # vllm-omni extension for per-request LoRA.\n    lora: dict[str, Any] | None = Field(\n        default=None,\n        description=("
+      },
+      {
+        "line": 360,
+        "text": "\n    # vllm-omni extension for per-request LoRA.\n    lora: dict[str, Any] | None = Field(\n        default=None,\n        description=(\n            \"Optional LoRA adapter for this request. Expected shape: \""
+      },
+      {
+        "line": 363,
+        "text": "        default=None,\n        description=(\n            \"Optional LoRA adapter for this request. Expected shape: \"\n            \"{name/path/scale/int_id}. Field names are flexible \"\n            \"(e.g. name|lora_name|adapter, path|lora_path|local_path, \"\n            \"scale|lora_scale, int_id|lora_int_id).\""
+      },
+      {
+        "line": 365,
+        "text": "            \"Optional LoRA adapter for this request. Expected shape: \"\n            \"{name/path/scale/int_id}. Field names are flexible \"\n            \"(e.g. name|lora_name|adapter, path|lora_path|local_path, \"\n            \"scale|lora_scale, int_id|lora_int_id).\"\n        ),\n    )"
+      },
+      {
+        "line": 366,
+        "text": "            \"{name/path/scale/int_id}. Field names are flexible \"\n            \"(e.g. name|lora_name|adapter, path|lora_path|local_path, \"\n            \"scale|lora_scale, int_id|lora_int_id).\"\n        ),\n    )\n"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/video/generation/helpers.py",
+    "sha256": "3b60937d8c5294ba87a5abb9265643e1bb4beb98f9ea63f533a7d11450577808",
+    "matches": [
+      {
+        "line": 1039,
+        "text": "    frame_interpolation_scale: float | None = Form(default=None, gt=0.0),\n    frame_interpolation_model_path: str | None = Form(default=None),\n    lora: str | None = Form(default=None),\n    extra_params: str | None = Form(default=None),\n    return_stage_metrics: bool | None = Form(default=None),\n    source_video: UploadFile | None = File(default=None),"
+      },
+      {
+        "line": 1125,
+        "text": "        \"frame_interpolation_scale\": frame_interpolation_scale,\n        \"frame_interpolation_model_path\": frame_interpolation_model_path,\n        \"lora\": _parse_form_json(lora, expected_type=dict),\n        \"extra_params\": _parse_form_json(extra_params, expected_type=dict),\n        \"return_stage_metrics\": return_stage_metrics,\n    }"
+      }
+    ]
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "path": "runs/api/outputs/comparison-official_api-official-H3-T01-api.mp4",
+  "sha256": "5db598f7cdd85625bfb21faa3dbca49c6bf30e1fa2ac6e2e26f3b3d81d2bc17b",
+  "technical_valid": null,
+  "manual_av_sync": "pending",
+  "reason": "按用户要求，ffprobe 和完整 ffmpeg 解码在服务器执行；此时仅通过 HTTP/Content-Type/ftyp 检查"
+}

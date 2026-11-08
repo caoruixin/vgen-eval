@@ -1,0 +1,4 @@
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x5cd49a87af40] moov atom not found
+[in#0 @ 0x5cd49a87ae40] Error opening input: Invalid data found when processing input
+Error opening input file runs/self/environment/media-qa/truncated.mp4.
+Error opening input files: Invalid data found when processing input

@@ -1,0 +1,6 @@
+{
+  "utc": "2026-11-07T16:19:24.542+00:00",
+  "pid": 6815,
+  "pgid": 6815,
+  "action": "planned session transition or phase cap; SIGTERM then bounded SIGKILL fallback"
+}

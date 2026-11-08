@@ -1,0 +1,8 @@
+{
+  "utc": "2026-11-07T14:03:52.890+00:00",
+  "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/entrypoints/openai/utils.py",
+  "source_sha256": "2b04b859cfb0899de3363593ceae35b73c495d78592a9fa79450acef8b18fd4f",
+  "first_line": 90,
+  "last_line": 122,
+  "purpose": "Inspect request contract without importing framework, touching GPU, or downloading LoRA weights"
+}

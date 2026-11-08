@@ -1,0 +1,7 @@
+{
+  "kind": "measured",
+  "created_utc": "2026-11-07T12:29:21.516+00:00",
+  "model_revision": "42ed227ee7df40d41602854ae760620d6eb651fe",
+  "matrix_sha256": "bce02ba9f7518fbcd4b4c897a18c8009a6904e80cb4d9ebd43618be0e14dd742",
+  "manual_quality": "pending_user_review"
+}

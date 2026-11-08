@@ -1,0 +1,7 @@
+{
+  "finished_utc": "2026-11-07T16:34:39.298542+00:00",
+  "exit_code": 0,
+  "stdout": "Destroy request accepted; verify Instances/Storage and final billing from laptop.\n",
+  "stderr": "Welcome to vast.ai. If authentication fails, try again after a few seconds, and double check your ssh key.\nHave fun!\n",
+  "requires_independent_verification": true
+}

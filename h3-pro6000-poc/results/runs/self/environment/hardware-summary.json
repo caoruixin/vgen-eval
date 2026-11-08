@@ -1,0 +1,13 @@
+{
+  "started_utc": "2026-11-07T12:06:21.849+00:00",
+  "finished_utc": "2026-11-07T12:06:36.315+00:00",
+  "basic_checks_passed": true,
+  "issues": [],
+  "ram_bytes": 811074256896,
+  "effective_ram_limit_bytes": 778630594560,
+  "filesystem_reported_total_bytes": 536870912000,
+  "filesystem_reported_free_bytes": 536862171136,
+  "disk_allocation_note": "df 可能反映宿主文件系统，500GB 合同配额需以 Vast 实例创建/账单证据另行确认",
+  "topology_sha256": "0318a5143060b07ab55f7ec7697c7f3951561b39dcce1343525c6403a8bf5986",
+  "acceptance_status": "pending NCCL all-reduce/all-to-all and topology mapping review"
+}

@@ -1,0 +1,8 @@
+{
+  "utc": "2026-11-07T16:32:45.368+00:00",
+  "source": "https://pypi.org/pypi/matplotlib/3.10.7/json",
+  "version": "3.10.7",
+  "requires_python": ">=3.10",
+  "response_sha256": "88c84aba34b74e0918dd84138705cc7ff82aa599d6d9113e1120ecc6fb3d5c20",
+  "purpose": "Post-measurement CPU figure authoring only"
+}

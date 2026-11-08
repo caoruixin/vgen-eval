@@ -1,0 +1,26 @@
+{
+  "checked_utc": "2026-11-08T00:51:23.289043+00:00",
+  "original_run_manifests": {
+    "self": {
+      "files": 948,
+      "passed": true,
+      "manifest_sha256": "b4e2b64b68228a94d4e1a8406b080acd39dbccefb0762489891f5b397302dc14",
+      "failed": []
+    },
+    "api": {
+      "files": 107,
+      "passed": true,
+      "manifest_sha256": "65a4a15f83397e478f127d652f68317028e5dfb778dfa7f35651c1941706aad3",
+      "failed": []
+    }
+  },
+  "source_delivery_zip_sha256": "87f5b8669ad058cc5007f6223b384aa4002938d7fc62ad30b0fbbfbaf1d8d1b3",
+  "source_delivery_zip_size_bytes": 525373465,
+  "packaged_files_verified": 1121,
+  "extracted_files": 1123,
+  "self_original_videos": 77,
+  "official_original_videos": 10,
+  "blind_review_videos": 20,
+  "known_minimax_key_and_private_key_scan_passed": true,
+  "models_or_private_credentials_included": false
+}

@@ -1,0 +1,10 @@
+{
+  "utc": "2026-11-07T12:21:30.807+00:00",
+  "pid": 5700,
+  "pgid": 5700,
+  "command": [
+    "python3",
+    "scripts/watch_ready_warmup.py"
+  ],
+  "log": "runs/self/deploy/warmup-baseline-console.txt"
+}

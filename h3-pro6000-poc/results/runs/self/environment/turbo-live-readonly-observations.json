@@ -1,0 +1,15 @@
+{
+  "utc": "2026-11-07T16:26:54.175636+00:00",
+  "no_generation_requests": true,
+  "observations": {
+    "/v1/models": {
+      "error_type": "URLError"
+    },
+    "/server_info": {
+      "error_type": "URLError"
+    },
+    "/metrics": {
+      "error_type": "URLError"
+    }
+  }
+}

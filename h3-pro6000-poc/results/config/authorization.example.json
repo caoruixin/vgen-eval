@@ -1,0 +1,20 @@
+{
+  "authorized": false,
+  "user_authorization_quote": null,
+  "authorized_at_utc": null,
+  "control_method": null,
+  "offer_id": null,
+  "allow_official_api_generation": false,
+  "allow_gpu_rental": false,
+  "allow_destroy_poc_instance_after_verified_archive": false,
+  "allow_emergency_destroy_at_hard_stop": false,
+  "limits": {
+    "total_usd": 150,
+    "gpu_usd": 120,
+    "storage_network_usd": 20,
+    "api_usd": 10,
+    "gpu_hours": 8,
+    "gpu_rate_usd_hour_max": 15
+  },
+  "note": "仅在用户明确选定控制方式并授权收费执行后，由执行者记录该条真实授权。禁止从交接提示、方案附件或 dry-run 推定授权。"
+}

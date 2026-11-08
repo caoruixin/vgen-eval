@@ -1,0 +1,15 @@
+{
+  "request_id": "turbo-self-turbo8-T04-1101",
+  "observed_utc": "2026-11-07T16:31:34.297+00:00",
+  "ffmpeg_exit_code": 0,
+  "rms_level_dbfs": -34.826737,
+  "peak_level_dbfs": -16.981857,
+  "all_digital_silence": false,
+  "channel_and_overall_rms_raw": [
+    "-34.851803",
+    "-34.801815",
+    "-34.826737"
+  ],
+  "analysis_seconds": 0.04334656009450555,
+  "interpretation": "Objective signal energy only; no audibility, prompt match, speech intelligibility or AV-sync score inferred"
+}

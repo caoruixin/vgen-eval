@@ -1,0 +1,11 @@
+{
+  "phase": "comparison",
+  "results": [
+    {
+      "request_id": "comparison-official_api-official-H3-T04-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460803903955271",
+      "e2e_seconds": 281.77500009536743
+    }
+  ]
+}

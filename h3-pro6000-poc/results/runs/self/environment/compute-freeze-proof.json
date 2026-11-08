@@ -1,0 +1,9 @@
+{
+  "utc": "2026-11-07T16:31:12.734069+00:00",
+  "STOP_SUBMISSIONS": true,
+  "health_watcher_stop": true,
+  "telemetry_stop": true,
+  "nvidia_compute_query_rc": 0,
+  "nvidia_compute_processes": "",
+  "scope": "Stopped own generation services before CPU post-analysis; lease remains billable until destroy"
+}

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "nvidia-smi",
+    "--query-gpu=index,name,memory.total,driver_version,pci.bus_id,mig.mode.current",
+    "--format=csv,noheader,nounits"
+  ],
+  "exit_code": 0,
+  "stdout": "0, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887, 615.71.09, 00000000:05:00.0, Disabled\n1, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887, 615.71.09, 00000000:06:00.0, Disabled\n2, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887, 615.71.09, 00000000:76:00.0, Disabled\n3, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887, 615.71.09, 00000000:77:00.0, Disabled\n4, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887, 615.71.09, 00000000:85:00.0, Disabled\n5, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887, 615.71.09, 00000000:86:00.0, Disabled\n6, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887, 615.71.09, 00000000:F4:00.0, Disabled\n7, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887, 615.71.09, 00000000:F5:00.0, Disabled\n",
+  "stderr": "",
+  "elapsed_seconds": 0.08540627313777804
+}

@@ -1,0 +1,27 @@
+{
+  "observed_utc": "2026-11-07T17:10:38.242908+00:00",
+  "instance_id": 59566113,
+  "source": "Authenticated Vast Billing page after destroy; instance transaction expanded",
+  "usage_total_usd": 64.9,
+  "credit_usage_summary_usd": 64.91,
+  "instance_transaction_amount_usd": 64.9,
+  "gpu_hours_display": 4.61,
+  "gpu_charge_usd": 63.91,
+  "storage_hours_display": 4.62,
+  "storage_charge_usd": 0.64,
+  "download_GB_display": 130.0,
+  "download_charge_usd": 0.35,
+  "upload_GB_display": 2.5,
+  "upload_charge_display": "<$0.01",
+  "credit_balance_usd": 55.1,
+  "current_spending_rate_usd_per_hour": 0,
+  "auto_top_up": "Not setup",
+  "other_displayed_serverless_and_volume_usage_usd": 0,
+  "formal_consumption_invoice_obtained": false,
+  "export_csv_obtained": false,
+  "uncertainty": "Recent activity may be delayed. Credit Usage summary64.91 differs by0.01 from transaction64.90 and credit decrease64.90. Posted GPU4.61h and storage4.62h exceed the first independent absence control interval4.5846h; billing boundary not supplied, no exact end time inferred. Latest observed costs are not a final invoice.",
+  "evidence": [
+    "evidence/billing-after-release.png",
+    "evidence/billing-zero-rate.png"
+  ]
+}

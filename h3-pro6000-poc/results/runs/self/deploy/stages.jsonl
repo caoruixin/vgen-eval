@@ -1,0 +1,3 @@
+{"event": "weights_verified_start_bf16", "utc": "2026-11-07T12:25:08.847+00:00"}
+{"event": "http_service_ready", "utc": "2026-11-07T12:29:21.413+00:00"}
+{"event": "phase_gate", "utc": "2026-11-07T12:29:22.003+00:00", "phase": "warmup", "expected": 4, "records": 1, "valid": 0, "exit_code": 0}

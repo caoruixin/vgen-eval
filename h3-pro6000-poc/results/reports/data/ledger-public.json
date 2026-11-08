@@ -1,0 +1,146 @@
+{
+  "entries": [
+    {
+      "id": "e1039429-cb16-4400-b9d2-f5621376bacd",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-T01-api",
+      "created_utc": "2026-11-07T11:40:50.787+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "597d48d5-5c5b-4675-b537-3e2e58cb6f39",
+      "category": "storage_network",
+      "reserved_usd": 2.0,
+      "actual_usd": null,
+      "source": "traffic_envelope_quote_330GB_in_20GB_out",
+      "request_id": null,
+      "created_utc": "2026-11-07T11:56:36.029+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "4b38bb11-8e2c-4c41-84da-e517d05c08bb",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-T02-api",
+      "created_utc": "2026-11-07T12:16:47.578+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "de3661ba-d709-4463-b933-e23f37826e7b",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-T03-api",
+      "created_utc": "2026-11-07T12:18:19.434+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "2f8fbd4f-f38b-4078-95d5-fbabd7ca1713",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-T04-api",
+      "created_utc": "2026-11-07T12:19:56.243+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "1dc7e024-e9df-40be-9ddd-c466ab415872",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-T05-api",
+      "created_utc": "2026-11-07T12:27:41.458+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "24872429-2b05-41dd-a991-724aaa6d72f8",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-T06-api",
+      "created_utc": "2026-11-07T12:29:14.890+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "ea6e4939-9e24-45c2-a7a1-fc895da374c9",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-F01-api",
+      "created_utc": "2026-11-07T12:30:56.251+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "178b02d7-09af-4e00-a3a1-352c428b4c7d",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-F02-api",
+      "created_utc": "2026-11-07T12:32:51.383+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "26d58fa7-d120-4b21-8a07-5f1a3c7dfe3e",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-F03-api",
+      "created_utc": "2026-11-07T12:34:42.923+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    },
+    {
+      "id": "933bafdf-1dd9-415a-b958-bd49481d3d6b",
+      "category": "api",
+      "reserved_usd": 1.0,
+      "actual_usd": null,
+      "source": "published 768P price; conservative pending cap $1/request",
+      "request_id": "comparison-official_api-official-H3-F04-api",
+      "created_utc": "2026-11-07T12:36:35.936+00:00",
+      "settled_source": null,
+      "settled_utc": null
+    }
+  ],
+  "rentals": [
+    {
+      "instance_id": 59566113,
+      "offer_id": 55456241,
+      "started_utc": "2026-11-07T12:00:31.289889+00:00",
+      "ended_utc": "2026-11-07T16:35:35.790025+00:00",
+      "hard_release_utc": "2026-11-07T19:55:31.289889+00:00",
+      "gpu_hour_usd": 13.867,
+      "disk_hour_usd": 0.139,
+      "disk_GB": 500,
+      "image": "vllm/vllm-omni@sha256:6b44ee504a0dc3a21eacf72e7dc5da318b7bcc8ed0e349dc928e67278414430c",
+      "posted_gpu_charge_usd": 63.91,
+      "posted_disk_charge_usd": 0.64,
+      "posted_billed_gpu_hours_display": 4.61,
+      "posted_billed_storage_hours_display": 4.62,
+      "posted_billing_upper_bound_hours": 4.625,
+      "posted_charge_evidence": "runs/control/vast-usage-final.json",
+      "formal_consumption_invoice_obtained": false
+    }
+  ],
+  "scope": "Cost-only sanitized view; credentials, SSH details and user authorization text excluded"
+}

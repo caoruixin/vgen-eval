@@ -1,0 +1,12 @@
+{
+  "phase": "warmup",
+  "results": [
+    {
+      "request_id": "warmup-self-bf16-T01-9001",
+      "status": "ambiguous_submission",
+      "task_id": null,
+      "e2e_seconds": null
+    }
+  ]
+}
+Phase gate stopped

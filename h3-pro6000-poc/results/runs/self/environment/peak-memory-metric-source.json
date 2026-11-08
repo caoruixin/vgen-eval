@@ -1,0 +1,10 @@
+{
+  "utc": "2026-11-07T15:36:21.655999+00:00",
+  "source_path": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/worker/diffusion_model_runner.py",
+  "source_sha256": "e3e75e5dbaf2ccf20b65995e32effc64962c8285b8f8c19bf61a1a785bdb21c1",
+  "function": "_sample_peak_memory_mb",
+  "expression": "current_omni_platform.max_memory_reserved() / (1024**2)",
+  "unit": "MiB despite public field named peak_memory_mb",
+  "excerpt": "peak-memory-metric-source.txt",
+  "scope": "Installed-source metric definition; no claim about cross-rank aggregation"
+}

@@ -1,0 +1,18 @@
+{
+  "instance_id": 59566113,
+  "offer_id": 55456241,
+  "started_utc": "2026-11-07T12:00:31.289889+00:00",
+  "ended_utc": "2026-11-07T16:35:35.790025+00:00",
+  "hard_release_utc": "2026-11-07T19:55:31.289889+00:00",
+  "gpu_hour_usd": 13.867,
+  "disk_hour_usd": 0.139,
+  "disk_GB": 500,
+  "image": "vllm/vllm-omni@sha256:6b44ee504a0dc3a21eacf72e7dc5da318b7bcc8ed0e349dc928e67278414430c",
+  "posted_gpu_charge_usd": 63.91,
+  "posted_disk_charge_usd": 0.64,
+  "posted_billed_gpu_hours_display": 4.61,
+  "posted_billed_storage_hours_display": 4.62,
+  "posted_billing_upper_bound_hours": 4.625,
+  "posted_charge_evidence": "runs/control/vast-usage-final.json",
+  "formal_consumption_invoice_obtained": false
+}

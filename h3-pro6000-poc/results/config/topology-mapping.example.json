@@ -1,0 +1,9 @@
+{
+  "gpu_order": null,
+  "numa_interleave_nodes": null,
+  "topology_sha256": null,
+  "hardware_summary": null,
+  "nccl_result": null,
+  "instance_allocation_evidence": null,
+  "basis": "租后读取真实 PCIe/NUMA/P2P/NCCL，再填写 8 个不同物理 GPU index、NUMA 节点及对应证据。这里不预填公开机器的 rank 顺序。"
+}

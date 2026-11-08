@@ -1,0 +1,82 @@
+{
+  "request_id": "comparison-official_api-official-H3-T04-api",
+  "case_id": "T04",
+  "task": "t2va",
+  "phase": "comparison",
+  "provider": "official_api",
+  "variant": "official-H3",
+  "seed": null,
+  "prompt_sha256": "74334a247e60c4f8ae7657a55be1217cd931781e65a926fbb3121fa16f9ca29f",
+  "asset_sha256": null,
+  "attempt": 1,
+  "config_sha256": "de50754ab4d725943ba9973f8321ad271200be5d7562516837844655e6aceb14",
+  "matrix_sha256": "bce02ba9f7518fbcd4b4c897a18c8009a6904e80cb4d9ebd43618be0e14dd742",
+  "model_revision": "not_exposed_by_official_api",
+  "poll_interval_seconds": 2.0,
+  "transport": "async",
+  "versions": {
+    "vllm_omni_tag": "v0.32.0",
+    "source_commit": "5917730a4b02aedb44d374173cdc1b10484ccd52",
+    "image": "vllm/vllm-omni@sha256:6b44ee504a0dc3a21eacf72e7dc5da318b7bcc8ed0e349dc928e67278414430c",
+    "harness_sha256": "610bf804afd1ae14bcb994258b3469ceca15ed32e746213ad011cb6274c247f4",
+    "adapter_sha256": null
+  },
+  "requested_num_inference_steps": null,
+  "actual_denoise_updates": null,
+  "actual_denoise_updates_source": null,
+  "return_stage_metrics_requested": false,
+  "api_reserved_usd": 1.0,
+  "ledger_reservation_id": "2f8fbd4f-f38b-4078-95d5-fbabd7ca1713",
+  "status": "failed",
+  "submitted": true,
+  "submitted_utc": "2026-11-07T12:19:56.244+00:00",
+  "task_id": "460803903955271",
+  "task_id_saved_utc": "2026-11-07T12:19:57.103+00:00",
+  "create_response": {
+    "task_id": "460803903955271"
+  },
+  "terminal_utc": "2026-11-07T12:21:32.975+00:00",
+  "query_response": {
+    "task": {
+      "id": "460803903955271",
+      "model": "MiniMax-H3",
+      "status": "succeeded",
+      "created_at": 1794053997,
+      "updated_at": 1794054093,
+      "content": {
+        "url": "[media URL redacted; original value sha256=a2940dd756e5164d75a6e06a843ba02c176cbbc24d27d00c1d33821f0628375e]"
+      },
+      "resolution": "768P",
+      "duration": 5,
+      "usage": {
+        "total_seconds": 5,
+        "input_seconds": 0,
+        "output_seconds": 5,
+        "input_image_count": 0,
+        "total_tokens": 162745,
+        "prompt_tokens": 0,
+        "completion_tokens": 162745
+      },
+      "ratio": "16:9",
+      "task_type": "generation"
+    }
+  },
+  "usage": {
+    "total_seconds": 5,
+    "input_seconds": 0,
+    "output_seconds": 5,
+    "input_image_count": 0,
+    "total_tokens": 162745,
+    "prompt_tokens": 0,
+    "completion_tokens": 162745
+  },
+  "stage_durations": null,
+  "server_metrics": null,
+  "server_inference_time_s": null,
+  "server_peak_memory_mb": null,
+  "submit_to_terminal_seconds": 96.72944991698023,
+  "poll_detection_bound_seconds": 11.21797095797956,
+  "ambiguous_submission": false,
+  "error": "文件长度不完整",
+  "finished_utc": "2026-11-07T12:21:35.091+00:00"
+}

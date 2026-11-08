@@ -1,0 +1,12 @@
+{
+  "utc": "2026-11-07T16:18:48.342+00:00",
+  "limit_seconds": 2700,
+  "includes": [
+    "adapter download and verification",
+    "BF16 stop",
+    "Turbo service startup",
+    "six requests and validation",
+    "Turbo shutdown"
+  ],
+  "requested_max_samples": 6
+}
