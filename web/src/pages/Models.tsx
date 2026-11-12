@@ -1,10 +1,10 @@
 import { Fragment, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api, IS_PUBLIC } from "../api";
+import { api, IS_ADMIN, IS_PUBLIC } from "../api";
 import { useI18n, type TKey } from "../i18n";
 import type { ModelRow, Task } from "../types";
-import { cls, secs, usd } from "../util";
-import { ErrorBox, Spinner, VendorDot } from "../components/common";
+import { cls, isUnavailable, rawUnavailable, secs, usd } from "../util";
+import { AdminOnly, ErrorBox, Spinner, VendorDot } from "../components/common";
 import { useModels } from "../components/RunSetup";
 
 const TASKS: Task[] = ["t2v", "i2v", "flf2v", "r2v", "v2v_edit", "extend", "a2v"];
@@ -43,6 +43,7 @@ export default function ModelsPage() {
   const { data: probe } = useQuery({
     queryKey: ["probe"],
     queryFn: api.probe,
+    enabled: IS_ADMIN,
     refetchInterval: (q) => (q.state.data?.running ? 4000 : false),
   });
   const recheck = async (m: ModelRow) => {
@@ -65,7 +66,7 @@ export default function ModelsPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight">{t("models.title")}</h1>
-          <p className="max-w-4xl text-[13.5px] text-ink-2">{t("models.intro")}</p>
+          <p className="max-w-4xl text-[13.5px] text-ink-2">{t(IS_ADMIN ? "models.intro" : "models.intro_public")}</p>
         </div>
         {!IS_PUBLIC && (
           <button
@@ -146,10 +147,10 @@ export default function ModelsPage() {
                     <td className="px-3 py-2.5">
                       <div className="flex items-center gap-2 font-medium">
                         <VendorDot vendor={m.vendor} /> {m.label}
-                        <span className={cls("chip !text-[10px]", m.doc === "inferred" && "!border-[var(--warn)]")}>{m.doc === "inferred" || m.doc === "documented" ? t(`models.doc.${m.doc}` as TKey) : m.doc}</span>
+                        {IS_ADMIN && <span className={cls("chip !text-[10px]", m.doc === "inferred" && "!border-[var(--warn)]")}>{m.doc === "inferred" || m.doc === "documented" ? t(`models.doc.${m.doc}` as TKey) : m.doc}</span>}
                       </div>
                       <div className="font-mono text-[11px] text-muted">{m.id}</div>
-                      {m.probe?.unavailable && (
+                      {isUnavailable(m) && (
                         <div className="mt-0.5 max-w-xs text-[11px]" style={{ color: "var(--critical)" }}>
                           ✕ {t("models.unavailable")}
                         </div>
@@ -188,37 +189,39 @@ export default function ModelsPage() {
                     <tr className="bg-surface-2">
                       <td colSpan={TASKS.length + 9} className="px-4 py-3 text-xs">
                         <p className="mb-2 text-ink-2">{tr(m.notes)}</p>
-                        {m.probe?.unavailable && <p className="mb-2" style={{ color: "var(--critical)" }}>{m.probe.unavailable}</p>}
-                        {(m.probe?.notes ?? []).map((n) => (
-                          <p key={n} className="mb-1 text-muted">• {n}</p>
-                        ))}
-                        {!IS_PUBLIC && (probe?.cases ?? []).some((c) => c.model === m.id) && (
-                          <button className="btn mb-2" disabled={probe?.running} onClick={(e) => { e.stopPropagation(); void recheck(m); }}>
-                            ↻ {t("models.recheck")}
-                          </button>
-                        )}
                         <p className="mb-2 text-muted">{m.price_ref.basis}</p>
-                        {cases.length === 0 ? (
-                          <p className="text-muted">{t("models.probe")}: —</p>
-                        ) : (
-                          <table className="w-full">
-                            <tbody>
-                              {cases.map((c) => (
-                                <tr key={c.case}>
-                                  <td className="py-0.5 pr-3 font-mono">{c.case}</td>
-                                  <td className="pr-3" style={{ color: c.outcome === "ok" ? "var(--good-text)" : c.outcome === "fail" ? "var(--critical)" : "var(--ink-2)" }}>
-                                    {c.outcome}
-                                  </td>
-                                  <td className="tnum pr-3">{c.size ?? "—"}</td>
-                                  <td className="tnum pr-3">{c.duration ? `${c.duration.toFixed(1)}s` : "—"}</td>
-                                  <td className="pr-3">{c.audio ? "♪" : ""}</td>
-                                  <td className="tnum pr-3">{c.latency_s ? secs(c.latency_s) : ""}</td>
-                                  <td className="text-muted">{c.fail_reason || (c.failed_checks?.length ? `checks: ${c.failed_checks.join(", ")}` : "")}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        )}
+                        <AdminOnly>
+                          {rawUnavailable(m) && <p className="mb-2" style={{ color: "var(--critical)" }}>{rawUnavailable(m)}</p>}
+                          {(m.probe?.notes ?? []).map((n) => (
+                            <p key={n} className="mb-1 text-muted">• {n}</p>
+                          ))}
+                          {!IS_PUBLIC && (probe?.cases ?? []).some((c) => c.model === m.id) && (
+                            <button className="btn mb-2" disabled={probe?.running} onClick={(e) => { e.stopPropagation(); void recheck(m); }}>
+                              ↻ {t("models.recheck")}
+                            </button>
+                          )}
+                          {cases.length === 0 ? (
+                            <p className="text-muted">{t("models.probe")}: —</p>
+                          ) : (
+                            <table className="w-full">
+                              <tbody>
+                                {cases.map((c) => (
+                                  <tr key={c.case}>
+                                    <td className="py-0.5 pr-3 font-mono">{c.case}</td>
+                                    <td className="pr-3" style={{ color: c.outcome === "ok" ? "var(--good-text)" : c.outcome === "fail" ? "var(--critical)" : "var(--ink-2)" }}>
+                                      {c.outcome}
+                                    </td>
+                                    <td className="tnum pr-3">{c.size ?? "—"}</td>
+                                    <td className="tnum pr-3">{c.duration ? `${c.duration.toFixed(1)}s` : "—"}</td>
+                                    <td className="pr-3">{c.audio ? "♪" : ""}</td>
+                                    <td className="tnum pr-3">{c.latency_s ? secs(c.latency_s) : ""}</td>
+                                    <td className="text-muted">{c.fail_reason || (c.failed_checks?.length ? `checks: ${c.failed_checks.join(", ")}` : "")}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          )}
+                        </AdminOnly>
                       </td>
                     </tr>
                   )}
@@ -228,10 +231,12 @@ export default function ModelsPage() {
           </tbody>
         </table>
       </div>
-      {Object.entries(data.unregistered).some(([, v]) => v.length) && (
-        <div className="card p-3 text-xs text-ink-2">
-          {t("models.unregistered")} {Object.values(data.unregistered).flat().join(", ")}
-        </div>
+      {Object.entries(data.unregistered ?? {}).some(([, v]) => v.length) && (
+        <AdminOnly>
+          <div className="card p-3 text-xs text-ink-2">
+            {t("models.unregistered")} {Object.values(data.unregistered).flat().join(", ")}
+          </div>
+        </AdminOnly>
       )}
     </div>
   );

@@ -174,6 +174,16 @@ const en = {
   "board.render": "render",
   "board.all_prompts": "All prompts",
   "board.checklist": "checklist",
+  "board.clip": "Clip {x}",
+  "board.model_id": "Model ID",
+  "board.requested_used": "Settings (requested → used)",
+  "board.server_inference": "Server inference time",
+  "board.expected_actual": "expected {expected} · actual {actual}",
+  "board.score": "score {n}",
+  "board.motion_title": "Mean optical-flow magnitude, % of frame diagonal per second (information only)",
+  "board.frame_strip": "Frame strip",
+  "board.judge_failed": "The AI judge could not score this clip.",
+  "board.signals_unavailable": "Automatic checks could not be computed for this clip.",
 
   "lb.title": "Leaderboard",
   "lb.intro": "Set what your use case needs. Models that can't meet it are greyed out; the rest are ranked. Quality uses your ratings when you've rated at least 3 clips, otherwise the AI judge's score (checklist pass rate, reduced for defects).",
@@ -227,6 +237,7 @@ const en = {
 
   "models.title": "Models on tokenbay.com",
   "models.intro": "What each model can do, its limits, a normalized price and how the live probe went. Inferred = request format guessed from sibling models and verified by `vgen probe`.",
+  "models.intro_public": "What each model on Tokenbay can do: supported tasks, clip lengths, resolutions, audio, and an approximate price.",
   "models.refresh": "Refresh availability",
   "models.available": "Live",
   "models.doc": "Docs",
@@ -243,7 +254,7 @@ const en = {
   "models.state.probe_failed": "failed probe",
   "models.state.unsupported": "not supported",
   "models.delivery": "Image input",
-  "models.unavailable": "unavailable on the gateway right now (probe: HTTP 500)",
+  "models.unavailable": "Currently unavailable (last check did not succeed)",
   "models.recheck": "Re-check with a live probe (paid)",
   "models.probe_running": "Live probe running…",
   "models.doc.documented": "documented",
@@ -287,6 +298,34 @@ const en = {
   "status.stopped": "Stopped",
   "status.blocked": "Not run",
 
+  "fail.content_policy": "Not generated: a content safety check declined this prompt or input image.",
+  "fail.insufficient_balance": "Not generated: the API key used for this run did not have enough balance.",
+  "fail.auth": "Not generated: the API key used for this run was not accepted.",
+  "fail.rate_limited": "Not generated: the request rate limit was reached and retries ran out.",
+  "fail.provider_error": "Not generated: the generation service returned an error for this request.",
+  "fail.timeout": "No clip yet: generation did not finish within the waiting time.",
+  "fail.invalid_request": "Not generated: the requested settings were not accepted for this model.",
+  "fail.unsupported": "Not run: this model does not support the requested task or settings.",
+  "fail.download_failed": "Generated, but the clip could not be retrieved.",
+  "fail.stopped": "Stopped before a clip was produced.",
+  "fail.network": "Not generated: the generation service could not be reached.",
+  "fail.internal": "Not generated: an error occurred on this site, not in the model.",
+  "fail.unknown": "Not generated: the reason was not recorded.",
+  "fail.retrying": "Temporary problem, retrying…",
+
+  "admin.title": "Admin sign-in",
+  "admin.note": "For the site owner. Visitors do not need to sign in to watch or generate.",
+  "admin.secret": "Admin secret",
+  "admin.submit": "Sign in",
+  "admin.wrong": "That secret was not accepted.",
+  "admin.throttled": "Too many attempts. Wait and try again.",
+  "admin.disabled": "Admin sign-in is not enabled on this server.",
+  "admin.badge": "Admin",
+  "admin.signout": "Sign out",
+  "admin.signed_in": "You are signed in as admin.",
+  "admin.expired": "Admin session ended. Sign in again.",
+  "admin.only": "admin only",
+
   "common.close": "Close",
   "common.cancel": "Cancel",
   "common.loading": "Loading…",
@@ -301,6 +340,9 @@ const en = {
 
 type Dict = typeof en;
 export type TKey = keyof Dict;
+
+/** For keys built from server values (statuses, categories, outcomes): t() echoes a missing key back. */
+export const hasKey = (key: string): key is TKey => Object.prototype.hasOwnProperty.call(en, key);
 
 const zh: Dict = {
   ...evaluationZh,
@@ -474,6 +516,16 @@ const zh: Dict = {
   "board.render": "生成",
   "board.all_prompts": "全部提示词",
   "board.checklist": "检查清单",
+  "board.clip": "视频 {x}",
+  "board.model_id": "模型 ID",
+  "board.requested_used": "参数（请求 → 实际使用）",
+  "board.server_inference": "服务端推理耗时",
+  "board.expected_actual": "预期 {expected} · 实际 {actual}",
+  "board.score": "得分 {n}",
+  "board.motion_title": "平均光流幅度，每秒占画面对角线的百分比（仅供参考）",
+  "board.frame_strip": "帧序列",
+  "board.judge_failed": "AI 评审未能为该视频评分。",
+  "board.signals_unavailable": "未能为该视频计算自动检测指标。",
 
   "lb.title": "排行榜",
   "lb.intro": "设定你的场景需求，不满足的模型会置灰，其余按排名展示。若你已评价至少 3 条视频，质量以你的评价为准，否则使用 AI 评审得分（清单通过率，按缺陷扣分）。",
@@ -527,6 +579,7 @@ const zh: Dict = {
 
   "models.title": "tokenbay.com 上的模型",
   "models.intro": "各模型能做什么、限制、归一化价格以及实测探测结果。“推断”表示请求格式参照同系列模型推断，并经 `vgen probe` 验证。",
+  "models.intro_public": "Tokenbay 上各模型的能力：支持的任务、时长、分辨率、音频以及参考价格。",
   "models.refresh": "刷新可用性",
   "models.available": "在线",
   "models.doc": "文档",
@@ -543,7 +596,7 @@ const zh: Dict = {
   "models.state.probe_failed": "探测失败",
   "models.state.unsupported": "不支持",
   "models.delivery": "图片输入",
-  "models.unavailable": "网关当前不可用（探测：HTTP 500）",
+  "models.unavailable": "当前不可用（最近一次检查未通过）",
   "models.recheck": "用实测探测重新检查（付费）",
   "models.probe_running": "实测探测进行中…",
   "models.doc.documented": "有文档",
@@ -587,6 +640,34 @@ const zh: Dict = {
   "status.stopped": "已停止",
   "status.blocked": "未运行",
 
+  "fail.content_policy": "未生成：该提示词或输入图片未通过内容安全审核。",
+  "fail.insufficient_balance": "未生成：本次运行所用 API Key 的余额不足。",
+  "fail.auth": "未生成：本次运行所用的 API Key 未通过验证。",
+  "fail.rate_limited": "未生成：触发请求频率限制，重试后仍未成功。",
+  "fail.provider_error": "未生成：生成服务对该请求返回了错误。",
+  "fail.timeout": "暂无视频：在等待时限内未完成生成。",
+  "fail.invalid_request": "未生成：该模型未接受所请求的参数。",
+  "fail.unsupported": "未运行：该模型不支持所请求的任务或参数。",
+  "fail.download_failed": "已生成，但未能取回视频文件。",
+  "fail.stopped": "在生成出视频前已停止。",
+  "fail.network": "未生成：无法连接生成服务。",
+  "fail.internal": "未生成：本站处理出错，与模型无关。",
+  "fail.unknown": "未生成：未记录原因。",
+  "fail.retrying": "遇到临时问题，正在重试…",
+
+  "admin.title": "管理员登录",
+  "admin.note": "仅供站点管理员使用。访客观看与生成均无需登录。",
+  "admin.secret": "管理员密钥",
+  "admin.submit": "登录",
+  "admin.wrong": "密钥不正确。",
+  "admin.throttled": "尝试次数过多，请稍后再试。",
+  "admin.disabled": "此服务器未启用管理员登录。",
+  "admin.badge": "管理员",
+  "admin.signout": "退出",
+  "admin.signed_in": "已以管理员身份登录。",
+  "admin.expired": "管理员会话已结束，请重新登录。",
+  "admin.only": "仅管理员可见",
+
   "common.close": "关闭",
   "common.cancel": "取消",
   "common.loading": "加载中…",
@@ -605,6 +686,8 @@ interface I18n {
   lang: Lang;
   setLang: (l: Lang) => void;
   t: (key: TKey, vars?: Record<string, string | number>) => string;
+  /** t() for a key built from server data; the fallback when no such key exists */
+  tx: (key: string, fallback: string, vars?: Record<string, string | number>) => string;
   tr: (v: L10n | string | undefined | null) => string;
 }
 
@@ -633,15 +716,17 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
   const value = useMemo<I18n>(() => {
     const dict = DICTS[lang];
+    const t = (key: TKey, vars?: Record<string, string | number>) => {
+      const one = vars?.n === 1 ? (dict as Record<string, string>)[`${key}_one`] : undefined;
+      let s: string = one ?? dict[key] ?? en[key] ?? key;
+      if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
+      return s;
+    };
     return {
       lang,
       setLang,
-      t: (key, vars) => {
-        const one = vars?.n === 1 ? (dict as Record<string, string>)[`${key}_one`] : undefined;
-        let s: string = one ?? dict[key] ?? en[key] ?? key;
-        if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
-        return s;
-      },
+      t,
+      tx: (key, fallback, vars) => (hasKey(key) ? t(key, vars) : fallback),
       tr: (v) => (typeof v === "string" ? v : v ? (v[lang] ?? v.en ?? v.zh ?? "") : ""),
     };
   }, [lang, setLang]);

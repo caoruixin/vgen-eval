@@ -1,9 +1,9 @@
 import type { EvaluationSet, EvaluationDetail, BackfillPlan, BenchmarkSummary, BenchmarkDetail, Deployment } from "./types";
-import type { AppConfig, Asset, Leaderboard, Ledger, ModelRow, Plan, Rating, RunDetail, RunRequest, RunSummary, Scenarios } from "./types";
+import type { AdminJobFields, AppConfig, Asset, Job, Leaderboard, Ledger, ModelRow, Plan, Rating, RunDetail, RunRequest, RunSummary, Scenarios } from "./types";
 
 declare global {
   interface Window {
-    __VGEN__?: { token: string; mock: boolean; public?: boolean };
+    __VGEN__?: { token: string; mock: boolean; public?: boolean; admin?: boolean };
   }
 }
 
@@ -11,6 +11,43 @@ const TOKEN = () => window.__VGEN__?.token ?? "";
 
 /** Hosted demo: no server key; visitors generate with their own Tokenbay key. */
 export const IS_PUBLIC = Boolean(window.__VGEN__?.public);
+
+/** May see diagnostics: everyone on the local instance; on the hosted site only after admin sign-in. Fails closed:
+ *  a built page without the boot payload is not admin. Only the Vite dev server, which never injects the payload and
+ *  proxies to the local operator instance, falls back to admin. */
+export const IS_ADMIN = window.__VGEN__ ? (window.__VGEN__.admin ?? !IS_PUBLIC) : import.meta.env.DEV;
+
+/** The job's raw diagnostics, or null when this viewer is not an admin or the server left them out (e.g. an expired session). */
+export function adminFields<J extends Job>(job: J): (J & AdminJobFields) | null {
+  return IS_ADMIN && "task_id" in job ? (job as J & AdminJobFields) : null;
+}
+
+/** There is no error boundary: give the objects the UI reads unguarded a safe default. */
+export function normalizeJob<J extends Job>(job: J): J {
+  return {
+    ...job,
+    provenance: job.provenance ?? {},
+    spec: job.spec ?? {},
+    effective: job.effective ?? {},
+    adjustments: job.adjustments ?? [],
+    media: job.media ?? {},
+    cost: job.cost ?? { estimate_usd: null, actual_usd: null, per_second: null },
+  };
+}
+
+const normalizeRun = (d: RunDetail): RunDetail => ({ ...d, jobs: (d.jobs ?? []).map(normalizeJob), ratings: d.ratings ?? {}, picks: d.picks ?? {} });
+const normalizeEvaluation = (d: EvaluationDetail): EvaluationDetail => ({
+  ...d, groups: (d.groups ?? []).map((g) => ({ ...g, samples: (g.samples ?? []).map(normalizeJob) })), coverage: d.coverage ?? [],
+});
+/** Visitors get a reduced benchmark; keep every collection the page maps over defined. */
+function normalizeBenchmark(d: BenchmarkDetail): BenchmarkDetail {
+  const s: Partial<BenchmarkDetail["summary"]> = d.summary ?? {};
+  return {
+    ...d, config: d.config ?? {}, deployments: d.deployments ?? [], artifacts: d.artifacts ?? {},
+    attempts: (d.attempts ?? []).map((a) => ({ ...a, metrics: a.metrics ?? {} })),
+    summary: { groups: s.groups ?? [], phases: s.phases ?? [], scenes: s.scenes ?? [], telemetry: s.telemetry ?? {}, costs: s.costs ?? {}, utilization: s.utilization ?? [] },
+  };
+}
 
 export class ApiError extends Error {
   status: number;
@@ -61,10 +98,11 @@ async function request<T>(method: string, path: string, body?: unknown, form?: F
 
 export const api = {
   evaluations: () => request<EvaluationSet[]>("GET", "/api/evaluations"),
-  evaluation: (dataset: string, key: string) => request<EvaluationDetail>("GET", `/api/evaluations/${encodeURIComponent(dataset)}/cases/${encodeURIComponent(key)}`),
+  evaluation: (dataset: string, key: string) =>
+    request<EvaluationDetail>("GET", `/api/evaluations/${encodeURIComponent(dataset)}/cases/${encodeURIComponent(key)}`).then(normalizeEvaluation),
   backfill: (dataset: string) => request<BackfillPlan>("GET", `/api/evaluations/${encodeURIComponent(dataset)}/backfill-plan`),
   benchmarks: () => request<{ experiments: BenchmarkSummary[]; deployments: Deployment[] }>("GET", "/api/benchmarks"),
-  benchmark: (id: string) => request<BenchmarkDetail>("GET", `/api/benchmarks/${encodeURIComponent(id)}`),
+  benchmark: (id: string) => request<BenchmarkDetail>("GET", `/api/benchmarks/${encodeURIComponent(id)}`).then(normalizeBenchmark),
   config: () => request<AppConfig>("GET", "/api/config"),
   models: () => request<{ models: ModelRow[]; unregistered: Record<string, string[]>; live_checked_at: number | null }>("GET", "/api/models"),
   refreshModels: () => request<{ ok: boolean }>("POST", "/api/models/refresh", {}),
@@ -79,12 +117,12 @@ export const api = {
   },
   assetFromUrl: (url: string, label: string) => request<Asset>("POST", "/api/assets/url", { url, label }),
   plan: (req: RunRequest) => request<Plan>("POST", "/api/plan", req),
-  createRun: (req: RunRequest, key?: string) => request<RunDetail>("POST", "/api/runs", req, undefined, key),
+  createRun: (req: RunRequest, key?: string) => request<RunDetail>("POST", "/api/runs", req, undefined, key).then(normalizeRun),
   checkKey: (key: string) => request<{ ok: boolean }>("POST", "/api/key/check", {}, undefined, key),
-  attachKey: (runId: string, key: string) => request<RunDetail>("POST", `/api/runs/${runId}/key`, {}, undefined, key),
+  attachKey: (runId: string, key: string) => request<RunDetail>("POST", `/api/runs/${runId}/key`, {}, undefined, key).then(normalizeRun),
   runs: (kind?: string) => request<RunSummary[]>("GET", `/api/runs${kind ? `?kind=${kind}` : ""}`),
-  run: (id: string) => request<RunDetail>("GET", `/api/runs/${id}`),
-  rerun: (id: string, confirm: boolean, key?: string) => request<RunDetail>("POST", `/api/runs/${id}/rerun`, { confirm }, undefined, key),
+  run: (id: string) => request<RunDetail>("GET", `/api/runs/${id}`).then(normalizeRun),
+  rerun: (id: string, confirm: boolean, key?: string) => request<RunDetail>("POST", `/api/runs/${id}/rerun`, { confirm }, undefined, key).then(normalizeRun),
   deleteRun: (id: string) => request<{ ok: boolean }>("DELETE", `/api/runs/${id}`),
   stopJob: (id: string) => request("POST", `/api/jobs/${id}/stop`, {}),
   repollJob: (id: string, key?: string) => request("POST", `/api/jobs/${id}/repoll`, {}, undefined, key),
@@ -104,3 +142,7 @@ export const api = {
   startProbe: (cases: string[], confirm: boolean, budget = 3) =>
     request<{ started: boolean; total: number; cases: string[]; log: string[] }>("POST", "/api/probe", { cases, confirm, budget }),
 };
+
+/** 200 sets an HttpOnly session cookie; 401 wrong secret, 429 throttled, 404 sign-in not enabled. Reload afterwards. */
+export const adminLogin = (secret: string) => request<{ ok: boolean }>("POST", "/api/admin/login", { secret });
+export const adminLogout = () => request<{ ok: boolean }>("POST", "/api/admin/logout", {});

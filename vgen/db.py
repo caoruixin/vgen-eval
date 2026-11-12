@@ -29,6 +29,11 @@ BLOCKED = "blocked"            # payload could not be built; never submitted
 ACTIVE_REMOTE = {QUEUED, IN_PROGRESS}
 TERMINAL = {SUCCEEDED, FAILED, SUBMIT_UNKNOWN, TIMEOUT, STOPPED, BLOCKED}
 
+# Job.error_code for a failure that this app caused itself (a crash in a step, a restart mid-submit, a disabled
+# endpoint). Every other code comes from the gateway. The public "an error occurred on this site" reason keys on
+# this code, never on wording, because gateway messages are stored verbatim and may read "Internal error" too.
+INTERNAL_ERROR_CODE = "vgen_internal"
+
 
 def new_id(prefix: str) -> str:
     return f"{prefix}_{uuid.uuid4().hex[:12]}"

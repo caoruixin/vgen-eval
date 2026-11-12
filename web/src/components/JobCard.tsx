@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { api, IS_PUBLIC } from "../api";
+import { adminFields, api, IS_PUBLIC } from "../api";
 import { storedKey } from "../apiKey";
-import { useI18n, type TKey } from "../i18n";
+import { useI18n } from "../i18n";
 import type { Job, Rating } from "../types";
-import { cls, pct, secs, TERMINAL, usd } from "../util";
-import { Check, ErrorBox, StatusBadge, VendorDot } from "./common";
+import { cls, failureCategory, pct, secs, TERMINAL, usd } from "../util";
+import { AdminOnly, Check, ErrorBox, StatusBadge, VendorDot } from "./common";
 
 export const DEFECT_TAGS = ["morphing", "anatomy", "physics", "text_garbled", "identity_drift", "lip_sync", "audio_artifact", "ignores_prompt", "flicker", "letterbox_watermark"];
 
@@ -72,6 +72,7 @@ export default function JobCard({
   editable = true,
   pickEnabled = true,
   onSound,
+  tag,
 }: {
   job: Job;
   rating: Rating | undefined;
@@ -86,8 +87,10 @@ export default function JobCard({
   editable?: boolean;
   pickEnabled?: boolean;
   onSound?: (id: string) => void;
+  /** source label under the model name (hidden in blind mode) */
+  tag?: ReactNode;
 }) {
-  const { t, lang } = useI18n();
+  const { t, tx, lang } = useI18n();
   const qc = useQueryClient();
   const [details, setDetails] = useState(false);
   const [showChecklist, setShowChecklist] = useState(false);
@@ -100,11 +103,25 @@ export default function JobCard({
     call().then(refresh, setActionErr);
   };
   const rate = (patch: Partial<Rating>) => act(() => api.rate(job.id, patch));
-  const name = blind ? `${lang === "zh" ? "视频" : "Clip"} ${job.label}` : job.model_label;
+  const name = blind ? t("board.clip", { x: job.label }) : job.model_label;
   const requestedSteps = job.provenance.requested_num_inference_steps;
   const actualSteps = job.provenance.actual_denoise_updates;
   const done = job.status === "succeeded";
   const active = !TERMINAL.has(job.status);
+  const adm = adminFields(job);
+  // a gateway task exists, so it may already have been billed
+  const hasTask = job.has_task ?? Boolean(job.task_id);
+  const fail = failureCategory(job);
+  const failText = active && job.failure?.retrying ? t("fail.retrying") : fail ? t(`fail.${fail}`) : null;
+  const settings = (o: Record<string, unknown>) =>
+    [
+      o.resolution != null ? String(o.resolution) : null,
+      o.duration != null ? t("common.seconds", { n: String(o.duration) }) : null,
+      o.ratio != null ? String(o.ratio) : null,
+      typeof o.audio === "boolean" ? (o.audio ? "♪" : t("board.no_audio")) : null,
+    ].filter(Boolean).join(" · ");
+  const requested = settings(job.spec);
+  const used = settings(job.effective);
   const v = job.media?.video;
   const judge = job.judge ?? {};
   const fid = job.fidelity ?? {};
@@ -133,7 +150,15 @@ export default function JobCard({
           <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center text-[13px] text-white/80">
             <StatusBadge status={job.status} progress={job.progress} />
             {active && job.status === "pending" && <span className="text-xs text-white/60">{t("board.waiting")}</span>}
-            {job.fail_reason && <span className="max-w-[90%] text-xs text-white/70">{job.fail_reason}</span>}
+            {failText && <span className="max-w-[90%] text-xs text-white/80">{failText}</span>}
+            {!blind && adm && (adm.fail_reason || adm.error_code) && (
+              <AdminOnly inline>
+                <span className="max-w-[90%] break-all font-mono text-[11px] text-white/60">
+                  {adm.error_code ? `[${adm.error_code}] ` : ""}
+                  {adm.fail_reason}
+                </span>
+              </AdminOnly>
+            )}
             {active && job.progress && (
               <span className="h-1 w-40 overflow-hidden rounded-full bg-white/20">
                 <span className="block h-full bg-white/80" style={{ width: job.progress }} />
@@ -156,6 +181,7 @@ export default function JobCard({
                 {done && v ? ` · ${v.width}×${v.height} · ${(job.media.duration ?? 0).toFixed(1)}s${job.media.audio ? " · ♪" : ""}` : ""}
               </div>
             )}
+            {!blind && tag ? <div className="mt-1">{tag}</div> : null}
           </div>
           <div className="flex flex-col items-end gap-1">
             {done && <StatusBadge status={job.status} />}
@@ -171,7 +197,7 @@ export default function JobCard({
 
         {!blind && job.origin === "imported" && <div className="space-y-1 text-xs">
           <div className="flex flex-wrap gap-1.5">
-            {job.provenance.phase != null && <span className="chip">{t(`phase.${job.provenance.phase}` as TKey)}</span>}
+            {job.provenance.phase != null && <span className="chip">{tx(`phase.${job.provenance.phase}`, String(job.provenance.phase))}</span>}
             <span className="chip">{typeof requestedSteps === "number" ? `${t("eval.requested_steps")}: ${requestedSteps}` : t(job.provenance.source === "official_api" ? "eval.steps_undisclosed" : "eval.steps_unrecorded")}</span>
             {typeof actualSteps === "number" && <span className="chip">{t("eval.observed_steps")}: {actualSteps}</span>}
             {job.provenance.seed != null && <span className="chip">{t("eval.seed")}: {String(job.provenance.seed)}</span>}
@@ -179,19 +205,19 @@ export default function JobCard({
           {requestedSteps === 8 && job.provenance.turbo_activation_verified !== true && <p className="text-[var(--warn)]">{t("eval.turbo_unverified")}</p>}
         </div>}
 
-        {!blind && (done || job.task_id) && (
+        {!blind && (done || hasTask) && (
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="rounded-md bg-surface-2 px-2 py-1.5">
               <div className="text-muted">{t("board.cost")}</div>
               <div className="tnum font-medium text-ink">
-                {job.cost.actual_usd !== null ? usd(job.cost.actual_usd) : usd(job.cost.estimate_usd)}
-                <span className="ml-1 font-normal text-muted">{job.cost.actual_usd !== null ? t("board.actual") : job.cost.estimate_usd != null ? t("board.estimate") : t("eval.unknown")}</span>
+                {job.cost.actual_usd != null ? usd(job.cost.actual_usd) : usd(job.cost.estimate_usd)}
+                <span className="ml-1 font-normal text-muted">{job.cost.actual_usd != null ? t("board.actual") : job.cost.estimate_usd != null ? t("board.estimate") : t("eval.unknown")}</span>
               </div>
               {job.cost.per_second ? <div className="tnum text-muted">{usd(job.cost.per_second, 3)}/s</div> : null}
             </div>
             <div className="rounded-md bg-surface-2 px-2 py-1.5">
               <div className="text-muted">{t("board.latency")}</div>
-              <div className="tnum font-medium text-ink">{secs(job.latency_s ?? (!done && job.submitted_at ? Date.now() / 1000 - job.submitted_at : null))}</div>
+              <div className="tnum font-medium text-ink">{secs(job.latency_s ?? (active && job.submitted_at ? Date.now() / 1000 - job.submitted_at : null))}</div>
               {job.gw_start_time && job.gw_submit_time ? (
                 <div className="tnum text-muted">
                   {t("board.queue")} {secs(job.gw_start_time - job.gw_submit_time)}
@@ -205,8 +231,8 @@ export default function JobCard({
         {!blind && done && (
           <div className="space-y-1 text-xs text-muted">
             <p>{t("eval.requested")}: {String(job.spec.resolution ?? job.effective.resolution ?? "—")} · {String(job.spec.duration ?? "—")}s</p>
-            {job.latency_basis && <p>{t(`eval.${job.latency_basis}` as TKey)}</p>}
-            {job.cost.basis && <p>{t(`eval.${job.cost.basis}` as TKey)}</p>}
+            {job.latency_basis && <p>{tx(`eval.${job.latency_basis}`, job.latency_basis)}</p>}
+            {job.cost.basis && <p>{tx(`eval.${job.cost.basis}`, job.cost.basis)}</p>}
             {job.origin === "imported" && !rating?.overall && rating?.usable == null && <p>{t("eval.unrated")}</p>}
           </div>
         )}
@@ -220,7 +246,7 @@ export default function JobCard({
                   key={c.key}
                   ok={c.ok}
                   label={L(COMPLIANCE_LABEL, c.key)}
-                  title={`${t("board.compliance")}: expected ${String(c.expected)} · actual ${String(c.actual)}${c.note ? ` · ${c.note}` : ""}`}
+                  title={`${t("board.compliance")}: ${t("board.expected_actual", { expected: String(c.expected), actual: String(c.actual) })}${c.note ? ` · ${c.note}` : ""}`}
                 />
               ))}
             </div>
@@ -241,12 +267,12 @@ export default function JobCard({
             <div className="label">{t("board.signals")}</div>
             <div className="flex flex-wrap gap-1 text-xs">
               {fid.first && (
-                <span className="chip" title={`score ${fid.first.score}`}>
+                <span className="chip" title={t("board.score", { n: String(fid.first.score) })}>
                   {t("board.first_frame")}: <b className="text-ink">{L(GRADE_LABEL, fid.first.grade)}</b>
                 </span>
               )}
               {fid.last && (
-                <span className="chip" title={`score ${fid.last.score}`}>
+                <span className="chip" title={t("board.score", { n: String(fid.last.score) })}>
                   {t("board.last_frame")}: <b className="text-ink">{L(GRADE_LABEL, fid.last.grade)}</b>
                 </span>
               )}
@@ -257,7 +283,7 @@ export default function JobCard({
                 </span>
               )}
               {sig.motion_pct_per_s !== undefined && (
-                <span className="chip" title="mean optical-flow magnitude, % of frame diagonal per second (information only)">
+                <span className="chip" title={t("board.motion_title")}>
                   {t("board.motion")}: <span className="tnum">{sig.motion_pct_per_s?.toFixed(1)}</span>
                 </span>
               )}
@@ -272,7 +298,12 @@ export default function JobCard({
                 </span>
               )}
             </div>
-            {sig.error && <div className="text-xs text-muted">{sig.error}</div>}
+            {(sig.analysis_failed || sig.error) && <div className="text-xs text-muted">{t("board.signals_unavailable")}</div>}
+            {sig.error && (
+              <AdminOnly>
+                <div className="break-all font-mono text-[11px] text-muted">{sig.error}</div>
+              </AdminOnly>
+            )}
           </div>
         )}
 
@@ -288,9 +319,16 @@ export default function JobCard({
             </div>
             {(job.judge_status === "pending" || job.judge_status === "running") && <div className="text-xs text-muted">{t("board.judge_pending")}</div>}
             {job.judge_status === "error" && (
-              <div className="text-xs" style={{ color: "var(--critical)" }}>
-                ✕ {judge.error}
-              </div>
+              <>
+                <div className="text-xs" style={{ color: "var(--critical)" }}>
+                  ✕ {t("board.judge_failed")}
+                </div>
+                {judge.error && (
+                  <AdminOnly>
+                    <div className="break-all font-mono text-[11px] text-muted">{judge.error}</div>
+                  </AdminOnly>
+                )}
+              </>
             )}
             {job.judge_status === "done" && (
               <>
@@ -368,13 +406,13 @@ export default function JobCard({
           {editable && ["pending", "queued", "in_progress"].includes(job.status) && (
             <TwoStep label={t("board.stop")} confirmLabel={`${t("board.stop")}?`} onConfirm={() => act(() => api.stopJob(job.id))} />
           )}
-          {editable && ["timeout", "stopped"].includes(job.status) && job.task_id && (
+          {editable && ["timeout", "stopped"].includes(job.status) && hasTask && (
             <button className="btn" onClick={() => act(() => api.repollJob(job.id, key()))}>
               {t("board.repoll")}
             </button>
           )}
           {editable && ["failed", "submit_unknown", "timeout", "stopped", "blocked"].includes(job.status) && (
-            <TwoStep label={t("board.resubmit")} confirmLabel={job.task_id ? t("board.resubmit_confirm") : `${t("board.resubmit")}?`} onConfirm={() => act(() => api.resubmitJob(job.id, true, key()))} />
+            <TwoStep label={t("board.resubmit")} confirmLabel={hasTask ? t("board.resubmit_confirm") : `${t("board.resubmit")}?`} onConfirm={() => act(() => api.resubmitJob(job.id, true, key()))} />
           )}
           {editable && done && job.origin !== "imported" && (
             <button className="btn" onClick={() => act(() => api.judgeJob(job.id, key()))}>
@@ -387,7 +425,16 @@ export default function JobCard({
         </div>
         {details && (
           <div className="space-y-2 text-xs">
-            {!blind && <div className="text-muted">model: {job.model} · task: {job.task_id ?? "—"} · {job.endpoint}</div>}
+            {!blind && (
+              <div className="text-muted">
+                {t("board.model_id")}: <span className="font-mono">{job.model}</span>
+              </div>
+            )}
+            {!blind && (requested || used) && (
+              <div className="text-muted">
+                {t("board.requested_used")}: {requested || "—"} → {used || "—"}
+              </div>
+            )}
             {!blind && job.adjustments.length > 0 && (
               <div>
                 <div className="label">{t("board.adjustments")}</div>
@@ -398,14 +445,26 @@ export default function JobCard({
                 ))}
               </div>
             )}
-            {!blind && <pre className="json">{JSON.stringify(job.payload, null, 2)}</pre>}
-            {!blind && job.origin === "imported" && <pre className="json">{JSON.stringify(job.provenance, null, 2)}</pre>}
-            {!blind && Object.keys(job.last_detail ?? {}).length > 0 && <pre className="json">{JSON.stringify(job.last_detail, null, 2)}</pre>}
-            {job.strip_url && <img src={job.strip_url} alt="frame strip" className="w-full rounded" />}
+            {!blind && job.origin === "imported" && typeof job.provenance.server_inference_time_s === "number" && (
+              <div className="text-muted">
+                {t("board.server_inference")}: <span className="tnum">{secs(job.provenance.server_inference_time_s)}</span>
+              </div>
+            )}
+            {job.strip_url && <img src={job.strip_url} alt={t("board.frame_strip")} className="w-full rounded" />}
             {["pending", "queued", "in_progress"].includes(job.status) && <p className="text-muted">{t("board.no_cancel")}</p>}
+            {!blind && adm && (
+              <AdminOnly>
+                <div className="break-all font-mono text-[11px] text-muted">
+                  task_id: {adm.task_id ?? "—"} · {adm.endpoint ?? "—"}
+                </div>
+                {Object.keys(adm.payload ?? {}).length > 0 && <pre className="json">{JSON.stringify(adm.payload, null, 2)}</pre>}
+                {job.origin === "imported" && <pre className="json">{JSON.stringify(job.provenance, null, 2)}</pre>}
+                {Object.keys(adm.last_detail ?? {}).length > 0 && <pre className="json">{JSON.stringify(adm.last_detail, null, 2)}</pre>}
+              </AdminOnly>
+            )}
           </div>
         )}
-        <span className="hidden">{t(`status.${job.status}` as TKey)}</span>
+        <span className="hidden">{tx(`status.${job.status}`, job.status)}</span>
       </div>
     </div>
   );

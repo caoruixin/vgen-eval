@@ -8,6 +8,7 @@ import dataclasses
 import io
 import json
 import logging
+import math
 import os
 import re
 import secrets
@@ -23,7 +24,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlmodel import select
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from vgen import db, ranking, runs
+from vgen import db, public_view, ranking, runs
 from vgen.assets import get_asset, list_assets, store_bytes
 from vgen.catalog.registry import TASKS, Registry
 from vgen.config import ROOT, Settings, get_settings
@@ -34,7 +35,8 @@ from vgen.jobs import JobEngine
 from vgen.keys import KEY_HEADER, KeyRing
 from vgen.mock_gateway import MockGateway
 from vgen.scenarios import load_packs, packs_for_api, register_assets
-from vgen.security import LAUNCH_TOKEN, TokenGuard
+from vgen.security import (ADMIN_COOKIE, ADMIN_SESSION_S, LAUNCH_TOKEN, AdminAuth, AdminThrottled, NoStoreApi,
+                           TokenGuard)
 
 log = logging.getLogger("vgen.api")
 WEB_DIST = ROOT / "web" / "dist"
@@ -44,6 +46,8 @@ VISITOR_COOKIE = "vgen_vid"
 _VISITOR_ID = re.compile(r"[A-Za-z0-9_-]{16,64}")
 MAX_UPLOAD_BYTES = 60 * 1024 * 1024
 MAX_PUBLIC_UPLOAD_BYTES = 20 * 1024 * 1024
+# Admin sign-in is refused over plain http, except on these hosts (a local check of the hosted mode, and tests).
+LOCAL_HOSTS = ("127.0.0.1", "localhost", "testserver")
 
 
 def viewer(request: Request) -> str | None:
@@ -91,6 +95,7 @@ class AppState:
     registry: Registry
     gateways: dict[str, Gateway]
     keys: KeyRing | None
+    admin: AdminAuth
     engine: JobEngine
     packs_raw: dict[str, Any]
     asset_ids: dict[str, str]
@@ -105,6 +110,10 @@ def build_runtime(settings: Settings, transport_factory: Callable[[str], httpx.A
     st.mock = MockGateway(st.registry) if settings.mock else None
     st.gateways = {}
     st.keys = None
+    # admin sign-in exists only on the hosted site; on the local instance everyone is the operator
+    st.admin = AdminAuth(settings.admin_secret_hash if settings.public else "")
+    if settings.public and settings.admin_secret_hash and not st.admin.enabled:
+        log.warning("VGEN_ADMIN_SECRET_HASH is not a valid hash from `vgen admin-hash`; admin sign-in is disabled")
 
     def transport_for(key: str) -> httpx.AsyncBaseTransport | None:
         return st.mock.transport() if st.mock else (transport_factory(key) if transport_factory else None)
@@ -192,25 +201,45 @@ def create_app(settings: Settings | None = None,
                 await st.keys.aclose()
             lock.release()
 
-    app = FastAPI(title="vgen-eval", lifespan=lifespan)
+    # the hosted site does not publish the API schema or the interactive docs
+    hidden_docs = {"docs_url": None, "redoc_url": None, "openapi_url": None} if settings.public else {}
+    app = FastAPI(title="vgen-eval", lifespan=lifespan, **hidden_docs)
     app.add_middleware(TrustedHostMiddleware,
                        allowed_hosts=["127.0.0.1", "localhost", "testserver", *settings.allowed_hosts])
     app.add_middleware(TokenGuard)
+    if settings.public:
+        app.add_middleware(NoStoreApi)     # the same URL now answers differently per visitor and per admin session
 
     def S(request: Request) -> AppState:
         return request.app.state.vgen
 
     # ------------------------------------------------------------------ public mode: who may see / change what
+    # Two separate notions. operator = this process holds the operator's Tokenbay key (local instance only).
+    # admin = may see diagnostics: everyone on the local instance, on the hosted site only a signed-in session.
+    # Admin adds read visibility and nothing else: no editing of example runs, no spending, no access to other
+    # visitors' private runs and uploads.
     def operator_only(request: Request) -> None:
         if S(request).settings.public:
             raise HTTPException(403, "not available on the hosted demo")
+
+    def is_admin(request: Request) -> bool:
+        st = S(request)
+        if not st.settings.public:
+            return True
+        return st.admin.valid(request.cookies.get(ADMIN_COOKIE))
+
+    def admin_only(request: Request) -> None:
+        if not is_admin(request):
+            raise HTTPException(403, "admin sign-in required")
 
     def can_see(st: AppState, request: Request, run: Run | None) -> bool:
         if run is None:
             return False
         if not st.settings.public:
             return True
-        return run.kind != "probe" and (run.owner is None or run.owner == viewer(request))
+        if run.kind == "probe" and not is_admin(request):
+            return False
+        return run.owner is None or run.owner == viewer(request)
 
     def visible_run(st: AppState, request: Request, run_id: str) -> Run:
         with session() as s:
@@ -246,11 +275,13 @@ def create_app(settings: Settings | None = None,
         try:
             await st.keys.check(key)
         except GatewayError as err:
+            # the gateway's own wording goes to admins only
+            upstream = f" ({err.message})" if is_admin(request) else ""
             if err.kind == AUTH:
-                raise HTTPException(401, f"Tokenbay rejected this key: {err.message}") from None
+                raise HTTPException(401, f"Tokenbay rejected this key; check that it is active{upstream}") from None
             if err.kind == RATE_LIMIT:
                 raise HTTPException(429, "Tokenbay's rate limit for this key was reached; try again in a minute") from None
-            raise HTTPException(502, f"could not reach Tokenbay to check the key: {err.message}") from None
+            raise HTTPException(502, f"could not reach Tokenbay to check the key; try again shortly{upstream}") from None
         return key
 
     async def attach_visitor_key(st: AppState, request: Request, run_id: str) -> None:
@@ -268,13 +299,56 @@ def create_app(settings: Settings | None = None,
                 Job.status.not_in(list(TERMINAL)) | Job.judge_status.in_(["pending", "running"]))).all()
         return len(set(rows))
 
+    # ------------------------------------------------------------------ admin sign-in (hosted site only)
+    def admin_auth(request: Request) -> AdminAuth:
+        st = S(request)
+        if not st.settings.public or not st.admin.enabled:
+            raise HTTPException(404, "admin sign-in is not available here")
+        return st.admin
+
+    @app.post("/api/admin/login")
+    def admin_login(request: Request, payload: dict = Body(default={})) -> Response:
+        # a sync handler: it runs in the thread pool, so hashing the secret never blocks the event loop
+        auth = admin_auth(request)
+        if request.url.scheme != "https" and request.url.hostname not in LOCAL_HOSTS:
+            raise HTTPException(400, "admin sign-in needs https")
+        # The peer address as uvicorn resolved it from the proxy's header (not parsed here). It only keys the
+        # throttle: being local never makes a request admin, since every proxied request arrives from 127.0.0.1.
+        client = request.client.host if request.client else "unknown"
+        try:
+            token = auth.login(client, payload.get("secret"))
+        except AdminThrottled as hold:
+            # turned away before the secret was looked at: never reported as a wrong secret
+            detail = ("sign-in is busy right now; try again in a moment" if hold.busy
+                      else "too many sign-in attempts; try again later")
+            raise HTTPException(429, detail, headers={"Retry-After": str(max(1, math.ceil(hold.retry_after)))}) from None
+        if token is None:
+            raise HTTPException(401, "that admin secret was not accepted")
+        resp = JSONResponse({"ok": True})
+        # Lax, not Strict: the cookie must come along when the operator follows a link to the site, or the page
+        # would boot as a visitor's while the session is valid. State changes are guarded by the launch-token header.
+        resp.set_cookie(ADMIN_COOKIE, token, max_age=ADMIN_SESSION_S, path="/", httponly=True, secure=True,
+                        samesite="lax")
+        return resp
+
+    @app.post("/api/admin/logout")
+    def admin_logout(request: Request) -> Response:
+        auth = admin_auth(request)
+        auth.logout(request.cookies.get(ADMIN_COOKIE))
+        resp = JSONResponse({"ok": True})
+        resp.delete_cookie(ADMIN_COOKIE, path="/", httponly=True, secure=True, samesite="lax")
+        return resp
+
     # ------------------------------------------------------------------ config & catalog
     @app.get("/api/config")
     def config(request: Request) -> dict[str, Any]:
         st = S(request)
-        return {
+        admin = is_admin(request)
+        full = {
             "mock": st.settings.mock,
             "public": st.settings.public,
+            "admin": admin,
+            "admin_login": st.settings.public and st.admin.enabled,
             "endpoints": [{"key": k, "name": g.endpoint.name, "rpm": g.limiter.rpm, "used_last_minute": g.limiter.used(),
                            "disabled_reason": g.disabled_reason, "last_error": g.last_error} for k, g in st.gateways.items()],
             "budget_usd": st.settings.budget_usd,
@@ -293,10 +367,12 @@ def create_app(settings: Settings | None = None,
             "live_checked_at": st.registry.live_checked_at,
             "live_error": st.registry.live_error,
         }
+        return full if admin else public_view.public_config(full)
 
     @app.get("/api/models")
     def models(request: Request) -> dict[str, Any]:
         st = S(request)
+        admin = is_admin(request)
         out = []
         for m in st.registry.models.values():
             res = "720p" if "720p" in m.resolutions else m.resolutions[0]
@@ -305,7 +381,7 @@ def create_app(settings: Settings | None = None,
             est = estimate_job(st.registry, m.id, {"duration": dur5, "resolution": res, "ratio": ratio, "audio": False})
             out.append({
                 **m.model_dump(exclude={"probe"}),
-                "probe": m.probe,
+                "probe": m.probe if admin else public_view.public_probe_overlay(m.probe),
                 "task_states": {t: m.task_state(t) for t in TASKS},
                 "delivery_effective": {k: {meth: m.delivery_state(k, meth) for meth in ("url", "data_uri")}
                                        for k in ("image", "video", "audio")},
@@ -313,7 +389,8 @@ def create_app(settings: Settings | None = None,
                 "price": st.registry.price(m.id),
                 "price_ref": {"settings": f"{dur5}s @ {res}", **est.as_dict()},
             })
-        return {"models": out, "unregistered": {k: st.registry.unregistered(k) for k in st.settings.endpoints},
+        return {"models": out,
+                "unregistered": {k: st.registry.unregistered(k) for k in st.settings.endpoints} if admin else [],
                 "live_checked_at": st.registry.live_checked_at}
 
     @app.put("/api/settings")
@@ -438,6 +515,8 @@ def create_app(settings: Settings | None = None,
     def plan_run(request: Request, req: runs.RunRequest) -> dict[str, Any]:
         st = S(request)
         planned = runs.plan(st.registry, visitor_request(st, req), st.settings.judge_model)
+        if not is_admin(request):
+            planned = public_view.public_plan(planned)
         return {**planned, "budget": budget_view(st, planned["total_usd"])}
 
     @app.post("/api/runs")
@@ -457,14 +536,16 @@ def create_app(settings: Settings | None = None,
         planned = runs.plan(st.registry, req, st.settings.judge_model)
         if planned["runnable"] == 0:
             raise HTTPException(400, "nothing to run: " + "; ".join(sorted({i.get("reason", "") for i in planned["items"]})))
+        # the plan echoed back with a confirmation request follows the same projection as /api/plan
+        shown_plan = planned if is_admin(request) else public_view.public_plan(planned)
         if planned["unknown_prices"] and not req.allow_unknown_price:
-            return JSONResponse(status_code=409, content={"needs_confirmation": True, "plan": planned,
+            return JSONResponse(status_code=409, content={"needs_confirmation": True, "plan": shown_plan,
                                                           "reasons": ["some models have no known price"]})
         budget = budget_view(st, planned["total_usd"])
         if budget["hard_cap_blocked"]:
             raise HTTPException(403, f"hard spend cap ${budget['hard_cap_usd']:g} would be exceeded")
         if budget["confirm_reasons"] and not req.confirm:
-            return JSONResponse(status_code=409, content={"needs_confirmation": True, "plan": planned,
+            return JSONResponse(status_code=409, content={"needs_confirmation": True, "plan": shown_plan,
                                                           "reasons": budget["confirm_reasons"], "budget": budget})
         key = await visitor_key(st, request) if st.settings.public else None
         run = runs.create(st.registry, req, planned, owner=owner)
@@ -488,12 +569,15 @@ def create_app(settings: Settings | None = None,
     def list_runs(request: Request, limit: int = 100, kind: str | None = None) -> list[dict[str, Any]]:
         st = S(request)
         vid = viewer(request)
+        admin = is_admin(request)
         with session() as s:
             q = select(Run).order_by(Run.created_at.desc()).limit(limit)
             if kind:
                 q = q.where(Run.kind == kind)
             if st.settings.public:
-                q = q.where(Run.kind != "probe", (Run.owner == None) | (Run.owner == vid))  # noqa: E711
+                q = q.where((Run.owner == None) | (Run.owner == vid))  # noqa: E711
+                if not admin:
+                    q = q.where(Run.kind != "probe")
             rows = list(s.exec(q))
             jobs = list(s.exec(select(Job).where(Job.run_id.in_([r.id for r in rows])))) if rows else []
         by_run: dict[str, list[Job]] = {}
@@ -507,16 +591,22 @@ def create_app(settings: Settings | None = None,
             for j in js:
                 counts[j.status] = counts.get(j.status, 0) + 1
             posters = [f"/api/jobs/{j.id}/poster" for j in js if j.poster_path][:4]
+            mine = not st.settings.public or (r.owner is not None and r.owner == vid)
+            # what a run cost is the payer's business: the operator's spend on example runs is for admins only
+            spent = None if r.kind == "experiment" or not (admin or mine) else spend.get(r.id, 0.0)
             out.append({**r.model_dump(include={"id", "created_at", "title", "kind", "scenario_id", "category",
                                                 "task", "lang", "judge", "est_cost_usd", "models"}),
                         "n_prompts": len(r.prompts or []), "n_jobs": len(js), "counts": counts,
                         "active": sum(1 for j in js if j.status not in TERMINAL), "posters": posters,
-                        "spent_usd": None if r.kind == "experiment" else spend.get(r.id, 0.0),
-                        "mine": not st.settings.public or (r.owner is not None and r.owner == vid)})
+                        "spent_usd": spent, "mine": mine})
         return out
 
-    def job_out(st: AppState, j: Job) -> dict[str, Any]:
+    def job_out(st: AppState, j: Job, admin: bool) -> dict[str, Any]:
+        """The full job for admins; everyone else gets the public projection (also of their own clips)."""
         d = j.model_dump(exclude={"video_path", "poster_path", "strip_path"})
+        d["provenance"] = dict(d.get("provenance") or {})
+        d["has_task"] = bool(j.task_id)
+        d["failure"] = public_view.job_failure(j.status, j.error_code, j.fail_reason)
         info = st.registry.models.get(j.model)
         d["model_label"] = info.label if info else j.model
         d["family"] = info.family if info else ""
@@ -544,17 +634,18 @@ def create_app(settings: Settings | None = None,
                       "cost": {"estimate_usd": cost, "actual_usd": None, "quota": None,
                                "basis": j.provenance.get("cost_basis"),
                                "per_second": cost / duration if cost is not None and duration else None}})
-            return d
-        d["latency_s"] = ranking.job_latency(j) if j.status == db.SUCCEEDED else None
-        d["latency_basis"] = "gateway_timestamps" if j.gw_finish_time and j.gw_submit_time else "client_total"
-        actual = quota_to_usd(st.registry, j.quota) if st.registry.quota_calibrated else None
-        if actual is None and j.status == db.SUCCEEDED:
-            usd, basis = runs.actual_cost(st.registry, j)
-            actual = usd if "reported" in basis else None
-        d["cost"] = {"estimate_usd": j.est_cost_usd, "quota": j.quota, "actual_usd": actual,
-                     "per_second": (actual or j.est_cost_usd or 0) / float((j.media or {}).get("duration") or 1)
-                     if j.status == db.SUCCEEDED else None}
-        return d
+        else:
+            d["latency_s"] = ranking.job_latency(j) if j.status == db.SUCCEEDED else None
+            d["latency_basis"] = "gateway_timestamps" if j.gw_finish_time and j.gw_submit_time else "client_total"
+            actual = quota_to_usd(st.registry, j.quota) if st.registry.quota_calibrated else None
+            if actual is None and j.status == db.SUCCEEDED:
+                usd, basis = runs.actual_cost(st.registry, j)
+                actual = usd if "reported" in basis else None
+            d["cost"] = {"estimate_usd": j.est_cost_usd, "quota": j.quota, "actual_usd": actual,
+                         "per_second": (actual or j.est_cost_usd or 0) / float((j.media or {}).get("duration") or 1)
+                         if j.status == db.SUCCEEDED else None}
+        # one exit for both origins, after the step-count fill above, so nothing skips the projection
+        return d if admin else public_view.public_job(d)
 
     def run_detail(st: AppState, run_id: str, request: Request) -> dict[str, Any]:
         with session() as s:
@@ -566,12 +657,18 @@ def create_app(settings: Settings | None = None,
             picks = {}
             for p in sorted(s.exec(select(Pick).where(Pick.run_id == run_id)), key=lambda p: p.created_at):
                 picks[p.prompt_key] = p.winner_job_id
+        admin = is_admin(request)
         mine = not st.settings.public or (run.owner is not None and run.owner == viewer(request))
         unfinished = any(j.status not in TERMINAL or j.judge_status in ("pending", "running") for j in jobs)
         needs_key = bool(st.settings.public and run.owner and unfinished and st.keys.for_run(run_id) is None)
-        return {"run": run.model_dump(exclude={"owner"}), "jobs": [job_out(st, j) for j in jobs], "ratings": ratings,
+        shown_run = run.model_dump(exclude={"owner"})
+        spent = None if run.kind == "experiment" or not (admin or mine) else runs.spent_by_run([run_id]).get(run_id, 0.0)
+        if not (admin or mine):    # someone else's ratings: the scores, not the free-text comment
+            ratings = {job_id: public_view.public_rating(r) for job_id, r in ratings.items()}
+        return {"run": shown_run if admin else public_view.public_run(shown_run),
+                "jobs": [job_out(st, j, admin) for j in jobs], "ratings": ratings,
                 "picks": picks, "active": sum(1 for j in jobs if j.status not in TERMINAL),
-                "spent_usd": None if run.kind == "experiment" else runs.spent_by_run([run_id]).get(run_id, 0.0), "mine": mine, "needs_key": needs_key}
+                "spent_usd": spent, "mine": mine, "needs_key": needs_key}
 
     @app.get("/api/runs/{run_id}")
     def get_run(request: Request, run_id: str) -> dict[str, Any]:
@@ -628,21 +725,27 @@ def create_app(settings: Settings | None = None,
         if format == "json":
             return Response(json.dumps(detail, ensure_ascii=False, indent=2, default=str), media_type="application/json",
                             headers={"content-disposition": f'attachment; filename="{run_id}.json"'})
+        admin = is_admin(request)
         buf = io.StringIO()
         w = csv.writer(buf)
-        w.writerow(["run_id", "prompt_key", "label", "model", "status", "fail_reason", "duration_s", "width", "height",
-                    "has_audio", "latency_s", "est_usd", "quota", "compliance_ok", "judge_adherence", "judge_defects",
-                    "usable", "overall", "picked"])
+        # admins keep the columns they had (raw reason, quota) plus the category; everyone else gets the category only
+        w.writerow(["run_id", "prompt_key", "label", "model", "status", *(["fail_reason"] if admin else ["failure_category"]),
+                    "duration_s", "width", "height", "has_audio", "latency_s", "est_usd", *(["quota"] if admin else []),
+                    "compliance_ok", "judge_adherence", "judge_defects", "usable", "overall", "picked",
+                    *(["failure_category"] if admin else [])])
         for j in detail["jobs"]:
             v = (j.get("media") or {}).get("video") or {}
             comp = [c for c in j.get("compliance") or [] if c.get("ok") is not None]
             r = detail["ratings"].get(j["id"]) or {}
-            w.writerow([run_id, j["prompt_key"], j["label"], j["model"], j["status"], j["fail_reason"],
+            category = (j.get("failure") or {}).get("category", "")
+            w.writerow([run_id, j["prompt_key"], j["label"], j["model"], j["status"],
+                        j.get("fail_reason", "") if admin else category,
                         (j.get("media") or {}).get("duration"), v.get("width"), v.get("height"),
-                        bool((j.get("media") or {}).get("audio")), j.get("latency_s"), j["cost"]["estimate_usd"],
-                        j.get("quota"), all(c["ok"] for c in comp) if comp else "", (j.get("judge") or {}).get("adherence"),
+                        bool((j.get("media") or {}).get("audio")), j.get("latency_s"), j["cost"].get("estimate_usd"),
+                        *([j.get("quota")] if admin else []),
+                        all(c["ok"] for c in comp) if comp else "", (j.get("judge") or {}).get("adherence"),
                         (j.get("judge") or {}).get("defect_score"), r.get("usable"), r.get("overall"),
-                        detail["picks"].get(j["prompt_key"]) == j["id"]])
+                        detail["picks"].get(j["prompt_key"]) == j["id"], *([category] if admin else [])])
         return Response(buf.getvalue(), media_type="text/csv",
                         headers={"content-disposition": f'attachment; filename="{run_id}.csv"'})
 
@@ -657,14 +760,14 @@ def create_app(settings: Settings | None = None,
     def stop_job(request: Request, job_id: str) -> dict[str, Any]:
         st = S(request)
         scheduled_job(st, request, job_id)
-        return job_out(st, st.engine.stop_job(job_id))
+        return job_out(st, st.engine.stop_job(job_id), is_admin(request))
 
     @app.post("/api/jobs/{job_id}/repoll")
     async def repoll(request: Request, job_id: str) -> dict[str, Any]:
         st = S(request)
         j = scheduled_job(st, request, job_id)
         await attach_visitor_key(st, request, j.run_id)
-        return job_out(st, st.engine.repoll(job_id))
+        return job_out(st, st.engine.repoll(job_id), is_admin(request))
 
     @app.post("/api/jobs/{job_id}/resubmit")
     async def resubmit(request: Request, job_id: str, payload: dict = Body(default={})) -> dict[str, Any]:
@@ -675,7 +778,7 @@ def create_app(settings: Settings | None = None,
         if j.task_id and not payload.get("confirm"):
             raise HTTPException(409, "this job already created a task (possibly billed); resend with confirm=true")
         await attach_visitor_key(st, request, j.run_id)
-        return job_out(st, st.engine.resubmit(job_id))
+        return job_out(st, st.engine.resubmit(job_id), is_admin(request))
 
     @app.post("/api/jobs/{job_id}/judge")
     async def rejudge(request: Request, job_id: str) -> dict[str, Any]:
@@ -684,7 +787,7 @@ def create_app(settings: Settings | None = None,
         if j.status != db.SUCCEEDED:
             raise HTTPException(409, "only finished clips can be judged")
         await attach_visitor_key(st, request, j.run_id)
-        return job_out(st, st.engine.rejudge(job_id))
+        return job_out(st, st.engine.rejudge(job_id), is_admin(request))
 
     @app.put("/api/jobs/{job_id}/rating")
     def rate(request: Request, job_id: str, payload: dict = Body(...)) -> dict[str, Any]:
@@ -763,6 +866,7 @@ def create_app(settings: Settings | None = None,
 
     @app.get("/api/probe")
     def probe_status(request: Request) -> dict[str, Any]:
+        admin_only(request)                # probe records quote the gateway's raw errors
         st = S(request)
         with session() as s:
             rows = list(s.exec(select(ProbeResult).order_by(ProbeResult.ts.desc()).limit(200)))
@@ -811,7 +915,8 @@ def create_app(settings: Settings | None = None,
 
     def index_html(request: Request) -> HTMLResponse:
         st = S(request)
-        boot = json.dumps({"token": LAUNCH_TOKEN, "mock": st.settings.mock, "public": st.settings.public})
+        boot = json.dumps({"token": LAUNCH_TOKEN, "mock": st.settings.mock, "public": st.settings.public,
+                           "admin": is_admin(request)})
         index = WEB_DIST / "index.html"
         if not index.exists():
             resp = HTMLResponse("<h1>vgen-eval</h1><p>Frontend not built. Run <code>make web</code>.</p>", status_code=200)
@@ -824,7 +929,7 @@ def create_app(settings: Settings | None = None,
         return resp
 
     from vgen.evaluations import register_routes
-    register_routes(app, S, viewer, job_out, budget_view)
+    register_routes(app, S, viewer, job_out, budget_view, is_admin, admin_only)
 
     @app.get("/", response_class=HTMLResponse)
     def root(request: Request):
@@ -836,7 +941,10 @@ def create_app(settings: Settings | None = None,
             raise HTTPException(404, "not found")
         static = (WEB_DIST / path).resolve()
         if path and static.is_file() and WEB_DIST.resolve() in static.parents:
-            return FileResponse(static)
+            # the page itself is never served raw: without the boot payload the UI would assume the local view
+            index = WEB_DIST / "index.html"
+            if not (index.is_file() and static.samefile(index)):
+                return FileResponse(static)
         return index_html(request)
 
     return app

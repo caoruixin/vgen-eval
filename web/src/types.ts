@@ -5,6 +5,10 @@ export type Task = "t2v" | "i2v" | "flf2v" | "r2v" | "v2v_edit" | "extend" | "a2
 export interface AppConfig {
   mock: boolean;
   public: boolean;
+  /** this viewer may see diagnostics (always true on the local instance) */
+  admin?: boolean;
+  /** hosted mode: admin sign-in is configured */
+  admin_login?: boolean;
   endpoints: { key: string; name: string; rpm: number; used_last_minute: number; disabled_reason: string | null; last_error: string | null }[];
   budget_usd: number;
   hard_cap_usd: number | null;
@@ -40,7 +44,8 @@ export interface ModelRow {
   max_refs: number;
   latency_s: number;
   notes: L10n;
-  probe: { tasks?: Record<string, string>; delivery?: Record<string, Record<string, string>>; cases?: Record<string, ProbeCase>; unavailable?: string; notes?: string[] };
+  /** visitors get only tasks, delivery and `unavailable: true`; admins get the raw probe text, notes and cases */
+  probe: { tasks?: Record<string, string>; delivery?: Record<string, Record<string, string>>; cases?: Record<string, ProbeCase>; unavailable?: string | boolean; notes?: string[] };
   task_states: Record<Task, "enabled" | "experimental" | "probe_failed" | "unsupported">;
   delivery_effective: Record<string, Record<string, string>>;
   available: Record<string, boolean | null>;
@@ -201,11 +206,59 @@ export interface JudgeResult {
   cached?: boolean;
 }
 
-export interface Job {
+export type FailureCategory =
+  | "content_policy" | "insufficient_balance" | "auth" | "rate_limited" | "provider_error" | "timeout" | "invalid_request"
+  | "unsupported" | "download_failed" | "stopped" | "network" | "internal" | "unknown";
+
+export interface JobFailure {
+  /** a FailureCategory; anything else is treated as "unknown" */
+  category: string;
+  retrying: boolean;
+}
+
+/** Imported clips carry their archive record here; visitors receive only these keys. */
+export interface Provenance {
+  phase?: string | null;
+  variant?: string | null;
+  seed?: number | string | null;
+  preferred?: boolean | null;
+  source?: string | null;
+  e2e_seconds?: number | null;
+  server_inference_time_s?: number | null;
+  model_revision?: string | null;
+  turbo_activation_verified?: boolean | null;
+  requested_num_inference_steps?: number | null;
+  actual_denoise_updates?: number | null;
+  variant_evidence_scope?: string | null;
+  cost_usd?: number | null;
+  cost_basis?: string | null;
+  timing_scope?: string | null;
+  [key: string]: unknown;
+}
+
+/** Raw gateway diagnostics: sent only to admins. Read them through `adminFields(job)`. */
+export interface AdminJobFields {
+  task_id: string | null;
+  endpoint: string;
+  payload: Record<string, unknown>;
+  remote_status: string;
+  submit_response: Record<string, unknown>;
+  last_detail: Record<string, unknown>;
+  fail_reason: string;
+  error_code: string;
+  quota: number | null;
+  poll_count: number;
+  submit_attempts: number;
+  next_poll_at: number | null;
+  case_fingerprint: string | null;
+  video_sha: string | null;
+}
+
+export interface Job extends Partial<AdminJobFields> {
   origin: "generated" | "imported";
   deployment_id: string | null;
   experiment_id: string | null;
-  provenance: Record<string, unknown>;
+  provenance: Provenance;
   latency_basis?: string;
   id: string;
   run_id: string;
@@ -214,22 +267,17 @@ export interface Job {
   model_label: string;
   family: string;
   vendor: string;
-  endpoint: string;
   label: string;
   status: string;
   spec: Record<string, unknown>;
-  payload: Record<string, unknown>;
   adjustments: Adjustment[];
   effective: Record<string, unknown>;
   est_cost_usd: number;
-  task_id: string | null;
+  /** a gateway task exists (it may have been billed) */
+  has_task?: boolean;
+  /** why no clip was produced; null while running or after success */
+  failure?: JobFailure | null;
   progress: string;
-  remote_status: string;
-  submit_response: Record<string, unknown>;
-  last_detail: Record<string, unknown>;
-  fail_reason: string;
-  error_code: string;
-  quota: number | null;
   created_at: number;
   submitted_at: number | null;
   gw_submit_time: number | null;
@@ -250,7 +298,9 @@ export interface Job {
     frozen_flag?: boolean;
     scene_cuts?: number[];
     audio?: { has_audio: boolean; rms_dbfs?: number | null; silence_ratio?: number };
+    /** admin only: raw analysis error */
     error?: string;
+    analysis_failed?: boolean;
   };
   fidelity: { first?: { score: number | null; grade: string; t: number | null }; last?: { score: number | null; grade: string; t: number | null } };
   judge: JudgeResult;
@@ -259,7 +309,7 @@ export interface Job {
   poster_url: string | null;
   strip_url: string | null;
   latency_s: number | null;
-  cost: { basis?: string; estimate_usd: number | null; quota: number | null; actual_usd: number | null; per_second: number | null };
+  cost: { basis?: string; estimate_usd: number | null; quota?: number | null; actual_usd: number | null; per_second: number | null };
 }
 
 export interface Rating {
@@ -290,7 +340,8 @@ export interface RunDetail {
   ratings: Record<string, Rating>;
   picks: Record<string, string>;
   active: number;
-  spent_usd: number | null;
+  /** only on the viewer's own runs */
+  spent_usd?: number | null;
   /** false for the hosted demo's example runs (read-only) */
   mine: boolean;
   /** hosted demo: the server restarted and needs the visitor's key again to finish this run */
@@ -314,7 +365,8 @@ export interface RunSummary {
   counts: Record<string, number>;
   active: number;
   posters: string[];
-  spent_usd: number | null;
+  /** only on the viewer's own runs */
+  spent_usd?: number | null;
   mine: boolean;
 }
 
@@ -375,11 +427,14 @@ export interface EvaluationCase {
 }
 export interface EvaluationSet { id: string; title: L10n; cases: EvaluationCase[] }
 export interface EvaluationSample extends Job { editable: boolean; rating?: Rating }
+export interface Hardware { gpu?: string | null; gpu_count?: number | null; memory_gb_per_gpu?: number | null }
 export interface EvaluationGroup {
-  id: string; model: string; label: string; provider: string; default_job_id: string; samples: EvaluationSample[];
+  /** provider: "tokenbay" | "self" | "official_api"; hardware only for a known deployment */
+  id: string; model: string; label: string; provider: string; default_job_id: string; samples: EvaluationSample[]; hardware?: Hardware | null;
 }
 export interface EvaluationDetail {
   dataset: { id: string; title: L10n }; case: EvaluationCase; groups: EvaluationGroup[];
+  /** the Tokenbay registry for this case's task; reason is "" for visitors */
   coverage: { model: string; label: string; status: string; task_state: string; reason: string }[];
 }
 export interface BackfillPlan {
@@ -393,9 +448,17 @@ export interface BenchmarkSummary {
   id: string; title: string; date: string; dataset_id: string; deployment_ids: string[]; n_attempts: number; n_videos: number;
 }
 export type MetricRow = Record<string, unknown>;
+/** Visitors get the first five keys; the account figures are admin only. */
+export interface BenchmarkCosts {
+  generated_utc?: string; currency?: string; api_usage_price_estimate_usd?: number | null;
+  self_technical_valid_outputs?: number | null; official_technical_valid_outputs?: number | null;
+  vast_observed_credit_decrease_usd?: number | null; whole_poc_observation_plus_api_estimate_usd?: number | null;
+  [key: string]: unknown;
+}
 export interface BenchmarkDetail {
   id: string; title: string; date: string; dataset_id: string; config: MetricRow; deployments: Deployment[];
-  summary: { groups: MetricRow[]; phases: MetricRow[]; scenes: MetricRow[]; telemetry: { phase_metrics: MetricRow[] }; costs: MetricRow; utilization: MetricRow[] };
+  summary: { groups: MetricRow[]; phases: MetricRow[]; scenes: MetricRow[]; telemetry?: { phase_metrics?: MetricRow[] }; costs: BenchmarkCosts; utilization?: MetricRow[] };
   artifacts: Record<string, string>;
-  attempts: { id: string; deployment_id: string; case_id: string; request_id: string; attempt: number; job_id: string | null; metrics: MetricRow }[];
+  /** request_id is admin only; visitors get a reduced metrics object */
+  attempts: { id: string; experiment_id?: string; deployment_id: string; case_id: string; request_id?: string; attempt: number; job_id: string | null; metrics: MetricRow }[];
 }

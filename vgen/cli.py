@@ -1,4 +1,4 @@
-"""Command line: vgen serve | probe | gen-assets | models | relocate."""
+"""Command line: vgen serve | probe | gen-assets | models | relocate | admin-hash."""
 
 from __future__ import annotations
 
@@ -234,6 +234,26 @@ def cmd_import_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_admin_hash(args: argparse.Namespace) -> int:
+    """Print the env line that enables admin sign-in on the hosted site. Reads no settings and no key file;
+    the secret is typed twice without echo and is never printed or stored, only its scrypt hash."""
+    import getpass
+
+    from vgen.security import ADMIN_MAX_SECRET_CHARS, ADMIN_MIN_SECRET_CHARS, hash_admin_secret
+
+    secret = getpass.getpass(f"Admin secret (at least {ADMIN_MIN_SECRET_CHARS} characters): ")
+    again = getpass.getpass("Repeat the admin secret: ")
+    if secret != again:
+        print("the two entries do not match; nothing was generated", file=sys.stderr)
+        return 1
+    if not ADMIN_MIN_SECRET_CHARS <= len(secret) <= ADMIN_MAX_SECRET_CHARS:
+        print(f"the admin secret must be {ADMIN_MIN_SECRET_CHARS} to {ADMIN_MAX_SECRET_CHARS} characters long; "
+              "nothing was generated", file=sys.stderr)
+        return 1
+    print(f"VGEN_ADMIN_SECRET_HASH={hash_admin_secret(secret)}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -280,6 +300,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="path prefix to replace; repeat, applied in order")
     rl.add_argument("--db", help="database file (default: the configured data dir's app.db)")
     rl.set_defaults(fn=cmd_relocate)
+    ah = sub.add_parser("admin-hash", help="hash an admin secret for the hosted site (prints the VGEN_ADMIN_SECRET_HASH line)")
+    ah.set_defaults(fn=cmd_admin_hash)
     args = p.parse_args(argv)
     return int(args.fn(args) or 0)
 
