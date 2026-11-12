@@ -1,0 +1,8 @@
+{
+  "utc": "2026-11-07T16:26:12.085+00:00",
+  "wall_seconds": 443.7430206160061,
+  "outcome": "results_require_activation_review",
+  "error": null,
+  "phase_cap_seconds": 2700,
+  "next_action": "Freeze evidence, validate archive and destroy instance; no paid repeat"
+}

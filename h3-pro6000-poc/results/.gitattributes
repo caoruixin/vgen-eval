@@ -1,0 +1,10 @@
+# Evidence hashes cover exact bytes. Preserve source line endings on every OS.
+* -text
+# The original signed report snapshot ends with a blank line covered by SHA256.
+*.md whitespace=-blank-at-eof
+
+# These are immutable measured data and logs; inspect through their manifest.
+*.csv -diff
+*.jsonl -diff
+*.log -diff
+runs/** -diff

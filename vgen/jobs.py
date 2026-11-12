@@ -86,7 +86,7 @@ class JobEngine:
     def recover(self) -> None:
         now = time.time()
         with session() as s:
-            for job in s.exec(select(Job).where(Job.status.in_([SUBMITTING, QUEUED, IN_PROGRESS, DOWNLOADING, ANALYZING]))):
+            for job in s.exec(select(Job).where(Job.origin == "generated", Job.status.in_([SUBMITTING, QUEUED, IN_PROGRESS, DOWNLOADING, ANALYZING]))):
                 if job.status == SUBMITTING:
                     job.status = SUBMIT_UNKNOWN
                     job.fail_reason = "app stopped while submitting; the task may exist and may be billed"
@@ -94,7 +94,7 @@ class JobEngine:
                     job.status = IN_PROGRESS if job.task_id else SUBMIT_UNKNOWN
                     job.next_poll_at = now
                 s.add(job)
-            for job in s.exec(select(Job).where(Job.judge_status == "running")):
+            for job in s.exec(select(Job).where(Job.origin == "generated", Job.judge_status == "running")):
                 job.judge_status = "pending"
                 s.add(job)
             s.commit()
@@ -137,9 +137,9 @@ class JobEngine:
     def _tick(self) -> None:
         now = time.time()
         with session() as s:
-            jobs = list(s.exec(select(Job).where(Job.status.in_(
+            jobs = list(s.exec(select(Job).where(Job.origin == "generated", Job.status.in_(
                 [PENDING, SUBMITTING, QUEUED, IN_PROGRESS, DOWNLOADING, ANALYZING])).order_by(Job.created_at)))
-            judge_jobs = list(s.exec(select(Job).where(Job.status == SUCCEEDED,
+            judge_jobs = list(s.exec(select(Job).where(Job.origin == "generated", Job.status == SUCCEEDED,
                                                        Job.judge_status.in_(["pending", "running"]))))
         if self.keys is not None:
             self._release_finished_runs({j.run_id for j in jobs} | {j.run_id for j in judge_jobs})
@@ -439,6 +439,8 @@ class JobEngine:
         job = db.get_job(job_id)
         if job is None:
             return None
+        if job.origin == "imported":
+            raise ValueError("imported results cannot be scheduled")
         if job.status in (PENDING,):
             return update_job(job_id, status=STOPPED, fail_reason="stopped before submit (not billed)", done_at=time.time())
         if job.status in (QUEUED, IN_PROGRESS):
@@ -448,6 +450,8 @@ class JobEngine:
 
     def repoll(self, job_id: str) -> Job | None:
         job = db.get_job(job_id)
+        if job is not None and job.origin == "imported":
+            raise ValueError("imported results cannot be scheduled")
         if job is None or not job.task_id:
             return job
         job = update_job(job_id, status=IN_PROGRESS, next_poll_at=time.time(), done_at=None, fail_reason="")
@@ -458,6 +462,8 @@ class JobEngine:
         job = db.get_job(job_id)
         if job is None:
             return None
+        if job.origin == "imported":
+            raise ValueError("imported results cannot be scheduled")
         job = update_job(job_id, status=PENDING, task_id=None, fail_reason="", error_code="", remote_status="",
                          progress="", done_at=None, next_poll_at=None, video_path=None, quota=None,
                          submit_response={}, last_detail={}, judge={}, judge_status="")
@@ -465,6 +471,9 @@ class JobEngine:
         return job
 
     def rejudge(self, job_id: str) -> Job | None:
+        existing = db.get_job(job_id)
+        if existing and existing.origin == "imported":
+            raise ValueError("imported results cannot be scheduled")
         job = update_job(job_id, judge_status="pending", judge={})
         self.wake()
         return job

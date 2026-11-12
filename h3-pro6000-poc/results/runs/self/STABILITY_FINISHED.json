@@ -1,0 +1,18 @@
+{
+  "utc": "2026-11-07T15:57:43.108+00:00",
+  "runner_exit_code": 0,
+  "n": 20,
+  "technical_valid": 19,
+  "other_outcomes": [
+    {
+      "request_id": "stability-self-bf16-F04-4120",
+      "status": "failed",
+      "error": "轮询/阶段时间到；仅停止此任务，不重提",
+      "cancellation_response": {
+        "id": "video_gen_7dfc9769d115433d8370e58a80325304",
+        "deleted": true,
+        "object": "video.deleted"
+      }
+    }
+  ]
+}

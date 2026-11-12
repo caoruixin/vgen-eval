@@ -1,0 +1,9 @@
+{
+  "source_log": "/data/h3-pro6000-poc/runs/self/deploy/server-bf16-cpubind.log",
+  "start_byte": 396905,
+  "end_byte": 401357,
+  "excerpt_sha256": "ea00dc3fae2257567f4801c9b3871b71f0e12fb509a4b3135aa92ea257093ef0",
+  "actual_denoise_updates_observed": 50,
+  "overlapping_requests": false,
+  "method": "Completed N/N denoising progress inside serial request byte span; not network forward-pass count or configured-step inference"
+}

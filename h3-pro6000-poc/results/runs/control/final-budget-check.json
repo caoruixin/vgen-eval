@@ -1,0 +1,20 @@
+{
+  "observed_utc": "2026-11-07T17:10:38.242908+00:00",
+  "open_rentals": 0,
+  "protected_control_window_hours": 4.584583371082942,
+  "billed_duration_upper_bound_hours": 4.625,
+  "category_upper_usd": {
+    "gpu": 64.13487500000001,
+    "storage_network": 2.642875,
+    "api": 10.0
+  },
+  "total_upper_usd": 76.77775000000001,
+  "caps_usd": {
+    "gpu": 120,
+    "storage_network": 20,
+    "api": 10,
+    "total": 150
+  },
+  "passed": true,
+  "basis": "Maximum of control interval, provider posted charges and rounded billed-hours bound; API/network pending reserves retained"
+}

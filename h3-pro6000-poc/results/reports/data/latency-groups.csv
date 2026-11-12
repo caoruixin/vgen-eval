@@ -1,0 +1,17 @@
+﻿provider,phase,variant,task,transport,n_submitted_attempts,n_technical_valid,outcomes,e2e_p50_s,e2e_p95_s,e2e_min_s,e2e_max_s,n_human_reviewed,deliverable_rate,deliverable_rate_scope,turbo_activation_verified
+official_api,comparison,official-H3,fl2va,async,4,4,"{""technical_valid"": 4}",112.43964104150655,114.80224061249173,111.53248133300804,115.12025537504815,0,,explicitly reviewed subset only; not all requests,
+official_api,comparison,official-H3,t2va,async,6,6,"{""technical_valid"": 6}",99.07481214549625,237.09962989452555,91.84537729097065,281.77500009536743,0,,explicitly reviewed subset only; not all requests,
+self,baseline,bf16,fl2va,sync,12,12,"{""technical_valid"": 12}",191.61231891042553,191.72444420002867,191.5013961675577,191.72800594288856,0,,explicitly reviewed subset only; not all requests,
+self,baseline,bf16,t2va,sync,30,30,"{""technical_valid"": 30}",178.2311576923821,178.4320656509837,177.94492417108268,178.5544514739886,0,,explicitly reviewed subset only; not all requests,
+self,concurrency_c2,bf16,fl2va,async,1,1,"{""technical_valid"": 1}",370.30990593275055,370.30990593275055,370.30990593275055,370.30990593275055,0,,explicitly reviewed subset only; not all requests,
+self,concurrency_c2,bf16,t2va,async,1,1,"{""technical_valid"": 1}",180.16797948395833,180.16797948395833,180.16797948395833,180.16797948395833,0,,explicitly reviewed subset only; not all requests,
+self,concurrency_c4,bf16,fl2va,async,2,2,"{""technical_valid"": 2}",643.6700187770184,729.2527862233343,548.5780549477786,738.7619826062582,0,,explicitly reviewed subset only; not all requests,
+self,concurrency_c4,bf16,t2va,async,2,2,"{""technical_valid"": 2}",268.3100674273446,347.6273247520905,180.1797815109603,356.44035334372893,0,,explicitly reviewed subset only; not all requests,
+self,stability,bf16,fl2va,async,8,7,"{""technical_valid"": 7, ""test_window_cancelled"": 1}",192.17910644272342,192.20876872655936,192.16614553891122,192.2089482061565,0,,explicitly reviewed subset only; not all requests,
+self,stability,bf16,t2va,async,12,12,"{""technical_valid"": 12}",180.16470486368053,180.30869397888893,178.13964115222916,180.34059555409476,0,,explicitly reviewed subset only; not all requests,
+self,turbo,turbo8,fl2va,async,3,3,"{""technical_valid"": 3}",34.06583613017574,35.87383340750821,34.05280615994707,36.074721993878484,0,,explicitly reviewed subset only; not all requests,False
+self,turbo,turbo8,t2va,async,3,3,"{""technical_valid"": 3}",32.046631092205644,57.536871306132525,32.044359313324094,60.36912021879107,0,,explicitly reviewed subset only; not all requests,False
+self,warmup,bf16,fl2va,async,1,1,"{""technical_valid"": 1}",192.16209172457457,192.16209172457457,192.16209172457457,192.16209172457457,0,,explicitly reviewed subset only; not all requests,
+self,warmup,bf16,fl2va,sync,1,1,"{""technical_valid"": 1}",194.32819771766663,194.32819771766663,194.32819771766663,194.32819771766663,0,,explicitly reviewed subset only; not all requests,
+self,warmup,bf16,t2va,async,1,1,"{""technical_valid"": 1}",180.34607228590176,180.34607228590176,180.34607228590176,180.34607228590176,0,,explicitly reviewed subset only; not all requests,
+self,warmup,bf16,t2va,sync,2,1,"{""technical_valid"": 1, ""confirmed_input_rejection"": 1}",202.9995189937763,202.9995189937763,202.9995189937763,202.9995189937763,0,,explicitly reviewed subset only; not all requests,

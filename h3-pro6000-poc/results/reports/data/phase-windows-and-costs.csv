@@ -1,0 +1,8 @@
+﻿provider,phase,n_submitted_attempts,n_technical_valid,observed_phase_windows,complete_for_requested_matrix,window_seconds,throughput_success_per_hour,phase_gpu_disk_cost_estimate_usd,cost_per_technical_success_usd,outcomes,turbo_activation_verified
+official_api,comparison,10,10,4,True,1039.6262842080887,34.62782785202682,,,"{""technical_valid"": 10}",
+self,baseline,42,42,2,True,7657.7977672950365,19.744579916401783,29.79214223973888,0.7093367199937829,"{""technical_valid"": 42}",
+self,concurrency_c2,2,2,1,True,370.6727995541878,19.424139048399336,1.4420773575248576,0.7210386787624288,"{""technical_valid"": 2}",
+self,concurrency_c4,4,4,1,True,738.9873505216092,19.48612515469427,2.874980109050891,0.7187450272627227,"{""technical_valid"": 4}",
+self,stability,20,19,1,True,3600.0120942960493,18.999936169207515,14.005602607593122,0.7371369793470064,"{""technical_valid"": 19, ""test_window_cancelled"": 1}",
+self,turbo,6,6,1,True,230.53016200615093,93.69706684812756,0.896861942002325,0.14947699033372083,"{""technical_valid"": 6}",False
+self,warmup,5,4,2,True,771.4675858081318,18.665722662755343,3.0013422589850323,0.7503355647462581,"{""technical_valid"": 4, ""confirmed_input_rejection"": 1}",

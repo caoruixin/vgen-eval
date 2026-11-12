@@ -1,0 +1,28 @@
+{
+  "observed_utc": "2026-11-07T13:01:33.555+00:00",
+  "container_os_release": {
+    "PRETTY_NAME": "Ubuntu 24.04.3 LTS",
+    "NAME": "Ubuntu",
+    "VERSION_ID": "24.04",
+    "VERSION": "24.04.3 LTS (Noble Numbat)",
+    "VERSION_CODENAME": "noble",
+    "ID": "ubuntu",
+    "ID_LIKE": "debian",
+    "HOME_URL": "https://www.ubuntu.com/",
+    "SUPPORT_URL": "https://help.ubuntu.com/",
+    "BUG_REPORT_URL": "https://bugs.launchpad.net/ubuntu/",
+    "PRIVACY_POLICY_URL": "https://www.ubuntu.com/legal/terms-and-policies/privacy-policy",
+    "UBUNTU_CODENAME": "noble",
+    "LOGO": "ubuntu-logo"
+  },
+  "uname": [
+    "Linux",
+    "94aa1e474f26",
+    "6.8.0-100146-generic",
+    "#146+dc1wb1 SMP PREEMPT_DYNAMIC Sat Oct 10 11:17:41 CDT 2026",
+    "x86_64",
+    "x86_64"
+  ],
+  "host_userspace_os": "not visible from container",
+  "note": "No laptop runtime installation; no package upgrade in running benchmark"
+}

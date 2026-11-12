@@ -1,0 +1,29 @@
+{
+  "phase": "concurrency_c4",
+  "results": [
+    {
+      "request_id": "concurrency_c4-self-bf16-T01-3101",
+      "status": "validated",
+      "task_id": "video_gen_070376e0b1bb48eab366ec212e7a7521",
+      "e2e_seconds": 356.44035334372893
+    },
+    {
+      "request_id": "concurrency_c4-self-bf16-T03-3102",
+      "status": "validated",
+      "task_id": "video_gen_f1a2b8fd7fc348a2891544bd72f97e14",
+      "e2e_seconds": 180.1797815109603
+    },
+    {
+      "request_id": "concurrency_c4-self-bf16-F01-3103",
+      "status": "validated",
+      "task_id": "video_gen_babffdcfc73b40539d2ffd0d1b804f63",
+      "e2e_seconds": 738.7619826062582
+    },
+    {
+      "request_id": "concurrency_c4-self-bf16-F03-3104",
+      "status": "validated",
+      "task_id": "video_gen_0e89141739544caea475b586a31fdf06",
+      "e2e_seconds": 548.5780549477786
+    }
+  ]
+}

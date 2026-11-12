@@ -1,0 +1,12 @@
+{
+  "started_utc": "2026-11-07T16:18:48.383+00:00",
+  "finished_utc": "2026-11-07T16:19:11.499+00:00",
+  "wall_seconds": 23.115779258310795,
+  "files": [
+    {
+      "path": "/data/models/h3-turbo/minimax_h3_fl2v_turbo_8step_v1.0_768p_bf16.safetensors",
+      "sha256": "9b0efe3613b43a84e30febaa43af27432ea9d0711eac7bba904b2556b175f6d4"
+    }
+  ],
+  "turbo": true
+}

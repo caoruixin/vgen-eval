@@ -1,0 +1,28 @@
+{
+  "utc": "2026-11-07T16:32:09.868272+00:00",
+  "activation_verified": false,
+  "session_outcome": "results_require_activation_review",
+  "six_media_validated": true,
+  "actual_update_count_each": 8,
+  "adapter_download_sha_verified": true,
+  "adapter_source_revision": "30f485ed874aa44c8183348ad361c5eabad318da",
+  "adapter_sha256": "9b0efe3613b43a84e30febaa43af27432ea9d0711eac7bba904b2556b175f6d4",
+  "server_log_sha256": "429eb15fa7c9a0409f4bcc790cc5135a9058ffc12e8b4828af12517c98b40e94",
+  "log_line_count": 3361,
+  "lora_log_line_count": 0,
+  "loader_signature_present": false,
+  "request_path_scale_fields_present": true,
+  "positive_runtime_tensor_activation_evidence": false,
+  "after_shutdown_readonly_endpoints": "Connection refused; no live evidence obtained",
+  "root_cause": "Unresolved: absence of loader logs cannot distinguish logging suppression from request/backend activation failure",
+  "no_additional_generation_or_paid_repeat": true,
+  "report_label": "8步配置样本；Turbo适配器激活未证实，不用于Turbo收益结论",
+  "source_evidence": [
+    "environment/turbo-activation-proof.json",
+    "environment/turbo-request-contract.json",
+    "environment/turbo-entrypoint-lora-source.json",
+    "environment/turbo-backend-source.json",
+    "environment/turbo-live-readonly-observations.json",
+    "deploy/turbo-cpubind/launch-command.json"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "utc": "2026-11-07T13:09:22.653+00:00",
+  "checkpoint_tensor_metadata_aggregated_only": {
+    "audio_vae": {
+      "F32": {
+        "tensors": 1087,
+        "elements": 151326585
+      }
+    },
+    "text_encoder": {
+      "BF16": {
+        "tensors": 1058,
+        "elements": 33357390064
+      }
+    },
+    "transformer": {
+      "BF16": {
+        "tensors": 522,
+        "elements": 33105770752
+      },
+      "F32": {
+        "tensors": 13,
+        "elements": 17222160
+      }
+    },
+    "video_vae": {
+      "F32": {
+        "tensors": 560,
+        "elements": 2603871032
+      }
+    }
+  },
+  "component_config_dtype_fields": {
+    "text_encoder": {
+      "architectures": [
+        "Qwen3VLForConditionalGeneration"
+      ]
+    },
+    "transformer": {
+      "_class_name": "MiniMaxH3DiTModel"
+    },
+    "audio_vae": {
+      "_class_name": "MiniMaxH3AudioVAE"
+    },
+    "video_vae": {
+      "_class_name": "MiniMaxH3VideoVAE"
+    }
+  },
+  "runtime_config_dtype_declaration": [
+    {
+      "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/data.py",
+      "line": 845,
+      "expression": "dtype: torch.dtype = torch.bfloat16",
+      "source_sha256": "072c04ec4633e4efe163d4403b5e8b350233f443835056ff5f2a899ff132f713"
+    }
+  ],
+  "note": "Metadata headers only on server; no tensor payload exported. Floating-point accumulation and component-specific casts follow pinned runtime defaults."
+}

@@ -1,0 +1,29 @@
+/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/worker/diffusion_model_runner.py
+623:         Must be called immediately after the measured forward/step work, with
+624:         reset_peak_memory_stats() called just before it, so the measurement
+625:         reflects the current execution slice and not the global historical
+626:         maximum.
+627: 
+628:         Uses max_memory_reserved (CUDA memory pool high-water mark) rather than
+629:         max_memory_allocated so that allocator fragmentation is also visible.
+630:         See: https://docs.pytorch.org/docs/stable/generated/torch.cuda.memory.max_memory_reserved.html
+631: 
+632:         Named ``_mb`` to match the public ``peak_memory_mb`` field.
+633:         """
+634:         peak_reserved_bytes = current_omni_platform.max_memory_reserved()
+635:         peak_allocated_bytes = current_omni_platform.max_memory_allocated()
+636: 
+637:         pool_overhead_bytes = peak_reserved_bytes - peak_allocated_bytes
+638: 
+639:         peak_memory_mb = peak_reserved_bytes / (1024**2)
+640: 
+641:         logger.debug(
+642:             "Peak GPU memory (this request): %s GiB reserved, %s GiB allocated, %s GiB pool overhead (%.1f%%)",
+643:             format_gib(peak_reserved_bytes),
+644:             format_gib(peak_allocated_bytes),
+645:             format_gib(pool_overhead_bytes),
+646:             pool_overhead_bytes / peak_reserved_bytes * 100 if peak_reserved_bytes > 0 else 0.0,
+647:         )
+648:         return peak_memory_mb
+649: 
+650:     def _prepare_request_for_forward(

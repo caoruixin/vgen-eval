@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "h3-pro6000-2026-11-07",
+  "title": "H3 · 8× RTX PRO 6000 · 2026-11-07",
+  "date": "2026-11-07",
+  "source_root": "../h3-pro6000-poc/results",
+  "dataset": {"id": "h3-v1", "title": {"en": "H3 · 10 shared scenarios", "zh": "H3 · 十场景共同测试集"}},
+  "deployments": {
+    "self": {"id": "h3-pro6000", "model": "MiniMax-H3", "label": "H3 · PRO6000 ×8", "hardware": {"gpu": "RTX PRO 6000 Blackwell Server Edition", "gpu_count": 8, "memory_gb_per_gpu": 96}, "timing_scope": "server_local_download", "output_root": "runs/self"},
+    "official_api": {"id": "h3-official", "model": "MiniMax-H3", "label": "H3 · MiniMax API", "hardware": {}, "timing_scope": "client_internet_download", "output_root": "runs/api"}
+  },
+  "files": {
+    "package_manifest": "PACKAGE-MANIFEST.json",
+    "cases": "cases/cases.json",
+    "assets": "cases/assets.lock.json",
+    "config": "config/baseline.json",
+    "attempts": "reports/data/all-request-attempts.csv",
+    "groups": "reports/data/latency-groups.csv",
+    "phases": "reports/data/phase-windows-and-costs.csv",
+    "scenes": "reports/data/scene-results.csv",
+    "telemetry": "reports/data/telemetry-summary.json",
+    "costs": "reports/data/cost-reconciliation.json",
+    "utilization": "reports/data/utilization-costs.csv"
+  },
+  "artifacts": {
+    "report.md": "reports/final/MiniMax_H3_PRO6000_8GPU_PoC_Report.md",
+    "report.docx": "reports/final/MiniMax_H3_PRO6000_8GPU_PoC_Report.docx",
+    "licenses.md": "cases/LICENSES.md",
+    "attempts.csv": "reports/data/all-request-attempts.csv"
+  },
+  "support_files": []
+}

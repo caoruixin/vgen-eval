@@ -1,0 +1,15 @@
+{
+  "request_id": "warmup-self-bf16-T01-9001",
+  "observed_utc": "2026-11-07T16:31:34.479+00:00",
+  "ffmpeg_exit_code": 0,
+  "rms_level_dbfs": -44.685055,
+  "peak_level_dbfs": -24.615368,
+  "all_digital_silence": false,
+  "channel_and_overall_rms_raw": [
+    "-44.677667",
+    "-44.692456",
+    "-44.685055"
+  ],
+  "analysis_seconds": 0.0466179889626801,
+  "interpretation": "Objective signal energy only; no audibility, prompt match, speech intelligibility or AV-sync score inferred"
+}

@@ -1,0 +1,15 @@
+{
+  "request_id": "concurrency_c4-self-bf16-F01-3103",
+  "observed_utc": "2026-11-07T16:31:33.091+00:00",
+  "ffmpeg_exit_code": 0,
+  "rms_level_dbfs": -93.648258,
+  "peak_level_dbfs": -76.36832,
+  "all_digital_silence": false,
+  "channel_and_overall_rms_raw": [
+    "-93.636662",
+    "-93.659885",
+    "-93.648258"
+  ],
+  "analysis_seconds": 0.044654605910182,
+  "interpretation": "Objective signal energy only; no audibility, prompt match, speech intelligibility or AV-sync score inferred"
+}

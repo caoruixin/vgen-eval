@@ -1,0 +1,9 @@
+{
+  "command": [
+    "lspci",
+    "-tv"
+  ],
+  "exit_code": null,
+  "error_type": "FileNotFoundError",
+  "elapsed_seconds": 0.0006782878190279007
+}

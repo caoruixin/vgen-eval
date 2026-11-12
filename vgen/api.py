@@ -230,6 +230,12 @@ def create_app(settings: Settings | None = None,
         editable_run(st, request, j.run_id)
         return j
 
+    def scheduled_job(st: AppState, request: Request, job_id: str) -> Job:
+        j = editable_job(st, request, job_id)
+        if j.origin == "imported":
+            raise HTTPException(409, "imported results cannot be submitted, polled or judged")
+        return j
+
     async def visitor_key(st: AppState, request: Request) -> str:
         """The visitor's Tokenbay key from this request, verified with a free model-list call."""
         key = (request.headers.get(KEY_HEADER) or "").strip()
@@ -336,7 +342,21 @@ def create_app(settings: Settings | None = None,
     @app.get("/api/scenarios")
     def scenarios(request: Request) -> dict[str, Any]:
         st = S(request)
-        return packs_for_api(st.packs_raw, st.asset_ids)
+        from vgen.evaluations import imported_packs
+        out = packs_for_api(st.packs_raw, st.asset_ids)
+        packs = imported_packs(st.registry)
+        if packs:
+            out["packs"].extend(packs)
+            out["categories"]["h3"] = {"en": "H3 shared scenarios", "zh": "H3 共同测试集"}
+            for pack in packs:
+                for prompt in pack["prompts"]:
+                    for role, asset_id in prompt["assets"].items():
+                        a = get_asset(asset_id)
+                        if a:
+                            out["assets"][asset_id] = {"name": asset_id, "id": asset_id, "label": {"en": a.label, "zh": a.label},
+                                "generated": False, "kind": a.kind, "public_urls": a.public_urls,
+                                "width": a.width, "height": a.height, "duration": a.duration}
+        return out
 
     # ------------------------------------------------------------------ assets
     def asset_out(a) -> dict[str, Any]:
@@ -491,7 +511,7 @@ def create_app(settings: Settings | None = None,
                                                 "task", "lang", "judge", "est_cost_usd", "models"}),
                         "n_prompts": len(r.prompts or []), "n_jobs": len(js), "counts": counts,
                         "active": sum(1 for j in js if j.status not in TERMINAL), "posters": posters,
-                        "spent_usd": spend.get(r.id, 0.0),
+                        "spent_usd": None if r.kind == "experiment" else spend.get(r.id, 0.0),
                         "mine": not st.settings.public or (r.owner is not None and r.owner == vid)})
         return out
 
@@ -504,7 +524,29 @@ def create_app(settings: Settings | None = None,
         d["video_url"] = f"/api/jobs/{j.id}/video" if j.video_path else None
         d["poster_url"] = f"/api/jobs/{j.id}/poster" if j.poster_path else None
         d["strip_url"] = f"/api/jobs/{j.id}/strip" if j.strip_path else None
+        if j.origin == "imported":
+            from vgen.db import BenchmarkAttempt, Deployment
+            from vgen.experiments import INFERENCE_EVIDENCE_FIELDS
+            with session() as s:
+                dep = s.get(Deployment, j.deployment_id)
+                # Older imports retain step evidence in the benchmark record. Expose it
+                # without rewriting immutable imports or guessing from a phase name.
+                attempt = s.exec(select(BenchmarkAttempt).where(BenchmarkAttempt.job_id == j.id)).first()
+                if attempt:
+                    for field in INFERENCE_EVIDENCE_FIELDS:
+                        if d["provenance"].get(field) is None:
+                            d["provenance"][field] = attempt.metrics.get(field)
+            cost = j.provenance.get("cost_usd")
+            duration = (j.media or {}).get("duration")
+            d.update({"model_label": dep.label if dep else j.model, "family": "h3", "vendor": "MiniMax",
+                      "latency_s": j.provenance.get("e2e_seconds"),
+                      "latency_basis": j.provenance.get("timing_scope"),
+                      "cost": {"estimate_usd": cost, "actual_usd": None, "quota": None,
+                               "basis": j.provenance.get("cost_basis"),
+                               "per_second": cost / duration if cost is not None and duration else None}})
+            return d
         d["latency_s"] = ranking.job_latency(j) if j.status == db.SUCCEEDED else None
+        d["latency_basis"] = "gateway_timestamps" if j.gw_finish_time and j.gw_submit_time else "client_total"
         actual = quota_to_usd(st.registry, j.quota) if st.registry.quota_calibrated else None
         if actual is None and j.status == db.SUCCEEDED:
             usd, basis = runs.actual_cost(st.registry, j)
@@ -529,7 +571,7 @@ def create_app(settings: Settings | None = None,
         needs_key = bool(st.settings.public and run.owner and unfinished and st.keys.for_run(run_id) is None)
         return {"run": run.model_dump(exclude={"owner"}), "jobs": [job_out(st, j) for j in jobs], "ratings": ratings,
                 "picks": picks, "active": sum(1 for j in jobs if j.status not in TERMINAL),
-                "spent_usd": runs.spent_by_run([run_id]).get(run_id, 0.0), "mine": mine, "needs_key": needs_key}
+                "spent_usd": None if run.kind == "experiment" else runs.spent_by_run([run_id]).get(run_id, 0.0), "mine": mine, "needs_key": needs_key}
 
     @app.get("/api/runs/{run_id}")
     def get_run(request: Request, run_id: str) -> dict[str, Any]:
@@ -541,6 +583,8 @@ def create_app(settings: Settings | None = None,
     async def rerun(request: Request, run_id: str, payload: dict = Body(default={})):
         st = S(request)
         run = visible_run(st, request, run_id)
+        if run.kind == "experiment":
+            raise HTTPException(409, "use the shared scenario pack to plan new generations")
         params = dict(run.params or {})
         req = runs.RunRequest(
             title=f"{run.title} (re-run)", kind=run.kind if run.kind != "probe" else "compare",
@@ -560,6 +604,8 @@ def create_app(settings: Settings | None = None,
             run = s.get(Run, run_id)
             if run is None:
                 raise HTTPException(404, "run not found")
+            if run.kind == "experiment":
+                raise HTTPException(409, "archived experiment runs cannot be deleted through the run API")
             jobs = list(s.exec(select(Job).where(Job.run_id == run_id)))
             if any(j.status in ACTIVE_REMOTE or j.status in (db.SUBMITTING, db.DOWNLOADING, db.ANALYZING) for j in jobs):
                 raise HTTPException(409, "run still has active jobs; stop them first")
@@ -593,7 +639,7 @@ def create_app(settings: Settings | None = None,
             r = detail["ratings"].get(j["id"]) or {}
             w.writerow([run_id, j["prompt_key"], j["label"], j["model"], j["status"], j["fail_reason"],
                         (j.get("media") or {}).get("duration"), v.get("width"), v.get("height"),
-                        bool((j.get("media") or {}).get("audio")), j.get("latency_s"), j.get("est_cost_usd"),
+                        bool((j.get("media") or {}).get("audio")), j.get("latency_s"), j["cost"]["estimate_usd"],
                         j.get("quota"), all(c["ok"] for c in comp) if comp else "", (j.get("judge") or {}).get("adherence"),
                         (j.get("judge") or {}).get("defect_score"), r.get("usable"), r.get("overall"),
                         detail["picks"].get(j["prompt_key"]) == j["id"]])
@@ -610,20 +656,20 @@ def create_app(settings: Settings | None = None,
     @app.post("/api/jobs/{job_id}/stop")
     def stop_job(request: Request, job_id: str) -> dict[str, Any]:
         st = S(request)
-        editable_job(st, request, job_id)
+        scheduled_job(st, request, job_id)
         return job_out(st, st.engine.stop_job(job_id))
 
     @app.post("/api/jobs/{job_id}/repoll")
     async def repoll(request: Request, job_id: str) -> dict[str, Any]:
         st = S(request)
-        j = editable_job(st, request, job_id)
+        j = scheduled_job(st, request, job_id)
         await attach_visitor_key(st, request, j.run_id)
         return job_out(st, st.engine.repoll(job_id))
 
     @app.post("/api/jobs/{job_id}/resubmit")
     async def resubmit(request: Request, job_id: str, payload: dict = Body(default={})) -> dict[str, Any]:
         st = S(request)
-        j = editable_job(st, request, job_id)
+        j = scheduled_job(st, request, job_id)
         if j.status not in (db.FAILED, db.SUBMIT_UNKNOWN, db.STOPPED, db.TIMEOUT, db.BLOCKED):
             raise HTTPException(409, f"job is {j.status}")
         if j.task_id and not payload.get("confirm"):
@@ -634,7 +680,7 @@ def create_app(settings: Settings | None = None,
     @app.post("/api/jobs/{job_id}/judge")
     async def rejudge(request: Request, job_id: str) -> dict[str, Any]:
         st = S(request)
-        j = editable_job(st, request, job_id)
+        j = scheduled_job(st, request, job_id)
         if j.status != db.SUCCEEDED:
             raise HTTPException(409, "only finished clips can be judged")
         await attach_visitor_key(st, request, j.run_id)
@@ -776,6 +822,9 @@ def create_app(settings: Settings | None = None,
             resp.set_cookie(VISITOR_COOKIE, secrets.token_urlsafe(18), max_age=365 * 86400, httponly=True,
                             samesite="lax", secure=request.url.scheme == "https")
         return resp
+
+    from vgen.evaluations import register_routes
+    register_routes(app, S, viewer, job_out, budget_view)
 
     @app.get("/", response_class=HTMLResponse)
     def root(request: Request):

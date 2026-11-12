@@ -1,0 +1,204 @@
+[
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/data.py",
+    "sha256": "072c04ec4633e4efe163d4403b5e8b350233f443835056ff5f2a899ff132f713",
+    "excerpts": [
+      {
+        "line": 934,
+        "text": "    # pipeline_config: PipelineConfig = field(default_factory=PipelineConfig, repr=False)\n\n    # LoRA parameters\n    lora_path: str | list[str] | None = None\n    lora_scale: float | list[float] = 1.0\n    lora_backend: LoRABackend = LoRABackend.PEFT  # available choices: [\"peft\", \"distill\"]\n    max_cpu_loras: int | None = None\n\n    output_type: str = \"pil\"\n\n    # CPU offload parameters. Keep the public mapping raw so stage configs can\n    # serialize it across processes; __post_init__ validates it once and caches\n    # the internal typed resolution used at runtime.\n    diffusion_offload_config: dict[str, Any] | None = None\n    # Compatibility aliases. Some model-specific legacy stage lifecycles are\n    # intentionally broader than the compact dit/text_encoder selector.\n    # When enabled, DiT and encoders swap GPU access (mutual exclusion):"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/vllm_config.py",
+    "sha256": "dac95ad7c1c54c4e1f8c815f6383f343ae0fedade849eed70e0f814d92a3ef2a",
+    "excerpts": [
+      {
+        "line": 247,
+        "text": "        )\n        vllm_config.parallel_config.prefill_context_parallel_size = parallel_config.sequence_parallel_size\n    vllm_config.parallel_config.enable_expert_parallel = parallel_config.enable_expert_parallel\n\n    vllm_config.model_config = _make_diffusion_vllm_model_config(od_config)  # type: ignore[assignment]\n    lora_backend = getattr(od_config, \"lora_backend\", \"peft\")\n    lora_backend = getattr(lora_backend, \"value\", lora_backend)\n    if od_config.is_moe and lora_backend == \"peft\":\n        vllm_config.lora_config = LoRAConfig(\n            max_lora_rank=512,\n            max_loras=1,\n            max_cpu_loras=getattr(od_config, \"max_cpu_loras\", 1) or 1,\n            lora_dtype=od_config.dtype,\n            fully_sharded_loras=False,\n        )\n    else:\n        vllm_config.lora_config = None"
+      },
+      {
+        "line": 248,
+        "text": "        vllm_config.parallel_config.prefill_context_parallel_size = parallel_config.sequence_parallel_size\n    vllm_config.parallel_config.enable_expert_parallel = parallel_config.enable_expert_parallel\n\n    vllm_config.model_config = _make_diffusion_vllm_model_config(od_config)  # type: ignore[assignment]\n    lora_backend = getattr(od_config, \"lora_backend\", \"peft\")\n    lora_backend = getattr(lora_backend, \"value\", lora_backend)\n    if od_config.is_moe and lora_backend == \"peft\":\n        vllm_config.lora_config = LoRAConfig(\n            max_lora_rank=512,\n            max_loras=1,\n            max_cpu_loras=getattr(od_config, \"max_cpu_loras\", 1) or 1,\n            lora_dtype=od_config.dtype,\n            fully_sharded_loras=False,\n        )\n    else:\n        vllm_config.lora_config = None\n    vllm_config.quant_config = od_config.quantization_config"
+      },
+      {
+        "line": 249,
+        "text": "    vllm_config.parallel_config.enable_expert_parallel = parallel_config.enable_expert_parallel\n\n    vllm_config.model_config = _make_diffusion_vllm_model_config(od_config)  # type: ignore[assignment]\n    lora_backend = getattr(od_config, \"lora_backend\", \"peft\")\n    lora_backend = getattr(lora_backend, \"value\", lora_backend)\n    if od_config.is_moe and lora_backend == \"peft\":\n        vllm_config.lora_config = LoRAConfig(\n            max_lora_rank=512,\n            max_loras=1,\n            max_cpu_loras=getattr(od_config, \"max_cpu_loras\", 1) or 1,\n            lora_dtype=od_config.dtype,\n            fully_sharded_loras=False,\n        )\n    else:\n        vllm_config.lora_config = None\n    vllm_config.quant_config = od_config.quantization_config\n    vllm_config.profiler_config = od_config.profiler_config"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/lora/loader.py",
+    "sha256": "2337cd40b01eee8ac0d9f298b8b95427d471abf168f8bf034ea173d560fe4f30",
+    "excerpts": [
+      {
+        "line": 394,
+        "text": "        logger.info(f\"{len(lora_unloaded_keys)} lora keys unloaded from {module.__class__.__name__}.\")\n        return lora_unloaded_keys\n\n\nclass QwenImageLoraLoaderMixin(LoraLoaderMixin):\n    def load_lora_weights(\n        self,\n        pretrained_model_name_or_path_or_dict: str | dict[str, torch.Tensor],\n        adapter_name: str | None = None,\n    ):\n        if adapter_name in self.lora_loaded:\n            return\n\n        if isinstance(pretrained_model_name_or_path_or_dict, dict):\n            state_dict = pretrained_model_name_or_path_or_dict\n        else:\n            state_dict = _load_lora_state_dict(pretrained_model_name_or_path_or_dict)"
+      },
+      {
+        "line": 430,
+        "text": "            prefix=self.transformer_name,\n        )\n\n        self.lora_loaded[adapter_name] = state_dict\n\n    def unload_lora_weights(self, adapter_name: str):\n        if adapter_name not in self.lora_loaded:\n            return\n\n        state_dict = self.lora_loaded[adapter_name]\n\n        transformer = get_transformer_from_pipeline(self)\n        self.unload_module_lora(state_dict, transformer, prefix=self.transformer_name)\n\n        del self.lora_loaded[adapter_name]\n\n"
+      },
+      {
+        "line": 446,
+        "text": "\nclass WanLoraLoaderMixin(LoraLoaderMixin):\n    transformer_2_name = \"transformer_2\"\n    has_transformer_2: bool\n\n    def load_lora_weights(\n        self,\n        pretrained_model_name_or_path: str | list[str],\n        adapter_name: str | None = None,\n    ):\n        \"\"\"Load LoRA weights into the pipeline's transformer(s).\n\n        Args:\n            pretrained_model_name_or_path: Path(s) to concrete .safetensors LoRA files.\n                - str: a single .safetensors file. Only valid for Wan2.1\n                  (single-transformer pipelines).\n                - list[str]: one file per transformer, matched **by position** to"
+      },
+      {
+        "line": 521,
+        "text": "            self.load_lora_into_module(state_dict, module, prefix=self.transformer_name, lora_bias_suffix=\"bias\")\n            module_to_lora_sd[target_module_name] = state_dict\n\n        self.lora_loaded[adapter_name] = module_to_lora_sd\n\n    def unload_lora_weights(self, adapter_name: str):\n        if adapter_name not in self.lora_loaded:\n            return\n\n        module_to_lora_sd = self.lora_loaded[adapter_name]\n        for module_name, lora_sd in module_to_lora_sd.items():\n            module = get_transformer_from_pipeline(self, transformer_name=module_name)\n            self.unload_module_lora(lora_sd, module, prefix=self.transformer_name)\n\n        del self.lora_loaded[adapter_name]"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/lora/manager.py",
+    "sha256": "1c5c6f60b34e05056316b72ea372919e9a082b2df3a4fe37eacc9432358b238a",
+    "excerpts": [
+      {
+        "line": 19,
+        "text": "from vllm.config.lora import LoRAConfig, MaxLoRARanks\nfrom vllm.logger import init_logger\nfrom vllm.lora.layers import BaseLayerWithLoRA, LoRAMapping\nfrom vllm.lora.lora_model import LoRAModel\nfrom vllm.lora.lora_weights import LoRALayerWeights, PackedLoRALayerWeights\nfrom vllm.lora.peft_helper import PEFTHelper\nfrom vllm.lora.request import LoRARequest\nfrom vllm.lora.utils import (\n    get_adapter_absolute_path,\n    get_supported_lora_modules,\n    replace_submodule,\n)\nfrom vllm.model_executor.layers.linear import MergedColumnParallelLinear, QKVParallelLinear\n\nfrom vllm_omni.diffusion.lora.utils import (\n    _expand_expected_modules_for_packed_layers,\n    _match_target_modules,"
+      },
+      {
+        "line": 41,
+        "text": "\nlogger = init_logger(__name__)\n\n\ndef _moe_lora_proj_names(moe_config: object | None) -> list[str]:\n    \"\"\"Map PEFT projection names to upstream ``[w1, w2, w3]`` order.\n\n    Gated MoE uses gate/down/up. Non-gated MoE uses up/down with an unused\n    up placeholder for w3. Shared by checkpoint validation and weight binding.\n    \"\"\"\n    is_gated = bool(getattr(moe_config, \"is_act_and_mul\", True))\n    if is_gated:\n        return [\"gate_proj\", \"down_proj\", \"up_proj\"]\n    return [\"up_proj\", \"down_proj\", \"up_proj\"]\n\n\ndef _moe_lora_target_names(full_module_name: str, module: nn.Module) -> list[str]:"
+      },
+      {
+        "line": 67,
+        "text": "        for projection in projections\n    ]\n\n\nclass LoRABackend(str, Enum):\n    PEFT = \"peft\"\n    DISTILL = \"distill\"\n\n\nclass MergedLoRAWeights(Protocol):\n    def activate(self) -> None: ...\n    def suspend(self) -> None: ...\n    def close(self) -> None: ...\n\n\nclass DiffusionLoRAManager:\n    \"\"\"Manager for LoRA adapters in diffusion models."
+      },
+      {
+        "line": 334,
+        "text": "                    )\n\n        return mapping\n\n    def _expand_expected_modules_for_moe(self, expected: set[str]) -> set[str]:\n        \"\"\"Whitelist indexed PEFT suffixes such as ``experts.0.gate_proj``.\n\n        The loader requires indexed suffixes instead of bare projection names.\n        Enumerate all global experts before layer replacement; EP slicing is\n        applied later while binding adapter weights.\n        \"\"\"\n        expanded = set(expected)\n        from vllm.model_executor.layers.fused_moe import MoERunner\n\n        for _, module in self.pipeline.named_modules():\n            if not isinstance(module, MoERunner):\n                continue"
+      },
+      {
+        "line": 438,
+        "text": "        return round(lora_scale, 3)\n\n    def _load_adapter(\n        self,\n        lora_request: LoRARequest,\n    ) -> tuple[LoRAModel, PEFTHelper]:\n        if not self._expected_lora_modules:\n            raise ValueError(\"No supported LoRA modules found in the diffusion pipeline.\")\n\n        logger.debug(\"Supported LoRA modules: %s\", self._expected_lora_modules)\n\n        lora_path = get_adapter_absolute_path(lora_request.lora_path)\n        logger.debug(\"Resolved LoRA path: %s\", lora_path)\n\n        model_loader = getattr(self.pipeline, \"_load_diffusion_lora_adapter\", None)\n        loaded = None\n        if callable(model_loader):"
+      },
+      {
+        "line": 447,
+        "text": "        logger.debug(\"Supported LoRA modules: %s\", self._expected_lora_modules)\n\n        lora_path = get_adapter_absolute_path(lora_request.lora_path)\n        logger.debug(\"Resolved LoRA path: %s\", lora_path)\n\n        model_loader = getattr(self.pipeline, \"_load_diffusion_lora_adapter\", None)\n        loaded = None\n        if callable(model_loader):\n            loaded = model_loader(\n                lora_request=lora_request,\n                lora_path=lora_path,\n                dtype=self.dtype,\n            )\n\n        if loaded is None:\n            peft_helper = PEFTHelper.from_local_dir(\n                lora_path,"
+      },
+      {
+        "line": 457,
+        "text": "                lora_path=lora_path,\n                dtype=self.dtype,\n            )\n\n        if loaded is None:\n            peft_helper = PEFTHelper.from_local_dir(\n                lora_path,\n                max_position_embeddings=None,  # no need in diffusion\n            )\n\n            lora_model = LoRAModel.from_local_checkpoint(\n                lora_path,\n                expected_lora_modules=self._expected_lora_modules,\n                peft_helper=peft_helper,\n                lora_model_id=lora_request.lora_int_id,\n                device=\"cpu\",  # consistent w/ vllm's behavior\n                dtype=self.dtype,"
+      },
+      {
+        "line": 476,
+        "text": "            )\n        else:\n            lora_model, peft_helper = loaded\n\n        logger.info(\n            \"Loaded PEFT config: r=%d, lora_alpha=%d, target_modules=%s\",\n            peft_helper.r,\n            peft_helper.lora_alpha,\n            peft_helper.target_modules,\n        )\n\n        logger.info(\n            \"Loaded LoRA model: id=%d, num_modules=%d, modules=%s\",\n            lora_model.id,\n            len(lora_model.loras),\n            list(lora_model.loras.keys()),\n        )"
+      },
+      {
+        "line": 535,
+        "text": "                continue\n            component = getattr(self.pipeline, component_name)\n            if isinstance(component, nn.Module):\n                yield component_name, component\n\n    def _replace_layers_with_lora(self, peft_helper: PEFTHelper) -> None:\n        self._ensure_max_lora_rank(peft_helper.r)\n\n        target_modules = getattr(peft_helper, \"target_modules\", None)\n        target_modules_list: list[str] | None = None\n        target_modules_pattern: str | None = None\n        if isinstance(target_modules, str) and target_modules:\n            target_modules_pattern = target_modules\n        elif isinstance(target_modules, list) and target_modules:\n            target_modules_list = target_modules\n\n        def _matches_target(module_name: str) -> bool:"
+      },
+      {
+        "line": 646,
+        "text": "                    logger.debug(\"Replaced layer: %s -> %s\", full_module_name, type(lora_layer).__name__)\n\n    def _ensure_moe_lora_context(self) -> None:\n        \"\"\"Wrap MoE runners and publish mapping before the first forward.\n\n        ``configure_diffusion_vllm_config`` sets ``lora_config`` for MoE + PEFT\n        even when no adapter is loaded. TRTLLM LoRA experts then require a\n        context on every apply(), including HunyuanImage3 baseline generate().\n        \"\"\"\n        if self._max_num_batched_tokens is None:\n            return\n        if self._max_lora_rank <= 0:\n            self._ensure_max_lora_rank(min(self._VALID_MAX_RANKS))\n        self._replace_moe_runners_with_lora()\n        self._publish_moe_lora_context()\n\n    def _replace_moe_runners_with_lora(self) -> None:"
+      },
+      {
+        "line": 782,
+        "text": "        if lora_weights is not None:\n            return lora_weights\n\n        # Model-scoped namespace aliases. HunyuanImage-3 registers the DiT\n        # under ``transformer.layers.*`` (``self.transformer`` aliases\n        # ``self.model``) while PEFT adapters use ``model.layers.*``.\n        name_aliases = getattr(self.pipeline, \"_get_diffusion_lora_name_aliases\", None)\n        if callable(name_aliases):\n            for alias in name_aliases(full_module_name) or []:\n                lora_weights = lora_model.get_lora(alias)\n                if lora_weights is not None:\n                    return lora_weights\n\n        return None\n\n    def _is_active_at_scale(self, adapter_id: int, scale: float) -> bool:\n        \"\"\"True if the adapter_id is active and the current scale matches.\"\"\""
+      },
+      {
+        "line": 994,
+        "text": "            for global_ei in range(global_num_experts):\n                if local_start <= global_ei < local_start + local_num_experts:\n                    continue\n                for proj in proj_names:\n                    cand = f\"{full_module_name}.{global_ei}.{proj}\"\n                    # Resolve to the PEFT namespace exactly as binding does.\n                    sub = self._get_lora_weights(lora_model, cand)\n                    if sub is not None:\n                        name = lora_names_by_id.get(id(sub))\n                        if name is not None:\n                            non_local_expert_names.add(name)\n        non_local_expert_names -= bound_lora_names\n        unbound_lora_names = sorted(all_lora_names - bound_lora_names - non_local_expert_names)\n        expected_count = len(all_lora_names) - len(non_local_expert_names)\n        # A sparse adapter can target only remote experts on this rank. That\n        # is a valid local no-op, unlike an empty or wholly unmatched adapter.\n        if not all_lora_names or unbound_lora_names or (expected_count and not bound_lora_names):"
+      },
+      {
+        "line": 1028,
+        "text": "        lora_layer,\n        lora_model: LoRAModel,\n        scale: float,\n        bound_lora_names_cb,\n    ) -> bool:\n        \"\"\"Bind per-expert PEFT weights to a MoE LoRA wrapper.\n\n        Returns ``False`` for non-MoE layers. For MoE layers, gathers this\n        rank's expert factors in upstream ``[w1, w2, w3]`` order, zero-fills\n        missing factors, and writes them to slot 0.\n        \"\"\"\n        from vllm.lora.layers.fused_moe import FusedMoEWithLoRA\n        from vllm.model_executor.layers.fused_moe import MoERunner\n\n        base_layer = getattr(lora_layer, \"base_layer\", None)\n        if not isinstance(base_layer, MoERunner):\n            return False"
+      },
+      {
+        "line": 1059,
+        "text": "            expert_factors: list = []\n            if local_num_experts is None:\n                per_proj.append(expert_factors)\n                continue\n            for ei in range(local_num_experts):\n                # PEFT uses global expert IDs; convert local IDs under EP.\n                global_ei = ep_rank * local_num_experts + ei if use_ep else ei\n                cand = f\"{prefix}.{global_ei}.{proj}\"\n                sub = self._get_lora_weights(lora_model, cand)\n                if sub is not None and not isinstance(sub, PackedLoRALayerWeights):\n                    expert_factors.append((sub.lora_a, sub.lora_b))\n                    any_found = True\n                    bound_lora_names_cb(sub)\n                else:\n                    expert_factors.append(None)\n            per_proj.append(expert_factors)\n"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/model_loader/diffusers_loader.py",
+    "sha256": "d75b7eacbbf0a2f4ef28be702d4bf6e0ea724b525bf5324e858ed1b632676764",
+    "excerpts": [
+      {
+        "line": 573,
+        "text": "\n    def _maybe_fuse_distilled_lora(self, model: nn.Module) -> None:\n        \"\"\"Fuse distilled LoRA weights into the model before sharding or quantization.\"\"\"\n        if self.od_config is None:\n            return\n        lora_backend = getattr(self.od_config, \"lora_backend\", None)\n        if lora_backend != LoRABackend.DISTILL and lora_backend != \"distill\":\n            return\n\n        if getattr(model, \"lora_is_fused\", False):\n            return\n\n        lora_path = getattr(self.od_config, \"lora_path\", None)\n        if not lora_path:\n            return\n\n        if isinstance(lora_path, list) and len(lora_path) == 1:"
+      },
+      {
+        "line": 574,
+        "text": "    def _maybe_fuse_distilled_lora(self, model: nn.Module) -> None:\n        \"\"\"Fuse distilled LoRA weights into the model before sharding or quantization.\"\"\"\n        if self.od_config is None:\n            return\n        lora_backend = getattr(self.od_config, \"lora_backend\", None)\n        if lora_backend != LoRABackend.DISTILL and lora_backend != \"distill\":\n            return\n\n        if getattr(model, \"lora_is_fused\", False):\n            return\n\n        lora_path = getattr(self.od_config, \"lora_path\", None)\n        if not lora_path:\n            return\n\n        if isinstance(lora_path, list) and len(lora_path) == 1:\n            lora_path = lora_path[0]"
+      },
+      {
+        "line": 587,
+        "text": "            return\n\n        if isinstance(lora_path, list) and len(lora_path) == 1:\n            lora_path = lora_path[0]\n\n        if hasattr(model, \"load_lora_weights\"):\n            lora_scale = getattr(self.od_config, \"lora_scale\", 1.0)\n            if lora_scale > 1.0:\n                logger.warning(\"lora_scale > 1.0 may not take any effect when using distilled LoRA backend.\")\n            logger.info(\"Fusing distilled LoRA weights from %s into %s\", lora_path, model.__class__.__name__)\n            model.load_lora_weights(lora_path)\n            setattr(model, \"lora_is_fused\", True)\n        else:\n            logger.warning(\"Pipeline %s does not support loading distilled LoRA weights.\", model.__class__.__name__)\n\n    def _broadcast_model_weights(\n        self,"
+      },
+      {
+        "line": 592,
+        "text": "        if hasattr(model, \"load_lora_weights\"):\n            lora_scale = getattr(self.od_config, \"lora_scale\", 1.0)\n            if lora_scale > 1.0:\n                logger.warning(\"lora_scale > 1.0 may not take any effect when using distilled LoRA backend.\")\n            logger.info(\"Fusing distilled LoRA weights from %s into %s\", lora_path, model.__class__.__name__)\n            model.load_lora_weights(lora_path)\n            setattr(model, \"lora_is_fused\", True)\n        else:\n            logger.warning(\"Pipeline %s does not support loading distilled LoRA weights.\", model.__class__.__name__)\n\n    def _broadcast_model_weights(\n        self,\n        model: nn.Module,\n        target_device: torch.device,\n        src_rank: int = 0,\n        bucket_cap_bytes: int = 256 * 1024 * 1024,\n    ) -> None:"
+      },
+      {
+        "line": 837,
+        "text": "                self._hwr_state = hwr_state\n                hwr_active = hwr_state is not None\n                if hwr_active and hwr_state is not None:\n                    self.host_weight_plan = cast(HostWeightPlan | None, hwr_state.get(\"plan\"))\n                if dit_distributed_offload and not hwr_active and not self._force_canonical_load:\n                    lora_backend = getattr(self.od_config, \"lora_backend\", None)\n                    has_distilled_lora = lora_backend in (LoRABackend.DISTILL, \"distill\") and bool(\n                        getattr(self.od_config, \"lora_path\", None)\n                    )\n                    plan_result = build_checkpoint_mmap_plan(\n                        model,\n                        dit_modules=tuple(zip(modules.dit_names, modules.dits)),\n                        sources=weight_sources,\n                        model_path=str(getattr(self.od_config, \"model\", \"\")) or None,\n                        tensor_parallel_size=tensor_parallel_size,\n                        use_hsdp=use_hsdp,\n                        online_quantization=any(self._has_online_quant(dit) for dit in modules.dits),"
+      },
+      {
+        "line": 838,
+        "text": "                hwr_active = hwr_state is not None\n                if hwr_active and hwr_state is not None:\n                    self.host_weight_plan = cast(HostWeightPlan | None, hwr_state.get(\"plan\"))\n                if dit_distributed_offload and not hwr_active and not self._force_canonical_load:\n                    lora_backend = getattr(self.od_config, \"lora_backend\", None)\n                    has_distilled_lora = lora_backend in (LoRABackend.DISTILL, \"distill\") and bool(\n                        getattr(self.od_config, \"lora_path\", None)\n                    )\n                    plan_result = build_checkpoint_mmap_plan(\n                        model,\n                        dit_modules=tuple(zip(modules.dit_names, modules.dits)),\n                        sources=weight_sources,\n                        model_path=str(getattr(self.od_config, \"model\", \"\")) or None,\n                        tensor_parallel_size=tensor_parallel_size,\n                        use_hsdp=use_hsdp,\n                        online_quantization=any(self._has_online_quant(dit) for dit in modules.dits),\n                        has_distilled_lora=has_distilled_lora,"
+      },
+      {
+        "line": 1825,
+        "text": "                    self.load_weights(model)\n                    self._maybe_fuse_distilled_lora(model)\n                self._broadcast_model_weights(model, target_device=target_device, src_rank=0)\n                if (\n                    rank != 0\n                    and getattr(self.od_config, \"lora_backend\", None) in (LoRABackend.DISTILL, \"distill\")\n                    and getattr(self.od_config, \"lora_path\", None)\n                    and hasattr(model, \"load_lora_weights\")\n                ):\n                    setattr(model, \"lora_is_fused\", True)\n            else:\n                self.load_weights(model)\n                self._maybe_fuse_distilled_lora(model)\n\n        # Quantization methods must finish while parameters are ordinary local\n        # tensors. Some post-load transforms use operations (for example,\n        # torch.unique in ModelOpt NVFP4) that do not support DTensor inputs."
+      },
+      {
+        "line": 1827,
+        "text": "                self._broadcast_model_weights(model, target_device=target_device, src_rank=0)\n                if (\n                    rank != 0\n                    and getattr(self.od_config, \"lora_backend\", None) in (LoRABackend.DISTILL, \"distill\")\n                    and getattr(self.od_config, \"lora_path\", None)\n                    and hasattr(model, \"load_lora_weights\")\n                ):\n                    setattr(model, \"lora_is_fused\", True)\n            else:\n                self.load_weights(model)\n                self._maybe_fuse_distilled_lora(model)\n\n        # Quantization methods must finish while parameters are ordinary local\n        # tensors. Some post-load transforms use operations (for example,\n        # torch.unique in ModelOpt NVFP4) that do not support DTensor inputs.\n        self._process_weights_after_loading(model, target_device)\n"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/worker/diffusion_worker.py",
+    "sha256": "83cecd380d99b10a2191e8557d526031f7649f9fb656c6dfc2e98303c5a682c8",
+    "excerpts": [
+      {
+        "line": 645,
+        "text": "\n        lora_path = self.od_config.lora_path\n        if isinstance(lora_path, list) and len(lora_path) == 1:\n            lora_path = lora_path[0]\n\n        lora_backend = self.od_config.lora_backend\n        if lora_backend == LoRABackend.PEFT or getattr(pipeline, \"diffusion_lora_fixed_adapter\", False) is True:\n            lora_scale = self.od_config.lora_scale\n            if isinstance(lora_scale, list) and len(lora_scale) == 1:\n                lora_scale = lora_scale[0]\n            if isinstance(lora_path, list) or isinstance(lora_scale, list):\n                raise ValueError(\"Dynamic PEFT LoRA requires a single adapter path and scale\")\n            max_cpu_loras = self.od_config.max_cpu_loras\n            assert max_cpu_loras is not None, \"max_cpu_loras must be resolved before worker initialization\"\n            max_num_batched_tokens = None\n            if getattr(self.od_config, \"is_moe\", False) is True:\n                assert self.vllm_config is not None"
+      },
+      {
+        "line": 646,
+        "text": "        lora_path = self.od_config.lora_path\n        if isinstance(lora_path, list) and len(lora_path) == 1:\n            lora_path = lora_path[0]\n\n        lora_backend = self.od_config.lora_backend\n        if lora_backend == LoRABackend.PEFT or getattr(pipeline, \"diffusion_lora_fixed_adapter\", False) is True:\n            lora_scale = self.od_config.lora_scale\n            if isinstance(lora_scale, list) and len(lora_scale) == 1:\n                lora_scale = lora_scale[0]\n            if isinstance(lora_path, list) or isinstance(lora_scale, list):\n                raise ValueError(\"Dynamic PEFT LoRA requires a single adapter path and scale\")\n            max_cpu_loras = self.od_config.max_cpu_loras\n            assert max_cpu_loras is not None, \"max_cpu_loras must be resolved before worker initialization\"\n            max_num_batched_tokens = None\n            if getattr(self.od_config, \"is_moe\", False) is True:\n                assert self.vllm_config is not None\n                max_num_batched_tokens = resolve_diffusion_moe_lora_token_capacity("
+      },
+      {
+        "line": 651,
+        "text": "        if lora_backend == LoRABackend.PEFT or getattr(pipeline, \"diffusion_lora_fixed_adapter\", False) is True:\n            lora_scale = self.od_config.lora_scale\n            if isinstance(lora_scale, list) and len(lora_scale) == 1:\n                lora_scale = lora_scale[0]\n            if isinstance(lora_path, list) or isinstance(lora_scale, list):\n                raise ValueError(\"Dynamic PEFT LoRA requires a single adapter path and scale\")\n            max_cpu_loras = self.od_config.max_cpu_loras\n            assert max_cpu_loras is not None, \"max_cpu_loras must be resolved before worker initialization\"\n            max_num_batched_tokens = None\n            if getattr(self.od_config, \"is_moe\", False) is True:\n                assert self.vllm_config is not None\n                max_num_batched_tokens = resolve_diffusion_moe_lora_token_capacity(\n                    self.od_config,\n                    self.vllm_config,\n                )\n            self.lora_manager = DiffusionLoRAManager(\n                pipeline=pipeline,"
+      },
+      {
+        "line": 670,
+        "text": "                max_cached_adapters=max_cpu_loras,\n                lora_path=lora_path,\n                lora_scale=lora_scale,\n                max_num_batched_tokens=max_num_batched_tokens,\n            )\n        elif lora_backend == LoRABackend.DISTILL:\n            if hasattr(pipeline, \"load_lora_weights\"):\n                scales = self.od_config.lora_scale\n                if any(scale > 1.0 for scale in (scales if isinstance(scales, list) else [scales])):\n                    logger.warning(\"lora_scale > 1.0 may not take any effect when using distilled LoRA backend.\")\n                pipeline.load_lora_weights(lora_path)\n                pipeline.lora_is_fused = True\n            else:\n                logger.warning(\"Pipeline does not support loading distilled LoRA weights for now.\")\n        else:\n            raise ValueError(f\"Unknown LoRA backend: {lora_backend}. Available choices: {LoRABackend.__members__}\")\n"
+      },
+      {
+        "line": 671,
+        "text": "                lora_path=lora_path,\n                lora_scale=lora_scale,\n                max_num_batched_tokens=max_num_batched_tokens,\n            )\n        elif lora_backend == LoRABackend.DISTILL:\n            if hasattr(pipeline, \"load_lora_weights\"):\n                scales = self.od_config.lora_scale\n                if any(scale > 1.0 for scale in (scales if isinstance(scales, list) else [scales])):\n                    logger.warning(\"lora_scale > 1.0 may not take any effect when using distilled LoRA backend.\")\n                pipeline.load_lora_weights(lora_path)\n                pipeline.lora_is_fused = True\n            else:\n                logger.warning(\"Pipeline does not support loading distilled LoRA weights for now.\")\n        else:\n            raise ValueError(f\"Unknown LoRA backend: {lora_backend}. Available choices: {LoRABackend.__members__}\")\n\n    def profile("
+      },
+      {
+        "line": 675,
+        "text": "        elif lora_backend == LoRABackend.DISTILL:\n            if hasattr(pipeline, \"load_lora_weights\"):\n                scales = self.od_config.lora_scale\n                if any(scale > 1.0 for scale in (scales if isinstance(scales, list) else [scales])):\n                    logger.warning(\"lora_scale > 1.0 may not take any effect when using distilled LoRA backend.\")\n                pipeline.load_lora_weights(lora_path)\n                pipeline.lora_is_fused = True\n            else:\n                logger.warning(\"Pipeline does not support loading distilled LoRA weights for now.\")\n        else:\n            raise ValueError(f\"Unknown LoRA backend: {lora_backend}. Available choices: {LoRABackend.__members__}\")\n\n    def profile(\n        self,\n        is_start: bool = True,\n        profile_prefix: str | None = None,\n        *,"
+      },
+      {
+        "line": 680,
+        "text": "                pipeline.load_lora_weights(lora_path)\n                pipeline.lora_is_fused = True\n            else:\n                logger.warning(\"Pipeline does not support loading distilled LoRA weights for now.\")\n        else:\n            raise ValueError(f\"Unknown LoRA backend: {lora_backend}. Available choices: {LoRABackend.__members__}\")\n\n    def profile(\n        self,\n        is_start: bool = True,\n        profile_prefix: str | None = None,\n        *,\n        delay_iterations: int | None = None,\n        max_iterations: int | None = None,\n    ) -> None:\n        \"\"\"Start or stop profiling for this GPU worker.\n"
+      }
+    ]
+  },
+  {
+    "source": "/usr/local/lib/python3.12/dist-packages/vllm_omni/diffusion/models/minimax_h3/pipeline_minimax_h3.py",
+    "sha256": "8ba5e0353fa6e7ea5124bf5eb73ad19b21cc95878b1370251f657958eae79e5e",
+    "excerpts": [
+      {
+        "line": 185,
+        "text": "\nlogger = init_logger(__name__)\n\nif TYPE_CHECKING:\n    from vllm.lora.lora_model import LoRAModel\n    from vllm.lora.peft_helper import PEFTHelper\n\n    from vllm_omni.lora.request import LoRARequest\n\nMINIMAX_H3_FPS = 24\nMINIMAX_H3_AUDIO_SAMPLE_RATE = 32000\nMINIMAX_H3_IMGVID_COND_TIMESTEP = 0.999\nMINIMAX_H3_AUDIO_REF_COND_TIMESTEP = 1.0\nMINIMAX_H3_DOWNLOAD_PATTERNS = [\n    \"FL2VA/**\",\n    \"Ref2VA/model_index.json\",\n    \"Ref2VA/transformer/**\","
+      },
+      {
+        "line": 684,
+        "text": "    _fasth3: FastH3WeightFusion | None = None\n    # Set from --lora-path when it names a VDN-H3 checkpoint directory.\n    _vdn: VDNCheckpoint | None = None\n    _fasth3_checkpoint: FastH3CheckpointSpec | None = None\n\n    def _load_diffusion_lora_adapter(\n        self,\n        *,\n        lora_request: LoRARequest,\n        lora_path: str | Path,\n        dtype: torch.dtype,\n    ) -> tuple[LoRAModel, PEFTHelper] | None:\n        # A cache eviction may be followed by a different adapter reusing the\n        # same client-supplied ID. Every real load replaces the classification.\n        self._clear_adaln_caches()\n        self._turbo_lora_specs.pop(lora_request.lora_int_id, None)\n        self._native_lora_adapter_ids.discard(lora_request.lora_int_id)"
+      },
+      {
+        "line": 690,
+        "text": "        self,\n        *,\n        lora_request: LoRARequest,\n        lora_path: str | Path,\n        dtype: torch.dtype,\n    ) -> tuple[LoRAModel, PEFTHelper] | None:\n        # A cache eviction may be followed by a different adapter reusing the\n        # same client-supplied ID. Every real load replaces the classification.\n        self._clear_adaln_caches()\n        self._turbo_lora_specs.pop(lora_request.lora_int_id, None)\n        self._native_lora_adapter_ids.discard(lora_request.lora_int_id)\n        self._lora_sigma_schedules.pop(lora_request.lora_int_id, None)\n        od_config = getattr(self, \"od_config\", None)\n        offload_modes = []\n        if od_config is not None:\n            resolved_offload = resolve_offload(od_config)\n            if resolved_offload.offloads(DIT_COMPONENT):"
+      }
+    ]
+  }
+]

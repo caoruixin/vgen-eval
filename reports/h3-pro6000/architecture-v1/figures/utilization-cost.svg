@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="880" viewBox="0 0 1600 880">
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="Arial,Hiragino Sans GB,sans-serif" fill="#161B22">
+<text x="80.00" y="55.00" font-size="38" text-anchor="start" fill="#161B22">按实测基线推导的利用率成本情景</text>
+<rect x="155.00" y="92.00" width="42.00" height="19.00" fill="#2B5686"/>
+<text x="215.00" y="114.00" font-size="25" text-anchor="start" fill="#161B22">GPU加磁盘稳态估算</text>
+<rect x="650.00" y="92.00" width="42.00" height="19.00" fill="#A9C6E1"/>
+<text x="710.00" y="114.00" font-size="25" text-anchor="start" fill="#161B22">一次启动分摊100条 示例</text>
+<line x1="1160.00" y1="103.00" x2="1205.00" y2="103.00" stroke="#C86B24" stroke-width="2" stroke-dasharray="9 7"/>
+<text x="1220.00" y="114.00" font-size="25" text-anchor="start" fill="#161B22">API标价估算</text>
+<line x1="155.00" y1="725.00" x2="1520.00" y2="725.00" stroke="#DCE2E8" stroke-width="1.8"/>
+<text x="133.00" y="734.00" font-size="26" text-anchor="end" fill="#161B22">0</text>
+<line x1="155.00" y1="648.61" x2="1520.00" y2="648.61" stroke="#DCE2E8" stroke-width="1.8"/>
+<text x="133.00" y="657.61" font-size="26" text-anchor="end" fill="#161B22">0.5</text>
+<line x1="155.00" y1="572.22" x2="1520.00" y2="572.22" stroke="#DCE2E8" stroke-width="1.8"/>
+<text x="133.00" y="581.22" font-size="26" text-anchor="end" fill="#161B22">1</text>
+<line x1="155.00" y1="495.83" x2="1520.00" y2="495.83" stroke="#DCE2E8" stroke-width="1.8"/>
+<text x="133.00" y="504.83" font-size="26" text-anchor="end" fill="#161B22">1.5</text>
+<line x1="155.00" y1="419.44" x2="1520.00" y2="419.44" stroke="#DCE2E8" stroke-width="1.8"/>
+<text x="133.00" y="428.44" font-size="26" text-anchor="end" fill="#161B22">2</text>
+<line x1="155.00" y1="343.06" x2="1520.00" y2="343.06" stroke="#DCE2E8" stroke-width="1.8"/>
+<text x="133.00" y="352.06" font-size="26" text-anchor="end" fill="#161B22">2.5</text>
+<line x1="155.00" y1="266.67" x2="1520.00" y2="266.67" stroke="#DCE2E8" stroke-width="1.8"/>
+<text x="133.00" y="275.67" font-size="26" text-anchor="end" fill="#161B22">3</text>
+<line x1="155.00" y1="190.28" x2="1520.00" y2="190.28" stroke="#DCE2E8" stroke-width="1.8"/>
+<text x="133.00" y="199.28" font-size="26" text-anchor="end" fill="#161B22">3.5</text>
+<line x1="155.00" y1="175.00" x2="155.00" y2="725.00" stroke="#31363B" stroke-width="2.2"/>
+<line x1="155.00" y1="725.00" x2="1520.00" y2="725.00" stroke="#31363B" stroke-width="2.2"/>
+<text x="42.00" y="450.00" font-size="27" text-anchor="middle" fill="#161B22" transform="rotate(-90 42 450.0)">美元 每个技术有效输出</text>
+<line x1="390.00" y1="725.00" x2="390.00" y2="735.00" stroke="#31363B" stroke-width="2"/>
+<text x="390.00" y="774.00" font-size="27" text-anchor="middle" fill="#161B22">25%</text>
+<line x1="835.00" y1="725.00" x2="835.00" y2="735.00" stroke="#31363B" stroke-width="2"/>
+<text x="835.00" y="774.00" font-size="27" text-anchor="middle" fill="#161B22">50%</text>
+<line x1="1280.00" y1="725.00" x2="1280.00" y2="735.00" stroke="#31363B" stroke-width="2"/>
+<text x="1280.00" y="774.00" font-size="27" text-anchor="middle" fill="#161B22">100%</text>
+<rect x="285.00" y="291.52" width="210.00" height="433.48" fill="#2B5686"/>
+<rect x="285.00" y="273.84" width="210.00" height="17.67" fill="#A9C6E1"/>
+<text x="390.00" y="251.84" font-size="29" text-anchor="middle" fill="#161B22">$2.953</text>
+<rect x="730.00" y="508.26" width="210.00" height="216.74" fill="#2B5686"/>
+<rect x="730.00" y="490.58" width="210.00" height="17.67" fill="#A9C6E1"/>
+<text x="835.00" y="468.58" font-size="29" text-anchor="middle" fill="#161B22">$1.534</text>
+<rect x="1175.00" y="616.63" width="210.00" height="108.37" fill="#2B5686"/>
+<rect x="1175.00" y="598.95" width="210.00" height="17.67" fill="#A9C6E1"/>
+<text x="1280.00" y="576.95" font-size="29" text-anchor="middle" fill="#161B22">$0.825</text>
+<line x1="155.00" y1="663.89" x2="1520.00" y2="663.89" stroke="#C86B24" stroke-width="2.4" stroke-dasharray="10 8"/>
+<text x="800.00" y="835.00" font-size="27" text-anchor="middle" fill="#161B22">需求利用率  不等同于 GPU 忙碌率</text>
+</g></svg>

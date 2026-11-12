@@ -1,0 +1,15 @@
+{
+  "request_id": "comparison-official_api-official-H3-F04-api",
+  "observed_utc": "2026-11-07T16:31:34.737+00:00",
+  "ffmpeg_exit_code": 0,
+  "rms_level_dbfs": -55.2794,
+  "peak_level_dbfs": -38.672216,
+  "all_digital_silence": false,
+  "channel_and_overall_rms_raw": [
+    "-55.898645",
+    "-54.737532",
+    "-55.279400"
+  ],
+  "analysis_seconds": 0.04779917513951659,
+  "interpretation": "Objective signal energy only; no audibility, prompt match, speech intelligibility or AV-sync score inferred"
+}

@@ -1,0 +1,102 @@
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 15:12:43[0m [90m[helpers.py:1138][0m Video generation handler: OmniOpenAIServingVideo
+INFO:     127.0.0.1:50624 - "POST /v1/videos HTTP/1.1" 200 OK
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 15:12:43[0m [90m[serving_video.py:475][0m Boundary ratio parse: request=None gen_params=None
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 15:12:43[0m [90m[serving_video.py:517][0m Applied extra_params: {'task': 't2va', 'duration': 5.0, 'audio_flow_shift': 3.0}
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 15:12:43[0m [90m[serving_video.py:521][0m Video sampling params: steps=50 guidance=None guidance_2=None seed=4106
+INFO:     127.0.0.1:50640 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+  0%|          | 0/50 [00:00<?, ?it/s]INFO:     127.0.0.1:50644 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57002 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+  2%|▏         | 1/50 [00:03<02:50,  3.48s/it]INFO:     127.0.0.1:57010 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+  4%|▍         | 2/50 [00:06<02:42,  3.38s/it]INFO:     127.0.0.1:57018 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57032 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+  6%|▌         | 3/50 [00:10<02:37,  3.35s/it]INFO:     127.0.0.1:57038 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37500 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+  8%|▊         | 4/50 [00:13<02:33,  3.34s/it]INFO:     127.0.0.1:37508 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 10%|█         | 5/50 [00:16<02:29,  3.33s/it]INFO:     127.0.0.1:37510 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37524 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 12%|█▏        | 6/50 [00:20<02:26,  3.32s/it]INFO:     127.0.0.1:37530 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52698 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 14%|█▍        | 7/50 [00:23<02:22,  3.32s/it]INFO:     127.0.0.1:52710 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 16%|█▌        | 8/50 [00:26<02:19,  3.32s/it]INFO:     127.0.0.1:52726 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52742 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 18%|█▊        | 9/50 [00:29<02:16,  3.32s/it]INFO:     127.0.0.1:52744 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 20%|██        | 10/50 [00:33<02:12,  3.32s/it]INFO:     127.0.0.1:36374 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36380 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 22%|██▏       | 11/50 [00:36<02:09,  3.32s/it]INFO:     127.0.0.1:36394 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36410 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 24%|██▍       | 12/50 [00:39<02:06,  3.32s/it]INFO:     127.0.0.1:36424 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 26%|██▌       | 13/50 [00:43<02:02,  3.32s/it]INFO:     127.0.0.1:35222 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35238 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 28%|██▊       | 14/50 [00:46<01:59,  3.32s/it]INFO:     127.0.0.1:35250 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35264 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 30%|███       | 15/50 [00:50<01:58,  3.37s/it]INFO:     127.0.0.1:35268 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34926 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 32%|███▏      | 16/50 [00:53<01:56,  3.43s/it]INFO:     127.0.0.1:34942 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 34%|███▍      | 17/50 [00:57<01:54,  3.48s/it]INFO:     127.0.0.1:34956 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34964 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 36%|███▌      | 18/50 [01:00<01:52,  3.51s/it]INFO:     127.0.0.1:34970 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40048 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 38%|███▊      | 19/50 [01:04<01:49,  3.53s/it]INFO:     127.0.0.1:40054 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40066 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 40%|████      | 20/50 [01:07<01:46,  3.54s/it]INFO:     127.0.0.1:40068 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40078 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 42%|████▏     | 21/50 [01:11<01:43,  3.55s/it]INFO:     127.0.0.1:53488 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 44%|████▍     | 22/50 [01:15<01:39,  3.56s/it]INFO:     127.0.0.1:53496 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53508 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 46%|████▌     | 23/50 [01:18<01:36,  3.56s/it]INFO:     127.0.0.1:53516 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53524 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 48%|████▊     | 24/50 [01:22<01:32,  3.57s/it]INFO:     127.0.0.1:58574 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58584 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 50%|█████     | 25/50 [01:25<01:29,  3.57s/it]INFO:     127.0.0.1:58588 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58590 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 52%|█████▏    | 26/50 [01:29<01:25,  3.58s/it]INFO:     127.0.0.1:58602 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 54%|█████▍    | 27/50 [01:33<01:22,  3.58s/it]INFO:     127.0.0.1:47926 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47936 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 56%|█████▌    | 28/50 [01:36<01:18,  3.58s/it]INFO:     127.0.0.1:47950 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47952 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 58%|█████▊    | 29/50 [01:40<01:15,  3.58s/it]INFO:     127.0.0.1:47956 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45998 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 60%|██████    | 30/50 [01:43<01:11,  3.58s/it]INFO:     127.0.0.1:46000 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 62%|██████▏   | 31/50 [01:47<01:08,  3.58s/it]INFO:     127.0.0.1:46016 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46030 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 64%|██████▍   | 32/50 [01:50<01:04,  3.58s/it]INFO:     127.0.0.1:46036 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35412 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 66%|██████▌   | 33/50 [01:54<01:00,  3.58s/it]INFO:     127.0.0.1:35426 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35436 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 68%|██████▊   | 34/50 [01:58<00:57,  3.58s/it]INFO:     127.0.0.1:35450 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35466 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 70%|███████   | 35/50 [02:01<00:53,  3.58s/it]INFO:     127.0.0.1:57322 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 72%|███████▏  | 36/50 [02:05<00:50,  3.58s/it]INFO:     127.0.0.1:57328 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57330 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 74%|███████▍  | 37/50 [02:08<00:46,  3.58s/it]INFO:     127.0.0.1:57338 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57348 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 76%|███████▌  | 38/50 [02:12<00:42,  3.58s/it]INFO:     127.0.0.1:60978 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60992 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 78%|███████▊  | 39/50 [02:16<00:39,  3.58s/it]INFO:     127.0.0.1:32770 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32772 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 80%|████████  | 40/50 [02:19<00:35,  3.58s/it]INFO:     127.0.0.1:32776 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 82%|████████▏ | 41/50 [02:23<00:32,  3.58s/it]INFO:     127.0.0.1:38340 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38350 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 84%|████████▍ | 42/50 [02:26<00:28,  3.58s/it]INFO:     127.0.0.1:38366 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38370 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 86%|████████▌ | 43/50 [02:30<00:25,  3.58s/it]INFO:     127.0.0.1:38382 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33270 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 88%|████████▊ | 44/50 [02:33<00:21,  3.58s/it]INFO:     127.0.0.1:33282 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33296 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 90%|█████████ | 45/50 [02:37<00:17,  3.58s/it]INFO:     127.0.0.1:33312 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 92%|█████████▏| 46/50 [02:41<00:14,  3.58s/it]INFO:     127.0.0.1:33314 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55352 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 94%|█████████▍| 47/50 [02:44<00:10,  3.58s/it]INFO:     127.0.0.1:55360 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55376 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 96%|█████████▌| 48/50 [02:48<00:07,  3.58s/it]INFO:     127.0.0.1:55382 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55398 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+ 98%|█████████▊| 49/50 [02:51<00:03,  3.58s/it]INFO:     127.0.0.1:34226 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+100%|██████████| 50/50 [02:55<00:00,  3.59s/it]100%|██████████| 50/50 [02:55<00:00,  3.51s/it]
+INFO:     127.0.0.1:34230 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34246 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 15:15:41[0m [90m[stats.py:947][0m [OmniTiming] req=video_gen_b6d97cc128a34ff3a7376a7437adede3-a7dc4032 total=178.15s engine=178.15s stages=[0:178.15s]
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 15:15:41[0m [90m[video_api_utils.py:774][0m Video response encoding route selected: selected_path=direct_planar frames=124 frame_shape=(768, 1344, 3) dtype=uint8 fps=24.0 audio_present=True effective_audio_sample_rate=32000 effective_frame_conversion_workers=8
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 15:15:42[0m [90m[serving_video.py:678][0m Video response encoding (MP4 bytes): 225.62 ms
+[0;36m(APIServer pid=6815)[0;0m [32mINFO[0m [90m11-07 15:15:42[0m [90m[helpers.py:453][0m Video request video_gen_b6d97cc128a34ff3a7376a7437adede3 persisted video_gen_b6d97cc128a34ff3a7376a7437adede3 output file.
+INFO:     127.0.0.1:34256 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34260 - "GET /v1/videos/video_gen_b6d97cc128a34ff3a7376a7437adede3/content HTTP/1.1" 200 OK

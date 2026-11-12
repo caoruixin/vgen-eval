@@ -1,0 +1,17 @@
+{
+  "utc": "2026-11-07T12:27:19.567+00:00",
+  "pid": 6815,
+  "pgid": 6815,
+  "command": [
+    "python3",
+    "scripts/launch.py",
+    "--execute",
+    "--numa-mode",
+    "cpu-bind",
+    "--mapping",
+    "private/topology-mapping.json",
+    "--out",
+    "runs/self/deploy/bf16-cpubind"
+  ],
+  "log": "runs/self/deploy/server-bf16-cpubind.log"
+}

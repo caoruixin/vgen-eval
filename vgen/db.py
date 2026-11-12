@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 import uuid
+import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
@@ -62,6 +63,11 @@ class Job(SQLModel, table=True):
     prompt_key: str = ""
     model: str = Field(index=True)
     endpoint: str = "com"
+    origin: str = "generated"                 # generated | imported (never scheduled)
+    case_fingerprint: str | None = Field(default=None, index=True)
+    deployment_id: str | None = Field(default=None, index=True)
+    experiment_id: str | None = Field(default=None, index=True)
+    provenance: dict = Field(default_factory=dict, sa_column=Column(JSON))
     label: str = ""                              # anonymous label for blind mode
     status: str = Field(default=PENDING, index=True)
     spec: dict = Field(default_factory=dict, sa_column=Column(JSON))
@@ -106,6 +112,51 @@ class Rating(SQLModel, table=True):
     defects: list = Field(default_factory=list, sa_column=Column(JSON))
     comment: str = ""
     updated_at: float = Field(default_factory=now)
+
+
+class EvaluationCase(SQLModel, table=True):
+    id: str = Field(primary_key=True)
+    dataset_id: str = Field(index=True)
+    dataset_title: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    key: str
+    title: str
+    task: str
+    prompt: str
+    fingerprint: str = Field(index=True)
+    checklist: list = Field(default_factory=list, sa_column=Column(JSON))
+    assets: dict = Field(default_factory=dict, sa_column=Column(JSON))
+
+
+class Deployment(SQLModel, table=True):
+    id: str = Field(primary_key=True)
+    model: str
+    label: str
+    provider: str
+    hardware: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    timing_scope: str = ""
+
+
+class Experiment(SQLModel, table=True):
+    id: str = Field(primary_key=True)
+    title: str
+    date: str
+    dataset_id: str
+    content_sha256: str
+    deployment_ids: list = Field(default_factory=list, sa_column=Column(JSON))
+    config: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    summary: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    artifacts: dict = Field(default_factory=dict, sa_column=Column(JSON))
+
+
+class BenchmarkAttempt(SQLModel, table=True):
+    id: str = Field(primary_key=True)
+    experiment_id: str = Field(index=True)
+    deployment_id: str = Field(index=True)
+    case_id: str
+    request_id: str
+    attempt: int
+    job_id: str | None = None
+    metrics: dict = Field(default_factory=dict, sa_column=Column(JSON))
 
 
 class Pick(SQLModel, table=True):
@@ -171,7 +222,29 @@ class KV(SQLModel, table=True):
 _engine = None
 
 # Columns added after the first release. create_all() never alters an existing table.
-ADDED_COLUMNS: dict[str, list[tuple[str, str]]] = {"run": [("owner", "VARCHAR")], "asset": [("owner", "VARCHAR")]}
+ADDED_COLUMNS: dict[str, list[tuple[str, str]]] = {
+    "run": [("owner", "VARCHAR")], "asset": [("owner", "VARCHAR")],
+    "job": [("origin", "VARCHAR NOT NULL DEFAULT 'generated'"), ("case_fingerprint", "VARCHAR"),
+            ("deployment_id", "VARCHAR"), ("experiment_id", "VARCHAR"),
+            ("provenance", "JSON NOT NULL DEFAULT '{}' ")],
+}
+
+
+def backup_before_migration(db_path: Path) -> Path | None:
+    """Make a consistent SQLite backup before altering an existing schema, including WAL."""
+    if not db_path.exists():
+        return None
+    with sqlite3.connect(db_path) as source:
+        tables = {r[0] for r in source.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        missing = any(table in tables and any(name not in {
+            r[1] for r in source.execute(f'PRAGMA table_info("{table}")')
+        } for name, _ in columns) for table, columns in ADDED_COLUMNS.items())
+        if not missing:
+            return None
+        dest = db_path.with_name(f"{db_path.name}.pre-migration-{time.time_ns()}.bak")
+        with sqlite3.connect(dest) as target:
+            source.backup(target)
+        return dest
 
 
 def _add_missing_columns(engine) -> None:
@@ -187,6 +260,7 @@ def _add_missing_columns(engine) -> None:
 def init_db(db_path: Path):
     global _engine
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    backup_before_migration(db_path)
     engine = create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False, "timeout": 30})
 
     @event.listens_for(engine, "connect")

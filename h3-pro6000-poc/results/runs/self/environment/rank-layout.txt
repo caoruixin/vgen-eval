@@ -1,0 +1,35 @@
+            raise ValueError(
+                f"data_parallel_size ({data_parallel_size}) does not match WORLD-derived value "
+                f"({inferred_data_parallel_size})"
+            )
+        data_parallel_size = inferred_data_parallel_size
+
+    rank_generator: RankGenerator = RankGenerator(
+        tensor_parallel_size,
+        sequence_parallel_size,
+        pipeline_parallel_size,
+        cfg_parallel_size,
+        data_parallel_size,
+        order="tp-sp-pp-cfg-dp",
+    )
+
+    def get_rank_groups(token: str) -> list[list[int]]:
+        if use_hsdp and non_dp_size == 1:
+            return [[rank] for rank in range(world_size)]
+        return rank_generator.get_ranks(token)
+
+    use_moe_parallel_mapping = False
+    if enable_expert_parallel:
+        od_config = get_forward_context().omni_diffusion_config
+        use_moe_parallel_mapping = bool(od_config and od_config.is_moe)
+        if not use_moe_parallel_mapping:
+            raise RuntimeError("Expert parallelism enabled for a non-MoE model")
+
+    sp_group_ranks = get_rank_groups("sp")
+    global _DP
+    assert _DP is None, "data parallel group is already initialized"
+    _DP = init_model_parallel_group(
+        group_ranks=get_rank_groups("dp"),
+        local_rank=get_world_group().local_rank,
+        backend=backend,
+        parallel_mode="data",

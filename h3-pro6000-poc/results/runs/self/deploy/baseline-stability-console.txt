@@ -1,0 +1,388 @@
+{
+  "phase": "baseline",
+  "results": [
+    {
+      "request_id": "baseline-self-bf16-T01-1101",
+      "status": "validated",
+      "task_id": "video_sync-bfb47b81e84d595f",
+      "e2e_seconds": 178.5544514739886
+    },
+    {
+      "request_id": "baseline-self-bf16-T01-1102",
+      "status": "validated",
+      "task_id": "video_sync-9751cc925ac5d187",
+      "e2e_seconds": 178.28368452982977
+    },
+    {
+      "request_id": "baseline-self-bf16-T01-1103",
+      "status": "validated",
+      "task_id": "video_sync-89d0f0cb920ce1b7",
+      "e2e_seconds": 178.382606158033
+    },
+    {
+      "request_id": "baseline-self-bf16-T01-1104",
+      "status": "validated",
+      "task_id": "video_sync-ba7a97d4643c2dbc",
+      "e2e_seconds": 178.27306099282578
+    },
+    {
+      "request_id": "baseline-self-bf16-T01-1105",
+      "status": "validated",
+      "task_id": "video_sync-b7905f0bbaa6cece",
+      "e2e_seconds": 178.2357357777655
+    },
+    {
+      "request_id": "baseline-self-bf16-T02-1101",
+      "status": "validated",
+      "task_id": "video_sync-aed460a0eb6d8d3f",
+      "e2e_seconds": 178.15672108484432
+    },
+    {
+      "request_id": "baseline-self-bf16-T02-1102",
+      "status": "validated",
+      "task_id": "video_sync-834bff6b80772877",
+      "e2e_seconds": 178.15953216003254
+    },
+    {
+      "request_id": "baseline-self-bf16-T02-1103",
+      "status": "validated",
+      "task_id": "video_sync-a0c969a4aa7121b0",
+      "e2e_seconds": 178.0160096809268
+    },
+    {
+      "request_id": "baseline-self-bf16-T02-1104",
+      "status": "validated",
+      "task_id": "video_sync-9e352aa8e63c9331",
+      "e2e_seconds": 177.94492417108268
+    },
+    {
+      "request_id": "baseline-self-bf16-T02-1105",
+      "status": "validated",
+      "task_id": "video_sync-90742475cee24881",
+      "e2e_seconds": 177.97613921482116
+    },
+    {
+      "request_id": "baseline-self-bf16-T03-1101",
+      "status": "validated",
+      "task_id": "video_sync-a86383ee68dc0b9d",
+      "e2e_seconds": 178.23119970643893
+    },
+    {
+      "request_id": "baseline-self-bf16-T03-1102",
+      "status": "validated",
+      "task_id": "video_sync-93f1ca5a402b0c1d",
+      "e2e_seconds": 178.16912796907127
+    },
+    {
+      "request_id": "baseline-self-bf16-T03-1103",
+      "status": "validated",
+      "task_id": "video_sync-89e720dd16cdf40d",
+      "e2e_seconds": 178.1996638509445
+    },
+    {
+      "request_id": "baseline-self-bf16-T03-1104",
+      "status": "validated",
+      "task_id": "video_sync-8f779eee8a494746",
+      "e2e_seconds": 178.30641132080927
+    },
+    {
+      "request_id": "baseline-self-bf16-T03-1105",
+      "status": "validated",
+      "task_id": "video_sync-83f80f9973f6ffa5",
+      "e2e_seconds": 178.28588207485154
+    },
+    {
+      "request_id": "baseline-self-bf16-T04-1101",
+      "status": "validated",
+      "task_id": "video_sync-b1ba29cf7a4503c3",
+      "e2e_seconds": 178.2311156783253
+    },
+    {
+      "request_id": "baseline-self-bf16-T04-1102",
+      "status": "validated",
+      "task_id": "video_sync-a2e5b7583d18082d",
+      "e2e_seconds": 178.43003503372893
+    },
+    {
+      "request_id": "baseline-self-bf16-T04-1103",
+      "status": "validated",
+      "task_id": "video_sync-be4369e985189a61",
+      "e2e_seconds": 178.24249618826434
+    },
+    {
+      "request_id": "baseline-self-bf16-T04-1104",
+      "status": "validated",
+      "task_id": "video_sync-8dbc2bc9d1134789",
+      "e2e_seconds": 178.1575439190492
+    },
+    {
+      "request_id": "baseline-self-bf16-T04-1105",
+      "status": "validated",
+      "task_id": "video_sync-bf12abb57ac6b419",
+      "e2e_seconds": 178.21467745490372
+    },
+    {
+      "request_id": "baseline-self-bf16-T05-1101",
+      "status": "validated",
+      "task_id": "video_sync-b207797e48818bc5",
+      "e2e_seconds": 178.31664753099903
+    },
+    {
+      "request_id": "baseline-self-bf16-T05-1102",
+      "status": "validated",
+      "task_id": "video_sync-acfe45076259be44",
+      "e2e_seconds": 178.14188762195408
+    },
+    {
+      "request_id": "baseline-self-bf16-T05-1103",
+      "status": "validated",
+      "task_id": "video_sync-b9141d6fc0d3a753",
+      "e2e_seconds": 178.2127443063073
+    },
+    {
+      "request_id": "baseline-self-bf16-T05-1104",
+      "status": "validated",
+      "task_id": "video_sync-8053d763ef80b0ac",
+      "e2e_seconds": 178.13099685497582
+    },
+    {
+      "request_id": "baseline-self-bf16-T05-1105",
+      "status": "validated",
+      "task_id": "video_sync-981018c5dd53fa64",
+      "e2e_seconds": 178.22203364828601
+    },
+    {
+      "request_id": "baseline-self-bf16-T06-1101",
+      "status": "validated",
+      "task_id": "video_sync-9715ba6288404360",
+      "e2e_seconds": 178.23715996416286
+    },
+    {
+      "request_id": "baseline-self-bf16-T06-1102",
+      "status": "validated",
+      "task_id": "video_sync-97cccf3b19aa4d79",
+      "e2e_seconds": 178.19722344214097
+    },
+    {
+      "request_id": "baseline-self-bf16-T06-1103",
+      "status": "validated",
+      "task_id": "video_sync-8c40ebf42dc3026c",
+      "e2e_seconds": 178.35001021716744
+    },
+    {
+      "request_id": "baseline-self-bf16-T06-1104",
+      "status": "validated",
+      "task_id": "video_sync-9d19b75619a4212e",
+      "e2e_seconds": 178.43372706510127
+    },
+    {
+      "request_id": "baseline-self-bf16-T06-1105",
+      "status": "validated",
+      "task_id": "video_sync-a21a65d8fe31bc61",
+      "e2e_seconds": 178.30374193470925
+    },
+    {
+      "request_id": "baseline-self-bf16-F01-2101",
+      "status": "validated",
+      "task_id": "video_sync-a068924303497da9",
+      "e2e_seconds": 191.72800594288856
+    },
+    {
+      "request_id": "baseline-self-bf16-F01-2102",
+      "status": "validated",
+      "task_id": "video_sync-bdade7b1bcff382a",
+      "e2e_seconds": 191.71727869287133
+    },
+    {
+      "request_id": "baseline-self-bf16-F01-2103",
+      "status": "validated",
+      "task_id": "video_sync-be53b8e071370f8e",
+      "e2e_seconds": 191.61845967033878
+    },
+    {
+      "request_id": "baseline-self-bf16-F02-2101",
+      "status": "validated",
+      "task_id": "video_sync-a04aa9bbf160ba6a",
+      "e2e_seconds": 191.56839353917167
+    },
+    {
+      "request_id": "baseline-self-bf16-F02-2102",
+      "status": "validated",
+      "task_id": "video_sync-8eb85ef4348f2a4f",
+      "e2e_seconds": 191.57227094424888
+    },
+    {
+      "request_id": "baseline-self-bf16-F02-2103",
+      "status": "validated",
+      "task_id": "video_sync-874862c5def0efd6",
+      "e2e_seconds": 191.5475033838302
+    },
+    {
+      "request_id": "baseline-self-bf16-F03-2101",
+      "status": "validated",
+      "task_id": "video_sync-a18b721bef5700d3",
+      "e2e_seconds": 191.611503129825
+    },
+    {
+      "request_id": "baseline-self-bf16-F03-2102",
+      "status": "validated",
+      "task_id": "video_sync-88d6d7d7bf2c206e",
+      "e2e_seconds": 191.5013961675577
+    },
+    {
+      "request_id": "baseline-self-bf16-F03-2103",
+      "status": "validated",
+      "task_id": "video_sync-a3b68ee02fce8bb1",
+      "e2e_seconds": 191.64986207708716
+    },
+    {
+      "request_id": "baseline-self-bf16-F04-2101",
+      "status": "validated",
+      "task_id": "video_sync-986529d6df166270",
+      "e2e_seconds": 191.59949516318738
+    }
+  ]
+}
+{
+  "phase": "baseline",
+  "results": [
+    {
+      "request_id": "baseline-self-bf16-F04-2102",
+      "status": "validated",
+      "task_id": "video_sync-828a0588f5313847",
+      "e2e_seconds": 191.61313469102606
+    },
+    {
+      "request_id": "baseline-self-bf16-F04-2103",
+      "status": "validated",
+      "task_id": "video_sync-bdb8871968157df7",
+      "e2e_seconds": 191.72153004677966
+    }
+  ]
+}
+{
+  "phase": "stability",
+  "results": [
+    {
+      "request_id": "stability-self-bf16-T01-4101",
+      "status": "validated",
+      "task_id": "video_gen_702e7cc95c8a4eaa956d5e6e5ab4b140",
+      "e2e_seconds": 180.34059555409476
+    },
+    {
+      "request_id": "stability-self-bf16-T02-4102",
+      "status": "validated",
+      "task_id": "video_gen_4ac7e6e599a64542a3ec6c70ce7f489a",
+      "e2e_seconds": 178.13964115222916
+    },
+    {
+      "request_id": "stability-self-bf16-T03-4103",
+      "status": "validated",
+      "task_id": "video_gen_d10c56908e464765bfa85fce5c5a30f7",
+      "e2e_seconds": 180.28044179920107
+    },
+    {
+      "request_id": "stability-self-bf16-T04-4104",
+      "status": "validated",
+      "task_id": "video_gen_4e8a6c8cba6a4518997cf242a8a8a4d5",
+      "e2e_seconds": 180.14713672501966
+    },
+    {
+      "request_id": "stability-self-bf16-T05-4105",
+      "status": "validated",
+      "task_id": "video_gen_28a304bd651440668497016e23fcc25d",
+      "e2e_seconds": 180.28259269008413
+    },
+    {
+      "request_id": "stability-self-bf16-T06-4106",
+      "status": "validated",
+      "task_id": "video_gen_b6d97cc128a34ff3a7376a7437adede3",
+      "e2e_seconds": 180.13485065381974
+    },
+    {
+      "request_id": "stability-self-bf16-F01-4107",
+      "status": "validated",
+      "task_id": "video_gen_ba1ea551e2044c5db9d38c127ce3b19a",
+      "e2e_seconds": 192.2089482061565
+    },
+    {
+      "request_id": "stability-self-bf16-F02-4108",
+      "status": "validated",
+      "task_id": "video_gen_6b765d8b10e74bd68b0105a41cda9b65",
+      "e2e_seconds": 192.17643189197406
+    },
+    {
+      "request_id": "stability-self-bf16-F03-4109",
+      "status": "validated",
+      "task_id": "video_gen_c90676511d794cc099296ad8d4306ecd",
+      "e2e_seconds": 192.19226695410907
+    },
+    {
+      "request_id": "stability-self-bf16-F04-4110",
+      "status": "validated",
+      "task_id": "video_gen_9211beff54924e8d9cee4d2168f85b78",
+      "e2e_seconds": 192.17508365726098
+    },
+    {
+      "request_id": "stability-self-bf16-T01-4111",
+      "status": "validated",
+      "task_id": "video_gen_d6ede40766fc4ab7a8a923c259c4c24d",
+      "e2e_seconds": 180.1582827451639
+    },
+    {
+      "request_id": "stability-self-bf16-T02-4112",
+      "status": "validated",
+      "task_id": "video_gen_60cf05977a4248bd9a87315437ec6495",
+      "e2e_seconds": 180.15271986322477
+    },
+    {
+      "request_id": "stability-self-bf16-T03-4113",
+      "status": "validated",
+      "task_id": "video_gen_caa3343281d04a60aba4aa3be90a2dcb",
+      "e2e_seconds": 180.23556913109496
+    },
+    {
+      "request_id": "stability-self-bf16-T04-4114",
+      "status": "validated",
+      "task_id": "video_gen_9357a946ac2c472db938aeaa64e2e2d6",
+      "e2e_seconds": 180.17112698219717
+    },
+    {
+      "request_id": "stability-self-bf16-T05-4115",
+      "status": "validated",
+      "task_id": "video_gen_cd81858ce4e54d6b91d12476e1b45c52",
+      "e2e_seconds": 180.1400962159969
+    },
+    {
+      "request_id": "stability-self-bf16-T06-4116",
+      "status": "validated",
+      "task_id": "video_gen_741101bf91724da3af69108ee6bfc159",
+      "e2e_seconds": 180.23728182306513
+    },
+    {
+      "request_id": "stability-self-bf16-F01-4117",
+      "status": "validated",
+      "task_id": "video_gen_f4ddb927ba774f4e917544abd4b8204b",
+      "e2e_seconds": 192.16614553891122
+    },
+    {
+      "request_id": "stability-self-bf16-F02-4118",
+      "status": "validated",
+      "task_id": "video_gen_2703346ac5f64867a1ee783d2b21d84a",
+      "e2e_seconds": 192.17910644272342
+    },
+    {
+      "request_id": "stability-self-bf16-F03-4119",
+      "status": "validated",
+      "task_id": "video_gen_2eeae0d324324c85bcab5816499011f0",
+      "e2e_seconds": 192.2083499408327
+    },
+    {
+      "request_id": "stability-self-bf16-F04-4120",
+      "status": "failed",
+      "task_id": "video_gen_7dfc9769d115433d8370e58a80325304",
+      "e2e_seconds": null
+    }
+  ]
+}
+Priority baseline and separate stability invocation finished. Controller must review before optional tests.

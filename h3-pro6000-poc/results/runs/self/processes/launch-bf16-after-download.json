@@ -1,0 +1,10 @@
+{
+  "utc": "2026-11-07T12:11:38.143+00:00",
+  "pid": 3636,
+  "pgid": 3636,
+  "command": [
+    "python3",
+    "scripts/await_download_launch.py"
+  ],
+  "log": "runs/self/deploy/prepare-launch-console.txt"
+}

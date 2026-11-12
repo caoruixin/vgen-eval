@@ -197,3 +197,101 @@ Layout:
    (PixVerse V6, HappyHorse 1.1) with their prices in `prices.yaml`; .me prices are in CNY, so convert them or extend the price
    schema. PixVerse needs its own adapter.
 3. Add `me` probe cases to `vgen/probe.py` and run `make probe`.
+
+## Shared video results and H3 deployment benchmarks
+
+The site now opens on **Video results** (`/results`). **H3 Benchmark** (`/benchmarks`) is a separate view of
+hardware experiments; the existing scenarios, Tokenbay generation tools, runs and leaderboard remain available.
+
+The [PRO6000 PoC report](https://video.llm-pro.cn/api/benchmarks/h3-pro6000-2026-11-07/artifacts/report.html)
+is readable online and downloadable as Word from H3 Benchmark. The [architecture revision](reports/h3-pro6000/README.md)
+adds H3 inference stages, GPU mapping and measurement boundaries while preserving the original experiment archive.
+
+- The H3 v1 dataset contains six text-to-video and four first-frame image-to-video scenarios. Its frozen Chinese
+  prompts and PNG bytes are unchanged. The original Tokenbay demonstrations use different inputs and remain in
+  their own dataset. A match requires the same task, exact prompt bytes and ordered, role-specific asset hashes.
+- Results group the model independently of its deployment and show self-hosted step configurations as separate
+  cards. PRO6000's 50-step card defaults to the baseline request designated by `scene-results.csv`; the 8-step
+  experiment appears alongside it for T01, T04, T06, F01, F02 and F03. Each card labels requested steps, available
+  observed denoising updates and the current phase; official API steps remain undisclosed. The `×8` in the
+  deployment name means eight GPUs, not eight inference steps. Other seeds and phases remain selectable. Group play, seek and loop
+  work across sources; the sound selector enables only one clip. Blind mode is visual anonymity, not an access
+  control boundary. It does not modify or reveal the original offline A/B review files.
+- Imported clips are terminal archive records. They cannot be resubmitted, polled, deleted as runs or sent to the
+  AI judge. Local human ratings are supported; hosted showcase results remain read-only. Imported costs never
+  enter the Tokenbay spending ledger, and imported experiments are excluded from the existing leaderboard.
+- Benchmark values retain the archive's definitions and sample sizes. E2E download destinations differ between
+  self-hosting and the API. Phase throughput and resource cost use whole observation windows. Empty human scores
+  and unmeasured costs stay missing, and the unverified 8-step experiment is not presented as proven Turbo gain.
+
+### Import the existing PRO6000 experiment
+
+Stop the app before importing. The importer verifies the source package and original media hashes before
+changing the database, copies the required files to the data directory, and generates playback posters locally.
+It never contacts a model service. `--dry-run` does not initialize or migrate the database.
+
+```bash
+uv run vgen import-experiment experiments/h3-pro6000.json --dry-run
+uv run vgen import-experiment experiments/h3-pro6000.json --data-dir data
+```
+
+The full import adds 10 shared cases, 89 attempt records and 87 playable original clips. Repeat imports are
+idempotent; changed content under an existing experiment id is rejected. An old database receives a consistent
+`app.db.pre-migration-*.bak` backup before additive schema migration. The source archive is never modified.
+
+After import, Scenarios contains two H3 input packs. **View backfill plan** computes missing Tokenbay combinations
+without submitting them. The 2026-11-08 repository catalog yields 66 combinations, approximately $42.90, without
+AI judging. This is an offline estimate, not a price guarantee or a spending authorization. Existing successful
+results and previously attempted combinations are excluded from the ready list; review previous attempts before
+explicitly generating again. New results join the comparison through their input fingerprint, not their title.
+The earlier $40.58 estimate included a Seedance Mini promotion that has ended. Each new job saves its price
+snapshot so a later catalog update does not change that clip's recorded pricing basis.
+
+### Future PRO5500 and other experiment archives
+
+Copy `experiments/h3-pro6000.json` as the descriptor for a new experiment. Use a new experiment id and deployment
+id for a different hardware profile; retain the dataset id only when the cases are identical. The importer is
+hardware-independent and accepts the same archive-v1 data format:
+
+- `schema_version: 1`, stable `id`, `title`, `date`, `source_root`, and `dataset: {id, title: {en, zh}}`.
+- `deployments` maps the CSV provider values to `{id, model, label, hardware, timing_scope, output_root}`.
+  `timing_scope` is `server_local_download` or `client_internet_download`. Hardware is descriptive metadata;
+  `gpu`, `gpu_count`, and `memory_gb_per_gpu` are displayed without inferring measurements.
+- `files` identifies the package manifest, case definitions, first-frame asset lock, baseline configuration,
+  all-attempt CSV, latency groups, complete phase windows, scene summaries, telemetry, cost reconciliation and
+  demand-utilization scenarios. Use the existing PRO6000 archive as the version-1 field reference. CSV blanks and
+  `NA` stay null. `fl2va` in this version means **first frame only**, mapped to `i2v`, not first+last frame.
+- `artifacts` explicitly allowlists downloadable reports and evidence. `support_files` includes any additional
+  files needed by reports. Every consumed file must appear in the package manifest with `path`, `packaged_size`
+  and `packaged_sha256`; valid output media must also match the attempt CSV's `sha256`.
+- `scene-results.csv` selects each default self-hosted request through `matched_baseline_request_id`.
+  `all-request-attempts.csv` uses a unique `(provider, request_id, attempt)` within the experiment and preserves
+  invalid/cancelled attempts without creating successful video jobs. `video_path` is relative to that provider's
+  `output_root`. Configuration, resource and timing differences remain visible and are never pooled across
+  experiments. New platforms using this contract appear without changes to React pages.
+
+Version 1 intentionally imports the existing H3 harness format. It does not orchestrate machines or define new
+experimental methods. A new archive with a different measurement format needs an explicit format adapter.
+
+### Incremental hosting updates
+
+```bash
+deploy/deploy.sh
+deploy/upload-experiment.sh experiments/h3-pro6000.json
+```
+
+The second command prepares a portable bundle, validates it on the host, briefly stops the service, backs up the
+live SQLite database and imports into it transactionally. It preserves existing runs, ratings and visitor data;
+never use `FORCE=1 deploy/upload-data.sh` for experiment updates. The previous source and database backup can be
+restored together if rollback is needed; imported media is immutable and can remain on disk.
+
+Portable bundles can also be prepared without publishing:
+
+```bash
+uv run vgen package-experiment experiments/h3-pro6000.json --output /tmp/h3-publication-bundle
+```
+
+Read-only APIs: `GET /api/evaluations`, `GET /api/evaluations/{dataset}/cases/{key}`,
+`GET /api/evaluations/{dataset}/backfill-plan`, `GET /api/benchmarks`,
+`GET /api/benchmarks/{experiment}`, and `GET /api/benchmarks/{experiment}/export?format=json|csv`.
+Generation remains on the existing budgeted Tokenbay APIs and is never triggered by these read endpoints.

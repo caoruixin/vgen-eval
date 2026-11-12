@@ -90,7 +90,7 @@ function PackSetup({ pack, data, onClose }: { pack: Pack; data: Scenarios; onClo
     ratio: String(pack.params.ratio ?? "16:9"),
     audio: Boolean(pack.params.audio),
   });
-  const [judge, setJudge] = useState(true);
+  const [judge, setJudge] = useState(pack.judge ?? true);
   const [experimental, setExperimental] = useState(["v2v_edit", "extend", "a2v"].includes(pack.task));
   const [planOpen, setPlanOpen] = useState(false);
   const { data: registry } = useModels();
@@ -261,7 +261,7 @@ export default function ScenariosPage() {
   if (isLoading) return <Spinner />;
   if (error || !data) return <ErrorBox error={error} />;
   const pack = data.packs.find((p) => p.id === packId);
-  if (pack) return <PackSetup key={pack.id} pack={pack} data={data} onClose={() => nav("/")} />;
+  if (pack) return <PackSetup key={pack.id} pack={pack} data={data} onClose={() => nav("/scenarios")} />;
   const cats = Object.keys(data.categories);
   const packs = data.packs.filter((p) => cat === "all" || p.category === cat);
   return (

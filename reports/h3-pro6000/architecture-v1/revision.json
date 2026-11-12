@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "experiment_id": "h3-pro6000-2026-11-07",
+  "revision": "architecture-2026-11-08",
+  "source_artifacts": {
+    "report.md": "fabc9e0684df05c05a2dd0373a1c2af113be1d62fbfe89c172a176b510747133",
+    "report.docx": "c94bcf6767a6ae943bce554888ce971aa573e898f8efb4f6e7f5a7ce3ac865ae"
+  },
+  "files": [
+    {
+      "path": "figures/figure-data-and-provenance.json",
+      "size": 12776,
+      "sha256": "221b88ed5bc3645bfa0660f75f378d5a337984873e07e56c725cd85420ca11b3"
+    },
+    {
+      "path": "figures/gpu-telemetry.png",
+      "size": 177421,
+      "sha256": "f10213b89cc99400dccfa646c3ed4dadcc8ec21bd0c443d2cf3c453b9d1eb201"
+    },
+    {
+      "path": "figures/gpu-telemetry.svg",
+      "size": 109016,
+      "sha256": "fa3ca37084aac857c62abb28db88bbd29e5e7e1380f6801e66f8509f1902df3b"
+    },
+    {
+      "path": "figures/h3-gpu-layout.png",
+      "size": 354870,
+      "sha256": "b7d7eb7986d0a7bb29d7b9634b96b826b8520a7e1ea4351086e6e98a252fcb57"
+    },
+    {
+      "path": "figures/h3-gpu-layout.svg",
+      "size": 4313,
+      "sha256": "a94f0eae7e098a3a3ea062c5f2d0750a245d7794d745e079a3d724a8d27ff5c7"
+    },
+    {
+      "path": "figures/h3-inference-flow.png",
+      "size": 584296,
+      "sha256": "09f7169ce0e87fe44132e5ba6eb24cc0a953369271fb67eaee5d6afffb2ded39"
+    },
+    {
+      "path": "figures/h3-inference-flow.svg",
+      "size": 7181,
+      "sha256": "5d4454f05a51e3e77d132de71a5f5daa539ec601253cdaf77dc28e1d7cedf996"
+    },
+    {
+      "path": "figures/h3-timing-scope.png",
+      "size": 436415,
+      "sha256": "2b66629bf44ef50744c5862c36e817949636dd90ddf45a5ee5f37aabb15a5799"
+    },
+    {
+      "path": "figures/h3-timing-scope.svg",
+      "size": 5783,
+      "sha256": "0c576fd43bfbcdf7ea8b4327254bb82d53f10b95844737a295a0b36f40169463"
+    },
+    {
+      "path": "figures/latency-by-scene.png",
+      "size": 76748,
+      "sha256": "68258ab25bac39248d85c9c8dfab2cbc6e97aba541b2e6b710921739cd8410ec"
+    },
+    {
+      "path": "figures/latency-by-scene.svg",
+      "size": 9214,
+      "sha256": "959df9c367968aa0ff2e8c7d820a0c7ebe61fa3f0a657eb35d364fe2da338a07"
+    },
+    {
+      "path": "figures/utilization-cost.png",
+      "size": 72697,
+      "sha256": "c8510415fe443b8a82671e938ab7bed82fc53ff94f42665c8cd9d0639076f754"
+    },
+    {
+      "path": "figures/utilization-cost.svg",
+      "size": 4227,
+      "sha256": "4e8bdcf54f7541749dc931d3a7a009ac49817e0ffe6a4f4fdd4742ae40af7f51"
+    },
+    {
+      "path": "provenance.json",
+      "size": 1478,
+      "sha256": "2728a20f8fcd2890a3d4d189aecc4b3c8c30cd9aec0e80484e93bdfb61b40a55"
+    },
+    {
+      "path": "report.docx",
+      "size": 1671246,
+      "sha256": "bdc7902d82ae5822c99c18abfaeb97325c103ce3418ba049bb6efb714c2a1a69"
+    },
+    {
+      "path": "report.html",
+      "size": 2337689,
+      "sha256": "f485cb2d00b24789c25b9e2ec71b44fae71a2b572a4830e4119ec5e57b59502e"
+    },
+    {
+      "path": "report.md",
+      "size": 55766,
+      "sha256": "54b1d4c314b728a6d5f64dcedf67686f042944a9717aa2db855dea9b2e00f12c"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "utc": "2026-11-07T12:33:53.915+00:00",
+  "pid": 12963,
+  "pgid": 12963,
+  "command": [
+    "python3",
+    "scripts/run.py",
+    "--phase",
+    "warmup",
+    "--run-dir",
+    "runs/self",
+    "--execute",
+    "--retry-confirmed-rejection"
+  ],
+  "log": "runs/self/deploy/warmup-after-aspect-fix-console.txt"
+}

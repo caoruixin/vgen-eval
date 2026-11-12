@@ -70,6 +70,8 @@ export default function JobCard({
   muted,
   judgeEnabled,
   editable = true,
+  pickEnabled = true,
+  onSound,
 }: {
   job: Job;
   rating: Rating | undefined;
@@ -82,13 +84,15 @@ export default function JobCard({
   judgeEnabled: boolean;
   /** false on the hosted demo's example runs: watch only */
   editable?: boolean;
+  pickEnabled?: boolean;
+  onSound?: (id: string) => void;
 }) {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
   const [details, setDetails] = useState(false);
   const [showChecklist, setShowChecklist] = useState(false);
   const [actionErr, setActionErr] = useState<unknown>(null);
-  const refresh = () => qc.invalidateQueries({ queryKey: ["run", job.run_id] });
+  const refresh = () => { void qc.invalidateQueries({ queryKey: ["evaluation"] }); return qc.invalidateQueries({ queryKey: ["run", job.run_id] }); };
   // hosted demo: paid follow-ups (check again, re-submit, re-judge) are billed to the visitor's own key
   const key = () => (IS_PUBLIC ? storedKey() : undefined);
   const act = (call: () => Promise<unknown>) => {
@@ -97,6 +101,8 @@ export default function JobCard({
   };
   const rate = (patch: Partial<Rating>) => act(() => api.rate(job.id, patch));
   const name = blind ? `${lang === "zh" ? "视频" : "Clip"} ${job.label}` : job.model_label;
+  const requestedSteps = job.provenance.requested_num_inference_steps;
+  const actualSteps = job.provenance.actual_denoise_updates;
   const done = job.status === "succeeded";
   const active = !TERMINAL.has(job.status);
   const v = job.media?.video;
@@ -119,6 +125,7 @@ export default function JobCard({
             controls
             playsInline
             muted={muted}
+            onVolumeChange={(e) => { if (!e.currentTarget.muted && onSound) onSound(job.id); }}
             loop={false}
             preload="metadata"
           />
@@ -152,7 +159,7 @@ export default function JobCard({
           </div>
           <div className="flex flex-col items-end gap-1">
             {done && <StatusBadge status={job.status} />}
-            {editable ? (
+            {editable && pickEnabled ? (
               <button className={cls("chip", picked && "!border-[var(--good)]")} onClick={onPick} disabled={!done} title={t("board.pick")}>
                 {picked ? "★" : "☆"} {picked ? t("board.picked") : t("board.pick")}
               </button>
@@ -162,19 +169,29 @@ export default function JobCard({
           </div>
         </div>
 
+        {!blind && job.origin === "imported" && <div className="space-y-1 text-xs">
+          <div className="flex flex-wrap gap-1.5">
+            {job.provenance.phase != null && <span className="chip">{t(`phase.${job.provenance.phase}` as TKey)}</span>}
+            <span className="chip">{typeof requestedSteps === "number" ? `${t("eval.requested_steps")}: ${requestedSteps}` : t(job.provenance.source === "official_api" ? "eval.steps_undisclosed" : "eval.steps_unrecorded")}</span>
+            {typeof actualSteps === "number" && <span className="chip">{t("eval.observed_steps")}: {actualSteps}</span>}
+            {job.provenance.seed != null && <span className="chip">{t("eval.seed")}: {String(job.provenance.seed)}</span>}
+          </div>
+          {requestedSteps === 8 && job.provenance.turbo_activation_verified !== true && <p className="text-[var(--warn)]">{t("eval.turbo_unverified")}</p>}
+        </div>}
+
         {!blind && (done || job.task_id) && (
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="rounded-md bg-surface-2 px-2 py-1.5">
               <div className="text-muted">{t("board.cost")}</div>
               <div className="tnum font-medium text-ink">
                 {job.cost.actual_usd !== null ? usd(job.cost.actual_usd) : usd(job.cost.estimate_usd)}
-                <span className="ml-1 font-normal text-muted">{job.cost.actual_usd !== null ? t("board.actual") : t("board.estimate")}</span>
+                <span className="ml-1 font-normal text-muted">{job.cost.actual_usd !== null ? t("board.actual") : job.cost.estimate_usd != null ? t("board.estimate") : t("eval.unknown")}</span>
               </div>
               {job.cost.per_second ? <div className="tnum text-muted">{usd(job.cost.per_second, 3)}/s</div> : null}
             </div>
             <div className="rounded-md bg-surface-2 px-2 py-1.5">
               <div className="text-muted">{t("board.latency")}</div>
-              <div className="tnum font-medium text-ink">{secs(job.latency_s ?? (job.submitted_at ? Date.now() / 1000 - job.submitted_at : null))}</div>
+              <div className="tnum font-medium text-ink">{secs(job.latency_s ?? (!done && job.submitted_at ? Date.now() / 1000 - job.submitted_at : null))}</div>
               {job.gw_start_time && job.gw_submit_time ? (
                 <div className="tnum text-muted">
                   {t("board.queue")} {secs(job.gw_start_time - job.gw_submit_time)}
@@ -182,6 +199,15 @@ export default function JobCard({
                 </div>
               ) : null}
             </div>
+          </div>
+        )}
+
+        {!blind && done && (
+          <div className="space-y-1 text-xs text-muted">
+            <p>{t("eval.requested")}: {String(job.spec.resolution ?? job.effective.resolution ?? "—")} · {String(job.spec.duration ?? "—")}s</p>
+            {job.latency_basis && <p>{t(`eval.${job.latency_basis}` as TKey)}</p>}
+            {job.cost.basis && <p>{t(`eval.${job.cost.basis}` as TKey)}</p>}
+            {job.origin === "imported" && !rating?.overall && rating?.usable == null && <p>{t("eval.unrated")}</p>}
           </div>
         )}
 
@@ -210,7 +236,7 @@ export default function JobCard({
           </div>
         )}
 
-        {done && (
+        {done && (Object.keys(fid).length > 0 || Object.keys(sig).length > 0) && (
           <div className="space-y-1.5">
             <div className="label">{t("board.signals")}</div>
             <div className="flex flex-wrap gap-1 text-xs">
@@ -350,7 +376,7 @@ export default function JobCard({
           {editable && ["failed", "submit_unknown", "timeout", "stopped", "blocked"].includes(job.status) && (
             <TwoStep label={t("board.resubmit")} confirmLabel={job.task_id ? t("board.resubmit_confirm") : `${t("board.resubmit")}?`} onConfirm={() => act(() => api.resubmitJob(job.id, true, key()))} />
           )}
-          {editable && done && (
+          {editable && done && job.origin !== "imported" && (
             <button className="btn" onClick={() => act(() => api.judgeJob(job.id, key()))}>
               {t("board.rejudge")}
             </button>
@@ -373,6 +399,7 @@ export default function JobCard({
               </div>
             )}
             {!blind && <pre className="json">{JSON.stringify(job.payload, null, 2)}</pre>}
+            {!blind && job.origin === "imported" && <pre className="json">{JSON.stringify(job.provenance, null, 2)}</pre>}
             {!blind && Object.keys(job.last_detail ?? {}).length > 0 && <pre className="json">{JSON.stringify(job.last_detail, null, 2)}</pre>}
             {job.strip_url && <img src={job.strip_url} alt="frame strip" className="w-full rounded" />}
             {["pending", "queued", "in_progress"].includes(job.status) && <p className="text-muted">{t("board.no_cancel")}</p>}

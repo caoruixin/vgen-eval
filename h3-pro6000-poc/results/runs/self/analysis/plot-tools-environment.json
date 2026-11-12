@@ -1,0 +1,67 @@
+{
+  "utc": "2026-11-07T16:32:49.056+00:00",
+  "target": "/data/h3-report-tools",
+  "packages": [
+    {
+      "name": "contourpy",
+      "version": "1.4.0"
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1"
+    },
+    {
+      "name": "fonttools",
+      "version": "4.68.0"
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.5.1"
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.10.7"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.4"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3"
+    },
+    {
+      "name": "pillow",
+      "version": "13.0.0"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.3"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "4.0.0"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.6"
+    }
+  ],
+  "inference_environment_modified": false,
+  "font_source": "https://raw.githubusercontent.com/notofonts/noto-cjk/Sans2.004/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+  "font_sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+  "font_license_source": "https://raw.githubusercontent.com/notofonts/noto-cjk/Sans2.004/LICENSE",
+  "install_command": [
+    "/usr/bin/python3",
+    "-m",
+    "pip",
+    "--isolated",
+    "install",
+    "--index-url",
+    "https://pypi.org/simple",
+    "--only-binary=:all:",
+    "--target",
+    "/data/h3-report-tools",
+    "matplotlib==3.10.7"
+  ]
+}

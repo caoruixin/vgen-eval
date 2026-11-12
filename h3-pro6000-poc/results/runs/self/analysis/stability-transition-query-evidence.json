@@ -1,0 +1,12 @@
+{
+  "utc": "2026-11-07T15:58:32.095+00:00",
+  "window_cutoff_followups": [
+    {
+      "utc": "2026-11-07T15:58:32.095+00:00",
+      "request_id": "stability-self-bf16-F04-4120",
+      "task_id": "video_gen_7dfc9769d115433d8370e58a80325304",
+      "post_cancel_http_status": 404,
+      "post_cancel_response": "{\"error\":{\"message\":\"Video not found\",\"type\":\"Not Found\",\"param\":null,\"code\":404}}"
+    }
+  ]
+}

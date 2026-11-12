@@ -1,0 +1,18 @@
+{
+  "utc": "2026-11-07T16:19:24.573+00:00",
+  "pid": 51700,
+  "pgid": 51700,
+  "command": [
+    "/usr/bin/python3",
+    "scripts/launch.py",
+    "--execute",
+    "--turbo",
+    "--numa-mode",
+    "cpu-bind",
+    "--mapping",
+    "private/topology-mapping.json",
+    "--out",
+    "runs/self/deploy/turbo-cpubind"
+  ],
+  "log": "/data/h3-pro6000-poc/runs/self/deploy/server-turbo-cpubind.log"
+}

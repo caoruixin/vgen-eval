@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="865" viewBox="0 0 1240 865">
+<title>耗时测量边界与缺失的模块计时</title>
+<rect width="100%" height="100%" fill="white"/>
+<text x="50.0" y="60.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="38" fill="#1d2631" font-weight="600">耗时测量边界与缺失的模块计时</text>
+<text x="50.0" y="107.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#526276">以下为口径示意，不按持续时间比例绘制</text>
+<text x="50.0" y="174.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">自部署客户端 E2E  下载到推理服务器</text>
+<rect x="50" y="196" width="330" height="143" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="239.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="28" fill="#1d2631" font-weight="600">请求与调度</text>
+<text x="72.0" y="285.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">校验与登记</text>
+<text x="72.0" y="324.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">queue_wait_ms</text>
+<rect x="450" y="196" width="350" height="143" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="472.0" y="239.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="28" fill="#1d2631" font-weight="600">H3-Base 服务阶段</text>
+<text x="472.0" y="285.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">管线整体计时</text>
+<text x="472.0" y="324.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">stage_0_gen_ms</text>
+<rect x="870" y="196" width="320" height="143" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="892.0" y="239.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="28" fill="#1d2631" font-weight="600">输出与本地下载</text>
+<text x="892.0" y="285.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">MP4 完整下载</text>
+<text x="892.0" y="324.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">E2E 在此结束</text>
+<polyline points="380,265 450,265" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="450.0,265.0 438.3,270.7 438.3,259.3" fill="#536b85"/>
+<polyline points="800,265 870,265" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="870.0,265.0 858.3,270.7 858.3,259.3" fill="#536b85"/>
+<text x="50.0" y="409.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">官方 API 客户端 E2E  下载到笔记本</text>
+<rect x="50" y="431" width="330" height="143" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="474.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="28" fill="#1d2631" font-weight="600">公网请求与任务状态</text>
+<text x="72.0" y="520.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">先保存任务 ID</text>
+<text x="72.0" y="559.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">轮询带来终态发现延迟</text>
+<rect x="450" y="431" width="350" height="143" rx="14" fill="#f3f3f3" stroke="#8da1ba" stroke-width="2"/>
+<text x="472.0" y="474.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="28" fill="#1d2631" font-weight="600">官方内部服务</text>
+<text x="472.0" y="520.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">硬件 / 步数 / 模块</text>
+<text x="472.0" y="559.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">内部实现与计时不可见</text>
+<rect x="870" y="431" width="320" height="143" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="892.0" y="474.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="28" fill="#1d2631" font-weight="600">CDN 与公网下载</text>
+<text x="892.0" y="520.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">MP4 完整下载</text>
+<text x="892.0" y="559.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">E2E 在此结束</text>
+<polyline points="380,500 450,500" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="450.0,500.0 438.3,505.7 438.3,494.3" fill="#536b85"/>
+<polyline points="800,500 870,500" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="870.0,500.0 858.3,505.7 858.3,494.3" fill="#536b85"/>
+<rect x="50" y="632" width="1140" height="122" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="679.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">独立组件耗时保持缺失</text>
+<text x="72.0" y="721.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">未取得 Encoder / Denoiser / VAE / 封装的完整独立计时</text>
+<text x="50.0" y="819.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="29" fill="#1d2631" font-weight="600">ffprobe 与完整解码校验在下载后执行，未计入主 E2E。</text>
+<text x="50.0" y="859.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="25" fill="#526276">不能将两方 E2E 之差解释为纯模型速度差，也不按总耗时分摊模块时间。</text>
+</svg>

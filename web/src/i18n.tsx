@@ -1,8 +1,10 @@
+import { evaluationEn, evaluationZh } from "./evaluationCopy";
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { L10n, Lang } from "./types";
 
 const en = {
-  "app.tagline": "Video model evaluation on Tokenbay",
+  ...evaluationEn,
+  "app.tagline": "Video results & deployment benchmarks",
   "nav.scenarios": "Scenarios",
   "nav.compare": "Compare",
   "nav.runs": "Runs",
@@ -301,7 +303,8 @@ type Dict = typeof en;
 export type TKey = keyof Dict;
 
 const zh: Dict = {
-  "app.tagline": "Tokenbay 视频模型评测",
+  ...evaluationZh,
+  "app.tagline": "视频效果与部署性能评测",
   "nav.scenarios": "场景",
   "nav.compare": "自由对比",
   "nav.runs": "运行记录",

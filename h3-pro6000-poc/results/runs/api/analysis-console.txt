@@ -1,0 +1,60 @@
+{
+  "generated_utc": "2026-11-07T12:42:46.390+00:00",
+  "kind": "observed_summary",
+  "groups": [
+    {
+      "provider": "official_api",
+      "phase": "comparison",
+      "variant": "official-H3",
+      "task": "fl2va",
+      "transport": "async",
+      "n_submitted": 4,
+      "n_technical_valid": 4,
+      "technical_success_rate": 1.0,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "e2e_p50_seconds": 112.43964104150655,
+      "e2e_p95_seconds": 114.80224061249173,
+      "e2e_min_seconds": 111.53248133300804,
+      "e2e_max_seconds": 115.12025537504815,
+      "phase_window_seconds_shared": 1039.6262842080887,
+      "phase_success_total_all_tasks": 10,
+      "phase_success_per_hour_all_tasks": 34.62782785202682,
+      "phase_window_cost_estimate_shared_usd": null,
+      "phase_cost_per_success_all_tasks_usd": null,
+      "tail_caution": "P95 is preliminary; small n, not a production SLA"
+    },
+    {
+      "provider": "official_api",
+      "phase": "comparison",
+      "variant": "official-H3",
+      "task": "t2va",
+      "transport": "async",
+      "n_submitted": 6,
+      "n_technical_valid": 6,
+      "technical_success_rate": 1.0,
+      "n_human_reviewed": 0,
+      "deliverable_rate": null,
+      "e2e_p50_seconds": 99.07481214549625,
+      "e2e_p95_seconds": 237.09962989452555,
+      "e2e_min_seconds": 91.84537729097065,
+      "e2e_max_seconds": 281.77500009536743,
+      "phase_window_seconds_shared": 1039.6262842080887,
+      "phase_success_total_all_tasks": 10,
+      "phase_success_per_hour_all_tasks": 34.62782785202682,
+      "phase_window_cost_estimate_shared_usd": null,
+      "phase_cost_per_success_all_tasks_usd": null,
+      "tail_caution": "P95 is preliminary; small n, not a production SLA"
+    }
+  ],
+  "sampled_peak_memory_MiB_by_GPU": {},
+  "utilization_estimates": [],
+  "quality": "pending user review; technical success is not deliverability",
+  "cost": "estimates from measured windows; invoices/pending ledger reconciled separately",
+  "limitations": [
+    "warmup, baseline, stability, concurrency and Turbo are separate",
+    "C2/C4 throughput and cost use the entire shared wall-clock once",
+    "no stage timing is inferred where logs/headers do not expose it",
+    "manual audio/visual sync cannot be inferred from ffprobe"
+  ]
+}

@@ -1,0 +1,540 @@
+{
+  "created_utc": "2026-11-07T16:33:14.822+00:00",
+  "files": [
+    {
+      "path": "METADATA_README.md",
+      "size": 611,
+      "sha256": "2343799bfcd0727f68317b4b3edc26a8c590a971c3968f0a15a19c4f6c3e74e0"
+    },
+    {
+      "path": "STOP_SUBMISSIONS",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "analysis/audio-signal-summary.json",
+      "size": 159,
+      "sha256": "8e2291f2af689f76e90cc8d2b6fb2448585e7917c97bd162f099e3043ab4d431"
+    },
+    {
+      "path": "analysis/groups.csv",
+      "size": 829,
+      "sha256": "d5fe37d699c55e5629d9e343181489517a5ba4e3694f9306c10967f4e5e9cd20"
+    },
+    {
+      "path": "analysis/summary.json",
+      "size": 2302,
+      "sha256": "6b0e7ca5761d8b23bae3d2dc87363becb5326c611da6092bf0de8bcc9d5b9253"
+    },
+    {
+      "path": "analysis-console.txt",
+      "size": 2302,
+      "sha256": "6b0e7ca5761d8b23bae3d2dc87363becb5326c611da6092bf0de8bcc9d5b9253"
+    },
+    {
+      "path": "http.jsonl",
+      "size": 123601,
+      "sha256": "d3e208815ca2ea55772dee4656e891bf87305d036b3a89ccf2b4221f692e4daf"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F01-api/audio-astats.stderr.txt",
+      "size": 6317,
+      "sha256": "ed953480292c87e628525246f3af7527da2b1734c92617c97c30e800325d8624"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F01-api/audio-signal.json",
+      "size": 506,
+      "sha256": "7d1a72c32343378c68863e0c583d556e7f170f65b73d06346cabe594e3df5852"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F01-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F01-api/ffprobe.json",
+      "size": 4769,
+      "sha256": "effb43ff04cc182825c7c79c71759a82d3eb590c004a5a2353e13dbaa7d909dd"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F01-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F01-api/validation-pending.json",
+      "size": 365,
+      "sha256": "7408bbf3e1de1c560c6d42f603a553587b4ecbc757524e7d9cc1c1a8d8403395"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F01-api/validation.json",
+      "size": 728,
+      "sha256": "b3de605bc7ed21553a1f3dc40d0b0c1329dd439807cb69ff61cb4fa9b8db8f3c"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F01-api.mp4",
+      "size": 433415,
+      "sha256": "f36c4ebe7a49b246f04a31ad9e9be9e31d900c5450f060c95d89c53009742190"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F02-api/audio-astats.stderr.txt",
+      "size": 6318,
+      "sha256": "4b07d84760dbbb04d06323174d187c1ba21a7730a045f496e813985239c73194"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F02-api/audio-signal.json",
+      "size": 511,
+      "sha256": "0b3f6ccecfc701a2a3da940f4090b7e80bb5e680e677769e3ff1a4f8168b6b30"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F02-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F02-api/ffprobe.json",
+      "size": 4767,
+      "sha256": "7854f8d611503a65a13a02adc8d7ca7cbdd043391d7d78aac7e68f2a22cfb0a7"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F02-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F02-api/validation-pending.json",
+      "size": 365,
+      "sha256": "5a881cf47fa07ea6b24fb89c86ad17773b9dbd354b0aef881cb1e60455ca237f"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F02-api/validation.json",
+      "size": 728,
+      "sha256": "d7d26d75b38010a7ed01c0cd0ebc21310322cbcd634d65ceb94e03add2379184"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F02-api.mp4",
+      "size": 298708,
+      "sha256": "643345dd87cf73f2b338c29229d60252283cd7263b4feb060c2428ec84413b2b"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F03-api/audio-astats.stderr.txt",
+      "size": 6324,
+      "sha256": "aeb1c767bb78bf3cf18b8565c7da2a2900a99a6f528c27ba617bb3190ed42b56"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F03-api/audio-signal.json",
+      "size": 506,
+      "sha256": "967bf6e3df3720e1fadb934e45bd6562dbafe7bf37c4c3ab9f654882dfef7b50"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F03-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F03-api/ffprobe.json",
+      "size": 4772,
+      "sha256": "c5d304c2f1affc1c4c3bba522aacd8dba68de4d76d28cd330535a96127273e77"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F03-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F03-api/validation-pending.json",
+      "size": 365,
+      "sha256": "3e38921651be7cf0691864a2f92f9307d10563841920b672db987f0e929c7aff"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F03-api/validation.json",
+      "size": 729,
+      "sha256": "ff738ebcf788f9034417f5a9f37afd0e0f8be209e6c7d4f77ab1f56832b8d26c"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F03-api.mp4",
+      "size": 1182718,
+      "sha256": "688522ab2cfdc297bec24edd0a4c627f463ba7dc16a7cb6c0dc8cf950922122f"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F04-api/audio-astats.stderr.txt",
+      "size": 6322,
+      "sha256": "9277f203a41c3f042e72012bce5a550e5a72aa8216720029de7e6d83e609be88"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F04-api/audio-signal.json",
+      "size": 504,
+      "sha256": "ac1bf8197c1835d4b388529e9ff5e5bbe8f6ef358986416f51b0bfb124e595a4"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F04-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F04-api/ffprobe.json",
+      "size": 4772,
+      "sha256": "e851909e70556d417388a895b5210b5fc93ae608f39d3df0b57822556f7a6193"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F04-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F04-api/validation-pending.json",
+      "size": 365,
+      "sha256": "d3c83809fc88323efe3d5936d82e869a3efe6443204eceeafdaa1e15da4303ee"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F04-api/validation.json",
+      "size": 728,
+      "sha256": "ac65647c4c21edd59ea09dd0e50353a23ea1b6b7f4e43f854c1c9fd28322c553"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-F04-api.mp4",
+      "size": 2163227,
+      "sha256": "9e2fd346f6b080a25741708fe9af22f62d27b2acb465b5ebb7faea263ac7a9ff"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T01-api/audio-astats.stderr.txt",
+      "size": 6326,
+      "sha256": "fe54d7be04bc07bc15a6334d04c64ce417f75d82367d074a3b98f85bf12af46e"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T01-api/audio-signal.json",
+      "size": 506,
+      "sha256": "ced05497407d9b143c8dc607f0a5cae7ac6058adac577613becf26668fb42610"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T01-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T01-api/ffprobe.json",
+      "size": 4772,
+      "sha256": "26e32ec51b43775bde6b598728211b672fce7a2693534c6a8021f8caba86744e"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T01-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T01-api/validation-pending.json",
+      "size": 350,
+      "sha256": "6af7aafcd28bdfb3ae9214607e4330b72544c6b21afa8efac8326c3d4ae8b04b"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T01-api/validation.json",
+      "size": 728,
+      "sha256": "7af1314d71addc4d880f32e19f8fbc88351a9dca83bfd350115ac838bce9c9a8"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T01-api.mp4",
+      "size": 2035811,
+      "sha256": "5db598f7cdd85625bfb21faa3dbca49c6bf30e1fa2ac6e2e26f3b3d81d2bc17b"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T02-api/audio-astats.stderr.txt",
+      "size": 6318,
+      "sha256": "c4aa6681ba47ea18c9579af9c35098aba1e8ad8bd02de69175941e8e4598efa0"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T02-api/audio-signal.json",
+      "size": 506,
+      "sha256": "e7953862ca183d90460e952f310f437239e67301c253f1992f372d46e1dd9a60"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T02-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T02-api/ffprobe.json",
+      "size": 4772,
+      "sha256": "c02d284d8e6094146228271b8c4e6131973cc88633ef1d191ba8cf7fe0aa569f"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T02-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T02-api/validation-pending.json",
+      "size": 365,
+      "sha256": "314244a7e6e6955e527b77aca4c94339c91b6689edb9919fc26489aeebc50d91"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T02-api/validation.json",
+      "size": 729,
+      "sha256": "b7a4a7c2d32357c7ab067752220026b24394f885fd42483349e7ddb27f3142ee"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T02-api.mp4",
+      "size": 2453667,
+      "sha256": "bc079cd6064888f6d62c10b9c26413bd941f968eaa335974da96d9504bca6b1d"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T03-api/audio-astats.stderr.txt",
+      "size": 6318,
+      "sha256": "bb35e8b61a8f7710569c823af02bf73ef7bc367efb4dd071625852b316f50198"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T03-api/audio-signal.json",
+      "size": 510,
+      "sha256": "c12ae0eb6267195596dcfe0705d2b3001b6a3e659c7e1daa9c7c81243aab11a0"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T03-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T03-api/ffprobe.json",
+      "size": 4767,
+      "sha256": "95adff4cbd20dd37dfb5a8b1115dc83556f245722a533c98e1c3ba61a862c9d5"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T03-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T03-api/validation-pending.json",
+      "size": 365,
+      "sha256": "f2227d1e0d7db4cb06e8bbca0ed18de8e8dac472fc6b0cae644d495bd7f51e15"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T03-api/validation.json",
+      "size": 727,
+      "sha256": "7721004ad78e39be739589d012bff2de261ccb55fd8741fa21c9894e3ac46947"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T03-api.mp4",
+      "size": 344777,
+      "sha256": "a1ed3c3e131c8c0ab5fe9f576b4df31a1a10dc60725a83b09f52249a6d35c899"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T04-api/audio-astats.stderr.txt",
+      "size": 6322,
+      "sha256": "6b38c265d116bd3dec52d62e71b9c0d19d5f696afc7b43c9c6fdebe4613abe5b"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T04-api/audio-signal.json",
+      "size": 506,
+      "sha256": "45f577b312a66cbd2f20d8ba58403bb23db438e99c94b308f746e45d15438862"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T04-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T04-api/ffprobe.json",
+      "size": 4769,
+      "sha256": "6fc4667ee60df19f4ad04b40ec244ddfb9c8f10a36aa25e4e11a3783d5c75222"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T04-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T04-api/validation-pending.json",
+      "size": 365,
+      "sha256": "21728f2ae4dd3b4e9374d58fd91da7b4978076d422015f540bb58f775b569c98"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T04-api/validation.json",
+      "size": 727,
+      "sha256": "9eaad3ce2e4d20bdc0bb25e2fe8d5ed7f1d7f2262e42a95b140359676086525b"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T04-api.mp4",
+      "size": 551943,
+      "sha256": "3553e0c5b913ac8a504a66110a9295cca411b3f5f6ce079f50c0a33189c814c0"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T05-api/audio-astats.stderr.txt",
+      "size": 6318,
+      "sha256": "80c66bfb3a37076285be5ef5ed016cd51358366f47f8b27573e611b8e154ff5a"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T05-api/audio-signal.json",
+      "size": 505,
+      "sha256": "58e1a7f676e0dd77b46e7ca0790456965cfefe135cdb5e9512ad1a2f8d69c4dd"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T05-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T05-api/ffprobe.json",
+      "size": 4769,
+      "sha256": "af0f7011e231f815fae38dcd44fd70e497060d20553463ece64f6eb9bea1fa60"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T05-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T05-api/validation-pending.json",
+      "size": 365,
+      "sha256": "5dc9a164ce481335c2413b2854b32df3b461b7f3a7c5019552cb3e47ee36e5ea"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T05-api/validation.json",
+      "size": 728,
+      "sha256": "44456ce6bb66a91cbb1f205bb4b5c1fd510d7315fe1000db03a2f20f9d926b93"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T05-api.mp4",
+      "size": 402929,
+      "sha256": "e74437d537e36b13990d3e2862d2f8620a66acccf90dde952d7e37e56d15244f"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T06-api/audio-astats.stderr.txt",
+      "size": 6324,
+      "sha256": "68f1bbe85bd49b03d571add397629b22d1bf31e5663b885c23561eddbe1fc0af"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T06-api/audio-signal.json",
+      "size": 506,
+      "sha256": "ccfe665ae4b2f6724d2fa36a1c99f49348199821289268cf0512ef431c164d71"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T06-api/decode.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T06-api/ffprobe.json",
+      "size": 4772,
+      "sha256": "3fb3e4a8f348f9bc4d642d4cab3f3a17c8f7257e82f90d5f4b45705f0265dc2c"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T06-api/ffprobe.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T06-api/validation-pending.json",
+      "size": 365,
+      "sha256": "c90f6cb1bea2661a06fe848a5dcc04acff83806bdda7f5da5eb312fa97dc5795"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T06-api/validation.json",
+      "size": 728,
+      "sha256": "d4ed0b65c2b689c5fb59db8a28a47f4219be80679ae9b03e0386c3b8c374a652"
+    },
+    {
+      "path": "outputs/comparison-official_api-official-H3-T06-api.mp4",
+      "size": 1236087,
+      "sha256": "4e0e64c9a3e362c5f7d27047da6eba617606c169da76fa3d2efcb998ca0f7f90"
+    },
+    {
+      "path": "phase-windows.jsonl",
+      "size": 901,
+      "sha256": "0dd6728fc6db53a4403b6388389c11adce302e5c105acc4aac038cf2d5ab93f7"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-F01-api.json",
+      "size": 4403,
+      "sha256": "3adbe40a4e98cf3fafb144fe22dffc1f4ada5329cd8ed3e27afcb6edf939951d"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-F02-api.json",
+      "size": 4404,
+      "sha256": "2f0ead3d8d94310bca7e954e044e9330a4cc1a90eb6f718c83f11a97061628a5"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-F03-api.json",
+      "size": 4405,
+      "sha256": "6372a1334867483d7173c8292085f30bdd0ff31b9adef17d0fc03cda22f5485f"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-F04-api.json",
+      "size": 4403,
+      "sha256": "e881ca204224da0247e4c1d7a9740aaf367ed03f899b2914d1ffdc4e911b7da8"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-T01-api.json",
+      "size": 4278,
+      "sha256": "fbb2c5a25f4049b8dcc8a232d3a77c29723f231e8657a3e04264eaa3369da762"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-T02-api.json",
+      "size": 4289,
+      "sha256": "6dd808cab32e610c1e38c8c1dd8b6c23612ae765c1c53ee3b4e6f4dd8b2fe69d"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-T03-api.json",
+      "size": 4286,
+      "sha256": "017452efe37a70f6a34bb566968b6ab68cab654e23329babb30944d130f9805f"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-T04-api.json",
+      "size": 4687,
+      "sha256": "b245bf0b682760ece8b8da4d3d718ecfc810fecc094b8963c862e8ccaa72b087"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-T05-api.json",
+      "size": 4324,
+      "sha256": "f8b8c2bd40aa71feaa2f53b1793d670e30ea3283af8233176bc5b4c18321cf3b"
+    },
+    {
+      "path": "records/comparison-official_api-official-H3-T06-api.json",
+      "size": 4328,
+      "sha256": "67d961246143dab0380a9ef3674444503482af3aa5cf8e05d1d9e331d31fb5ff"
+    },
+    {
+      "path": "recovery/T04-record-before-download-recovery.json",
+      "size": 2759,
+      "sha256": "bb6fc9ed36b0ed9884c089f008016c192dae84b918fb729e95031deefc24e529"
+    },
+    {
+      "path": "recovery/T04-recovery-console.txt",
+      "size": 259,
+      "sha256": "7f300620d38c1e7fd83fafc04573f5b84573d6a87a32583a95f563e0d78c6ac3"
+    },
+    {
+      "path": "recovery/run-original-reference-manifest.json",
+      "size": 269,
+      "sha256": "5bf232386173b0eccf7887845bfb0985e3bbb16f76df27196142e489a7fd3349"
+    },
+    {
+      "path": "remaining-nine-console.txt",
+      "size": 636,
+      "sha256": "6c18e4a07d93bdf6bc62da1ceddde24bb5d59beca4d495bb485fb920941cbf58"
+    },
+    {
+      "path": "remaining-six-console.txt",
+      "size": 1316,
+      "sha256": "b4692d5ba553a371950f681c73268021f8049bea548a87225c580a84c37af730"
+    },
+    {
+      "path": "requests.jsonl",
+      "size": 140754,
+      "sha256": "649f5579731b51cb2ca06800e13839c574c26f14071ab79a5c312962f4a89f6c"
+    },
+    {
+      "path": "results.csv",
+      "size": 15001,
+      "sha256": "a8f1403e02a601ccc7e742b378ffd9cff18ffbe729ffdfdbcd31066047f5e67e"
+    },
+    {
+      "path": "run.json",
+      "size": 617,
+      "sha256": "9e5a79e28c96bd632f14173fcac13a7b0f39b27597a732962a5037d64f532469"
+    },
+    {
+      "path": "staging-http.jsonl",
+      "size": 735,
+      "sha256": "adb977151aac1722b0e528b77420c4bd47bf70b59a05d8f78c814088a4f45eb4"
+    }
+  ]
+}

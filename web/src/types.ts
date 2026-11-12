@@ -75,6 +75,7 @@ export interface PackPrompt {
 }
 
 export interface Pack {
+  judge?: boolean;
   id: string;
   category: string;
   task: Task;
@@ -201,6 +202,11 @@ export interface JudgeResult {
 }
 
 export interface Job {
+  origin: "generated" | "imported";
+  deployment_id: string | null;
+  experiment_id: string | null;
+  provenance: Record<string, unknown>;
+  latency_basis?: string;
   id: string;
   run_id: string;
   prompt_key: string;
@@ -253,7 +259,7 @@ export interface Job {
   poster_url: string | null;
   strip_url: string | null;
   latency_s: number | null;
-  cost: { estimate_usd: number; quota: number | null; actual_usd: number | null; per_second: number | null };
+  cost: { basis?: string; estimate_usd: number | null; quota: number | null; actual_usd: number | null; per_second: number | null };
 }
 
 export interface Rating {
@@ -284,7 +290,7 @@ export interface RunDetail {
   ratings: Record<string, Rating>;
   picks: Record<string, string>;
   active: number;
-  spent_usd: number;
+  spent_usd: number | null;
   /** false for the hosted demo's example runs (read-only) */
   mine: boolean;
   /** hosted demo: the server restarted and needs the visitor's key again to finish this run */
@@ -308,7 +314,7 @@ export interface RunSummary {
   counts: Record<string, number>;
   active: number;
   posters: string[];
-  spent_usd: number;
+  spent_usd: number | null;
   mine: boolean;
 }
 
@@ -361,4 +367,35 @@ export interface Ledger {
   by_kind: Record<string, number>;
   by_model: Record<string, number>;
   entries: { id: string; ts: number; kind: string; model: string; est_usd: number; actual_usd: number | null; quota: number | null; run_id: string | null; job_id: string | null }[];
+}
+
+export interface EvaluationCase {
+  id: string; key: string; dataset_id: string; title: string; task: Task; prompt: string;
+  fingerprint: string; checklist: string[]; assets: Record<string, string | string[]>; n_results: number;
+}
+export interface EvaluationSet { id: string; title: L10n; cases: EvaluationCase[] }
+export interface EvaluationSample extends Job { editable: boolean; rating?: Rating }
+export interface EvaluationGroup {
+  id: string; model: string; label: string; provider: string; default_job_id: string; samples: EvaluationSample[];
+}
+export interface EvaluationDetail {
+  dataset: { id: string; title: L10n }; case: EvaluationCase; groups: EvaluationGroup[];
+  coverage: { model: string; label: string; status: string; task_state: string; reason: string }[];
+}
+export interface BackfillPlan {
+  dataset_id: string; items: (PlanItem & { case_key: string; case_title: string; task: Task; existing_result: boolean; previous_attempt: boolean; ready: boolean })[];
+  runnable: number; total_usd: number; unknown_prices: number; judge: boolean; submitted: boolean; budget: Plan["budget"];
+}
+export interface Deployment {
+  id: string; model: string; label: string; provider: string; hardware: Record<string, unknown>; timing_scope: string;
+}
+export interface BenchmarkSummary {
+  id: string; title: string; date: string; dataset_id: string; deployment_ids: string[]; n_attempts: number; n_videos: number;
+}
+export type MetricRow = Record<string, unknown>;
+export interface BenchmarkDetail {
+  id: string; title: string; date: string; dataset_id: string; config: MetricRow; deployments: Deployment[];
+  summary: { groups: MetricRow[]; phases: MetricRow[]; scenes: MetricRow[]; telemetry: { phase_metrics: MetricRow[] }; costs: MetricRow; utilization: MetricRow[] };
+  artifacts: Record<string, string>;
+  attempts: { id: string; deployment_id: string; case_id: string; request_id: string; attempt: number; job_id: string | null; metrics: MetricRow }[];
 }

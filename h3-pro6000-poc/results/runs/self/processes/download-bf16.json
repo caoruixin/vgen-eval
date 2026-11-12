@@ -1,0 +1,14 @@
+{
+  "utc": "2026-11-07T12:08:34.989+00:00",
+  "pid": 2869,
+  "pgid": 2869,
+  "command": [
+    "python3",
+    "scripts/download_model.py",
+    "--run-dir",
+    "runs/self",
+    "--out",
+    "runs/self/environment/model-files-verified.json"
+  ],
+  "log": "runs/self/download-console.txt"
+}

@@ -1,0 +1,21 @@
+{
+  "utc": "2026-11-07T12:06:39.292+00:00",
+  "world_size": 8,
+  "results": {
+    "all_reduce": {
+      "bytes_per_rank": 33554432,
+      "max_rank_mean_seconds": 0.0033165217842906713,
+      "payload_GB_per_second": 10.11735612862152,
+      "iterations": 10,
+      "correct": true
+    },
+    "all_to_all_single": {
+      "bytes_per_rank": 33554432,
+      "max_rank_mean_seconds": 0.0018461138010025025,
+      "payload_GB_per_second": 18.17571158494065,
+      "iterations": 10,
+      "correct": true
+    }
+  },
+  "note": "PyTorch/NCCL 小样；不能当作完整 nccl-tests 总线带宽或 H3 性能"
+}

@@ -1,0 +1,23 @@
+{
+  "phase": "comparison",
+  "results": [
+    {
+      "request_id": "comparison-official_api-official-H3-T02-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460802163298586",
+      "e2e_seconds": 91.84537729097065
+    },
+    {
+      "request_id": "comparison-official_api-official-H3-T03-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460804504699265",
+      "e2e_seconds": 96.8003106249962
+    },
+    {
+      "request_id": "comparison-official_api-official-H3-T04-api",
+      "status": "failed",
+      "task_id": "460803903955271",
+      "e2e_seconds": null
+    }
+  ]
+}

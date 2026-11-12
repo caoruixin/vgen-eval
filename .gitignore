@@ -28,3 +28,6 @@ web/dist/
 .vscode/
 .claude/
 .DS_Store
+.playwright-cli/
+output/playwright/
+output/analysis/

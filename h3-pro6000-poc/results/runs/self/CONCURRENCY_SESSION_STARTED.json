@@ -1,0 +1,9 @@
+{
+  "utc": "2026-11-07T15:59:06.930+00:00",
+  "max_wall_seconds": 1800,
+  "batches": {
+    "concurrency_c2": 2,
+    "concurrency_c4": 4
+  },
+  "no_retries": true
+}

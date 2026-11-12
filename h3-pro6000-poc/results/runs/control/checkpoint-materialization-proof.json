@@ -1,0 +1,109 @@
+{
+  "method": "gzip exact-byte restoration followed by raw SHA256 equality to server archive manifest",
+  "materialized": [
+    {
+      "path": "analysis/plot-tools-install.log",
+      "size": 7292,
+      "sha256": "67f52510932708a1bccde3bd5ae072422ca9a63fa0acfddf1b1f38ddb213654b",
+      "verified_checkpoint": "checkpoints/analysis__plot-tools-install.log.gz"
+    },
+    {
+      "path": "cost/fatal-watch-console.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "verified_checkpoint": "checkpoints/cost__fatal-watch-console.txt.gz"
+    },
+    {
+      "path": "cost/fatal-watch-turbo-console.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "verified_checkpoint": "checkpoints/cost__fatal-watch-turbo-console.txt.gz"
+    },
+    {
+      "path": "deploy/baseline-stability-console.txt",
+      "size": 11752,
+      "sha256": "cc177cabcefab18f39991847c31d33d38175b42d2f909a6c3634be8c62dcf392",
+      "verified_checkpoint": "checkpoints/deploy__baseline-stability-console.txt.gz"
+    },
+    {
+      "path": "deploy/concurrency-session-console.txt",
+      "size": 113,
+      "sha256": "40a1d39efac8e41bb0f2f5d2e16c9a2de6b8d3e96786e18df6a166e5d50b442d",
+      "verified_checkpoint": "checkpoints/deploy__concurrency-session-console.txt.gz"
+    },
+    {
+      "path": "deploy/concurrency_c2-console.txt",
+      "size": 455,
+      "sha256": "d87df615a2d02fc461ea6a67f9a8366e1dc2692fb3ecd06c00a670bf1c769d5d",
+      "verified_checkpoint": "checkpoints/deploy__concurrency_c2-console.txt.gz"
+    },
+    {
+      "path": "deploy/concurrency_c4-console.txt",
+      "size": 856,
+      "sha256": "2d3a992260ceb7f893c065f3e4e0df1d2f506424a8b6a1ffba8fdb0b15b28ff7",
+      "verified_checkpoint": "checkpoints/deploy__concurrency_c4-console.txt.gz"
+    },
+    {
+      "path": "deploy/server-bf16-cpubind.log",
+      "size": 1040556,
+      "sha256": "783c095a264ff77cee5b9d1f5746691026fd540429412cb3ed75fe7182525462",
+      "verified_checkpoint": "checkpoints/deploy__server-bf16-cpubind.log.gz"
+    },
+    {
+      "path": "deploy/server-turbo-cpubind.log",
+      "size": 407827,
+      "sha256": "429eb15fa7c9a0409f4bcc790cc5135a9058ffc12e8b4828af12517c98b40e94",
+      "verified_checkpoint": "checkpoints/deploy__server-turbo-cpubind.log.gz"
+    },
+    {
+      "path": "deploy/turbo-download-console.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "verified_checkpoint": "checkpoints/deploy__turbo-download-console.txt.gz"
+    },
+    {
+      "path": "deploy/turbo-requests-console.txt",
+      "size": 1209,
+      "sha256": "ee729ac267879842cc10c9a50660ba5f8751f0ac782ccc3d018625aad09c305b",
+      "verified_checkpoint": "checkpoints/deploy__turbo-requests-console.txt.gz"
+    },
+    {
+      "path": "deploy/turbo-session-console.txt",
+      "size": 659,
+      "sha256": "957788d3932867ec00139556ed39581459e3a766ce7467fa49bad68c65a6c121",
+      "verified_checkpoint": "checkpoints/deploy__turbo-session-console.txt.gz"
+    },
+    {
+      "path": "deploy/warmup-after-aspect-fix-console.txt",
+      "size": 788,
+      "sha256": "46d1b3c3d34bd2452f6c2be28391d7de7c567359e8d591da8f3f562eb186ea92",
+      "verified_checkpoint": "checkpoints/deploy__warmup-after-aspect-fix-console.txt.gz"
+    },
+    {
+      "path": "http.jsonl",
+      "size": 4302291,
+      "sha256": "60a5555586f0cf8593d7112a7ad98853d9cc817949b671d2c4937e587f8b3881",
+      "verified_checkpoint": "checkpoints/http.jsonl.gz"
+    },
+    {
+      "path": "phase-windows.jsonl",
+      "size": 1740,
+      "sha256": "6635ed8c3166b36e92ae3e45c538223ede56dac9c4a9f2b1a5f961d9828d99b9",
+      "verified_checkpoint": "checkpoints/phase-windows.jsonl.gz"
+    },
+    {
+      "path": "requests.jsonl",
+      "size": 1041853,
+      "sha256": "f88b041ba3a746aaa510e48dc0ab36c03e15328f2bdb1ba6779755fc303676c1",
+      "verified_checkpoint": "checkpoints/requests.jsonl.gz"
+    },
+    {
+      "path": "telemetry/gpu.jsonl",
+      "size": 25438142,
+      "sha256": "6caa3b246eda19c0d757742afeba0a0c80cd1877c39f60dad45fbed310ccbcb4",
+      "verified_checkpoint": "checkpoints/telemetry__gpu.jsonl.gz"
+    }
+  ],
+  "skipped_fallback_to_original_transfer": [],
+  "restored_bytes": 32255533
+}

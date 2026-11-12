@@ -178,11 +178,81 @@ def cmd_relocate(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_import_experiment(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+    from vgen import db
+    from vgen.api import EngineLock
+    from vgen.experiments import import_prepared, prepare, preview
+
+    prepared = prepare(Path(args.manifest).resolve())
+    if args.dry_run:
+        print(json.dumps({**preview(prepared), "dry_run": True}, indent=2))
+        return 0
+    data_dir = Path(args.data_dir).resolve() if args.data_dir else _settings().data_dir
+    lock = EngineLock(data_dir / "engine.lock")
+    lock.acquire()
+    try:
+        db.init_db(data_dir / "app.db")
+        print(json.dumps(import_prepared(prepared, data_dir), indent=2))
+    finally:
+        lock.release()
+    return 0
+
+
+def cmd_package_experiment(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+    from vgen.experiments import package_experiment, prepare
+    print(json.dumps(package_experiment(prepare(Path(args.manifest).resolve()), Path(args.output).resolve()), indent=2))
+    return 0
+
+
+def cmd_import_report(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+    from vgen import db
+    from vgen.api import EngineLock
+    from vgen.report_revisions import prepare_report, publish_report
+
+    prepared = prepare_report(Path(args.manifest).resolve())
+    if args.dry_run:
+        m = prepared["manifest"]
+        print(json.dumps({"experiment_id": m["experiment_id"], "revision": m["revision"],
+                          "files": len(m["files"]), "dry_run": True}, indent=2))
+        return 0
+    data_dir = Path(args.data_dir).resolve() if args.data_dir else _settings().data_dir
+    # Report metadata can be published while generation continues. Serialize
+    # report publishers independently; SQLite provides the atomic row update.
+    lock = EngineLock(data_dir / "report-publication.lock")
+    lock.acquire()
+    try:
+        db.init_db(data_dir / "app.db")
+        print(json.dumps(publish_report(prepared, data_dir), indent=2))
+    finally:
+        lock.release()
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
     p = argparse.ArgumentParser(prog="vgen", description="Video-generation evaluation platform (Tokenbay)")
     sub = p.add_subparsers(dest="cmd", required=True)
+    imp = sub.add_parser("import-experiment", help="verify and import an offline experiment (never generates)")
+    imp.add_argument("manifest")
+    imp.add_argument("--dry-run", action="store_true", help="validate files without changing the database")
+    imp.add_argument("--data-dir")
+    imp.set_defaults(fn=cmd_import_experiment)
+    pkg = sub.add_parser("package-experiment", help="build a portable incremental experiment bundle")
+    pkg.add_argument("manifest")
+    pkg.add_argument("--output", required=True)
+    pkg.set_defaults(fn=cmd_package_experiment)
+    report = sub.add_parser("import-report", help="publish a verified report revision without changing experiment results")
+    report.add_argument("manifest")
+    report.add_argument("--dry-run", action="store_true")
+    report.add_argument("--data-dir")
+    report.set_defaults(fn=cmd_import_report)
     s = sub.add_parser("serve", help="run the web app")
     s.add_argument("--host")
     s.add_argument("--port", type=int)

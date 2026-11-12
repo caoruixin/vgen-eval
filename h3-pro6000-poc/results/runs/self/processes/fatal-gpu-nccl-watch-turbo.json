@@ -1,0 +1,10 @@
+{
+  "utc": "2026-11-07T16:22:09.710+00:00",
+  "pid": 57237,
+  "pgid": 57237,
+  "command": [
+    "/usr/bin/python3",
+    "control/fatal_watch.py"
+  ],
+  "log": "/data/h3-pro6000-poc/runs/self/cost/fatal-watch-turbo-console.txt"
+}

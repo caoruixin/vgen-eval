@@ -1,0 +1,4 @@
+﻿utilization,observed_baseline_success_interval_s,gpu_disk_cost_per_success_usd,interpretation
+0.25,182.32851826892943,2.8373468799751316,"Demand utilization of allocated service time, not nvidia-smi utilization; cold start, traffic and human labor excluded"
+0.5,182.32851826892943,1.4186734399875658,"Demand utilization of allocated service time, not nvidia-smi utilization; cold start, traffic and human labor excluded"
+1,182.32851826892943,0.7093367199937829,"Demand utilization of allocated service time, not nvidia-smi utilization; cold start, traffic and human labor excluded"

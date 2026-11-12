@@ -1,0 +1,29 @@
+{
+  "generated_utc": "2026-11-07T15:20:12.034303+00:00",
+  "scope": "42 baseline latest logical-request records; no subjective interpretation",
+  "n": 42,
+  "all_identity_fields_single_value": true,
+  "observed_values_and_counts": {
+    "image": {
+      "vllm/vllm-omni@sha256:6b44ee504a0dc3a21eacf72e7dc5da318b7bcc8ed0e349dc928e67278414430c": 42
+    },
+    "source_commit": {
+      "5917730a4b02aedb44d374173cdc1b10484ccd52": 42
+    },
+    "harness_sha256": {
+      "84e9a84ec93b098d794d34e271b01eb7fd2704aba090a1557435ac33e471c713": 42
+    },
+    "model_revision": {
+      "42ed227ee7df40d41602854ae760620d6eb651fe": 42
+    },
+    "config_sha256": {
+      "de50754ab4d725943ba9973f8321ad271200be5d7562516837844655e6aceb14": 42
+    },
+    "matrix_sha256": {
+      "bce02ba9f7518fbcd4b4c897a18c8009a6904e80cb4d9ebd43618be0e14dd742": 42
+    },
+    "actual_denoise_updates": {
+      "50": 42
+    }
+  }
+}

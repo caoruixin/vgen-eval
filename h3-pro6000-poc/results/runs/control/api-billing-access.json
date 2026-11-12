@@ -1,0 +1,10 @@
+{
+  "observed_utc": "2026-11-07T15:16:43.104890+00:00",
+  "official_documented_entry": "https://platform.minimax.io/user-center/payment/balance",
+  "resolved_console_entry": "https://platform.minimax.io/console/recharge-records",
+  "browser_state": "sign-in required; no authenticated billing session",
+  "actions": "read only, no login credentials entered, no agreement accepted, no payment or generation submitted",
+  "invoice_obtained": false,
+  "api_cost_evidence": "10 successful generation task IDs; 50 usage.output_seconds; $4 list-price estimate; $10 pending reserve remains",
+  "public_search_result": "h3-pro6000-poc/.firecrawl/search-minimax-billing-20261107.json"
+}

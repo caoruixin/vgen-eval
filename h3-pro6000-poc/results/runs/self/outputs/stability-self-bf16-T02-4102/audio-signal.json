@@ -1,0 +1,15 @@
+{
+  "request_id": "stability-self-bf16-T02-4102",
+  "observed_utc": "2026-11-07T16:31:33.672+00:00",
+  "ffmpeg_exit_code": 0,
+  "rms_level_dbfs": -47.429966,
+  "peak_level_dbfs": -25.888996,
+  "all_digital_silence": false,
+  "channel_and_overall_rms_raw": [
+    "-47.407847",
+    "-47.452199",
+    "-47.429966"
+  ],
+  "analysis_seconds": 0.044326107017695904,
+  "interpretation": "Objective signal energy only; no audibility, prompt match, speech intelligibility or AV-sync score inferred"
+}

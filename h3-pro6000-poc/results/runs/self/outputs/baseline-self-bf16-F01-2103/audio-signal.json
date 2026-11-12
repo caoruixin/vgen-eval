@@ -1,0 +1,15 @@
+{
+  "request_id": "baseline-self-bf16-F01-2103",
+  "observed_utc": "2026-11-07T16:31:31.203+00:00",
+  "ffmpeg_exit_code": 0,
+  "rms_level_dbfs": -56.053899,
+  "peak_level_dbfs": -38.977884,
+  "all_digital_silence": false,
+  "channel_and_overall_rms_raw": [
+    "-56.163330",
+    "-55.947157",
+    "-56.053899"
+  ],
+  "analysis_seconds": 0.04462210601195693,
+  "interpretation": "Objective signal energy only; no audibility, prompt match, speech intelligibility or AV-sync score inferred"
+}

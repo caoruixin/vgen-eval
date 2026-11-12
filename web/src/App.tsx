@@ -1,3 +1,5 @@
+import ResultsPage from "./pages/Results";
+import BenchmarksPage from "./pages/Benchmarks";
 import { useEffect, useState } from "react";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -57,7 +59,9 @@ export default function App() {
   const [theme, setTheme] = useTheme();
   const mock = window.__VGEN__?.mock;
   const nav: [string, string][] = [
-    ["/", t("nav.scenarios")],
+    ["/results", t("nav.results")],
+    ["/benchmarks", t("nav.benchmarks")],
+    ["/scenarios", t("nav.scenarios")],
     ["/compare", t("nav.compare")],
     ["/runs", t("nav.runs")],
     ["/leaderboard", t("nav.leaderboard")],
@@ -66,7 +70,7 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b border-line bg-page/90 backdrop-blur">
-        <div className="mx-auto flex max-w-[1400px] items-center gap-6 px-4 py-2.5 sm:px-6">
+        <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5 sm:px-6">
           <NavLink to="/" className="flex items-center gap-2">
             <span className="grid h-7 w-7 place-items-center rounded-lg bg-ink text-surface">
               <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
@@ -74,7 +78,7 @@ export default function App() {
               </svg>
             </span>
             <span className="text-[15px] font-semibold tracking-tight">vgen·eval</span>
-            <span className="hidden text-xs text-muted lg:inline">{t("app.tagline")}</span>
+            <span className="hidden text-xs text-muted 2xl:inline">{t("app.tagline")}</span>
           </NavLink>
           <nav className="flex items-center gap-1 overflow-x-auto">
             {nav.map(([to, label]) => (
@@ -118,7 +122,10 @@ export default function App() {
       </header>
       <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
         <Routes>
-          <Route path="/" element={<ScenariosPage />} />
+          <Route path="/" element={<Navigate to="/results" replace />} />
+          <Route path="/results" element={<ResultsPage />} />
+          <Route path="/benchmarks" element={<BenchmarksPage />} />
+          <Route path="/scenarios" element={<ScenariosPage />} />
           <Route path="/scenarios/:packId" element={<ScenariosPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/runs" element={<RunsPage />} />

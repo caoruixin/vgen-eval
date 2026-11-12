@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1490" viewBox="0 0 1240 1490">
+<title>H3-Base 一次请求的推理链路</title>
+<rect width="100%" height="100%" fill="white"/>
+<text x="50.0" y="60.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="38" fill="#1d2631" font-weight="600">H3-Base 一次请求的推理链路</text>
+<text x="50.0" y="106.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#526276">本次 PoC 实际路径  T2VA 文生视频与仅首帧 FL2VA</text>
+<rect x="50" y="132" width="1140" height="122" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="179.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">1  请求与输入校验</text>
+<text x="72.0" y="221.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">冻结 prompt / 可选首帧 PNG / seed / 画幅与时长 / 推理步数</text>
+<polyline points="620,254 620,283 325,283 325,312" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="325.0,312.0 319.3,300.3 330.7,300.3" fill="#536b85"/>
+<polyline points="620,254 620,283 915,283 915,312" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="915.0,312.0 909.3,300.3 920.7,300.3" fill="#536b85"/>
+<rect x="50" y="312" width="550" height="158" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="358.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="31" fill="#1d2631" font-weight="600">2a  H3-Encoder</text>
+<text x="72.0" y="401.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">Qwen3-VL 编码文本与首帧语义</text>
+<text x="72.0" y="440.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">T2VA 无首帧时只编码文本</text>
+<rect x="640" y="312" width="550" height="158" rx="14" fill="#f3f6f3" stroke="#8da1ba" stroke-width="2"/>
+<text x="662.0" y="358.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="31" fill="#1d2631" font-weight="600">2b  首帧 VisualVAE 编码</text>
+<text x="662.0" y="401.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">生成视觉 latent 条件</text>
+<text x="662.0" y="440.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">仅 FL2VA 使用此路径</text>
+<polyline points="325,470 325,496 620,496 620,524" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="620.0,524.0 614.3,512.3 625.7,512.3" fill="#536b85"/>
+<polyline points="915,470 915,496 620,496 620,524" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="620.0,524.0 614.3,512.3 625.7,512.3" fill="#536b85"/>
+<rect x="50" y="524" width="1140" height="122" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="571.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">3  多模态序列与噪声初始化</text>
+<text x="72.0" y="613.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">条件 token + 视频与音频 latent 噪声 + 空间时间位置</text>
+<polyline points="620,646 620,697" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="620.0,697.0 614.3,685.3 625.7,685.3" fill="#536b85"/>
+<rect x="50" y="697" width="1140" height="187" rx="14" fill="#eaf1fb" stroke="#527aab" stroke-width="2"/>
+<text x="72.0" y="744.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">4  H3-Omni-Transformer 联合去噪</text>
+<text x="72.0" y="786.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">共同预测视频与音频更新，两个调度器分别推进</text>
+<text x="72.0" y="825.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">保留首帧条件；循环 50 次基线或 8 次配置试验</text>
+<text x="72.0" y="864.3" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">8 步已观察到，Turbo 适配器实际激活未证实</text>
+<polyline points="620,884 620,911 325,911 325,940" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="325.0,940.0 319.3,928.3 330.7,928.3" fill="#536b85"/>
+<polyline points="620,884 620,911 915,911 915,940" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="915.0,940.0 909.3,928.3 920.7,928.3" fill="#536b85"/>
+<rect x="50" y="940" width="550" height="139" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="987.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">5a  VisualVAE 解码</text>
+<text x="72.0" y="1029.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">视频 latent → 像素帧</text>
+<rect x="640" y="940" width="550" height="139" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="662.0" y="987.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">5b  AudioVAE 解码</text>
+<text x="662.0" y="1029.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">音频 latent → 立体声波形</text>
+<polyline points="325,1079 325,1106 620,1106 620,1135" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="620.0,1135.0 614.3,1123.3 625.7,1123.3" fill="#536b85"/>
+<polyline points="915,1079 915,1106 620,1106 620,1135" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="620.0,1135.0 614.3,1123.3 625.7,1123.3" fill="#536b85"/>
+<rect x="50" y="1135" width="1140" height="122" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="1182.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">6  音视频编码与 MP4 封装</text>
+<text x="72.0" y="1224.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">本轮输出：1344×768 / 24 fps / H.264 + 32 kHz 双声道 AAC</text>
+<polyline points="620,1257 620,1305" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="620.0,1305.0 614.3,1293.3 625.7,1293.3" fill="#536b85"/>
+<rect x="50" y="1305" width="1140" height="122" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="1352.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">7  下载与技术校验</text>
+<text x="72.0" y="1394.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">MP4 下载完成 → 主 E2E 结束；随后 ffprobe / 全文件解码 / 哈希</text>
+<text x="50.0" y="1475.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="25" fill="#526276">逻辑流程示意，不表示各模块实测耗时或 GPU/CPU 的完整任务调度。</text>
+</svg>

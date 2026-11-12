@@ -1,0 +1,19 @@
+{
+  "utc": "2026-11-07T16:26:00.396+00:00",
+  "activation_verified": false,
+  "file_sha256": "9b0efe3613b43a84e30febaa43af27432ea9d0711eac7bba904b2556b175f6d4",
+  "file_revision": "30f485ed874aa44c8183348ad361c5eabad318da",
+  "loader_evidence_lines": [],
+  "request_contract": "environment/turbo-request-contract.json",
+  "request_scale": 1,
+  "actual_updates_by_request": {
+    "turbo-self-turbo8-T01-1101": 8,
+    "turbo-self-turbo8-T04-1101": 8,
+    "turbo-self-turbo8-T06-1101": 8,
+    "turbo-self-turbo8-F01-2101": 8,
+    "turbo-self-turbo8-F02-2101": 8,
+    "turbo-self-turbo8-F03-2101": 8
+  },
+  "installed_loader_source_sha256": "b267e76692f956728ee083ce64f566ddae20ea90d8ef91b30bc9c60d56339db2",
+  "scope": "Loader logs plus frozen request LoRA name/path/scale, installed parser and completed 8-update traces; no live tensor dump or scale-zero ablation"
+}

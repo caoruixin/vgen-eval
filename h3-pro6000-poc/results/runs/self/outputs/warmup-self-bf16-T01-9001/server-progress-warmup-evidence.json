@@ -1,0 +1,8 @@
+{
+  "source_log": "/data/h3-pro6000-poc/runs/self/deploy/server-bf16-cpubind.log",
+  "start_byte": 0,
+  "end_byte": 361151,
+  "excerpt_sha256": "99cc7241a0381d552027f91a2cbaa93abb295fcc8dbf987c35f1b50a0cbb515c",
+  "actual_denoise_updates_observed": 50,
+  "method": "Four ordered serial successful sync/content HTTP completions before baseline first request; each span contains completed50/50; initial confirmed400 performed no denoising"
+}

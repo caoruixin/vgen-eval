@@ -1,0 +1,15 @@
+{
+  "instance_id": null,
+  "offer_id": null,
+  "started_utc": null,
+  "hard_release_utc": null,
+  "gpu_hours_before_this_rental": 0,
+  "gpu_hour_usd": null,
+  "disk_hour_usd": null,
+  "download_GB_usd": null,
+  "upload_GB_usd": null,
+  "disk_GB": 500,
+  "image": "vllm/vllm-omni@sha256:6b44ee504a0dc3a21eacf72e7dc5da318b7bcc8ed0e349dc928e67278414430c",
+  "billing_evidence_path": null,
+  "note": "started_utc 从发起创建/开始计费记起，不能从 SSH 成功记起。hard_release_utc 应至少比累计8小时提前5分钟；第一次硬件验收不通过20分钟内释放，替换最多一次。"
+}

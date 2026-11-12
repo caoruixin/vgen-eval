@@ -42,8 +42,8 @@ def video_tokens(resolution: str, ratio: str, seconds: float) -> int:
     return int(w * h * (SEEDANCE_FPS * seconds + 1) / 1024) if seconds else 0
 
 
-def estimate_job(registry: Registry, model_id: str, effective: dict) -> Estimate:
-    price = registry.price(model_id)
+def estimate_job(registry: Registry, model_id: str, effective: dict, *, price: dict | None = None) -> Estimate:
+    price = price if price is not None else registry.price(model_id)
     if not price:
         return Estimate(None, "no public price")
     dur = effective.get("duration") or AUTO_DURATION_WORST_S

@@ -1,0 +1,6 @@
+{
+  "utc": "2026-11-07T12:07:44.275+00:00",
+  "mapping_sha256": "8a1fa69473e929da6b4e47cd68b71655237390f5160ce433df68e3c929f36372",
+  "instance_id": 59566113,
+  "basis": "本机GPU0-3在NUMA0，4-7在NUMA1；PIX相邻对0/1,2/3,4/5,6/7。运行时RankGenerator顺序tp-sp-pp-cfg-dp，TP4连续rank；选0,1,2,3,4,5,6,7使TP组留在各NUMA内，Ulysses2跨NUMA。双节点内存interleave；8卡P2P全通且32MiB allreduce/alltoall正确，保留原始拓扑与NCCL数据。此选择不宣称最优。"
+}

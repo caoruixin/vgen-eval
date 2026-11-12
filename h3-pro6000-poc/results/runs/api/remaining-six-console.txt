@@ -1,0 +1,41 @@
+{
+  "phase": "comparison",
+  "results": [
+    {
+      "request_id": "comparison-official_api-official-H3-T05-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460805228044628",
+      "e2e_seconds": 93.42100004199892
+    },
+    {
+      "request_id": "comparison-official_api-official-H3-T06-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460804984144219",
+      "e2e_seconds": 101.3493136659963
+    },
+    {
+      "request_id": "comparison-official_api-official-H3-F01-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460806620905750",
+      "e2e_seconds": 115.12025537504815
+    },
+    {
+      "request_id": "comparison-official_api-official-H3-F02-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460807894389124",
+      "e2e_seconds": 111.53248133300804
+    },
+    {
+      "request_id": "comparison-official_api-official-H3-F03-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460805649236322",
+      "e2e_seconds": 113.00015695800539
+    },
+    {
+      "request_id": "comparison-official_api-official-H3-F04-api",
+      "status": "downloaded_pending_server_validation",
+      "task_id": "460806857593236",
+      "e2e_seconds": 111.8791251250077
+    }
+  ]
+}
