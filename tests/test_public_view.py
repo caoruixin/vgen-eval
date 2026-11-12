@@ -689,6 +689,16 @@ def test_admin_hash_cli_prints_the_env_line_and_never_the_secret(monkeypatch, ca
     assert verify_admin_secret(lines[0].split("=", 1)[1], secret)
 
 
+def test_admin_hash_cli_without_a_terminal_says_so_instead_of_crashing(monkeypatch, capsys):
+    def no_terminal(prompt=""):
+        raise EOFError
+
+    monkeypatch.setattr("getpass.getpass", no_terminal)
+    assert cli.main(["admin-hash"]) == 1
+    out, err = capsys.readouterr()
+    assert out == "" and "interactive terminal" in err and "Traceback" not in err
+
+
 @pytest.mark.parametrize("first,second", [
     ("a secret for the cli test 123", "a secret for the cli test 124"),      # typo
     ("too short", "too short"),                                              # under 16 characters

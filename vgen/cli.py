@@ -241,8 +241,14 @@ def cmd_admin_hash(args: argparse.Namespace) -> int:
 
     from vgen.security import ADMIN_MAX_SECRET_CHARS, ADMIN_MIN_SECRET_CHARS, hash_admin_secret
 
-    secret = getpass.getpass(f"Admin secret (at least {ADMIN_MIN_SECRET_CHARS} characters): ")
-    again = getpass.getpass("Repeat the admin secret: ")
+    try:
+        secret = getpass.getpass(f"Admin secret (at least {ADMIN_MIN_SECRET_CHARS} characters): ")
+        again = getpass.getpass("Repeat the admin secret: ")
+    except EOFError:
+        # no terminal (run from a script, an editor or an agent shell): getpass has nothing to read from
+        print("\nno terminal to read the secret from; run `vgen admin-hash` in an interactive terminal window; "
+              "nothing was generated", file=sys.stderr)
+        return 1
     if secret != again:
         print("the two entries do not match; nothing was generated", file=sys.stderr)
         return 1
