@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api, IS_PUBLIC } from "../api";
 import { useI18n } from "../i18n";
 import type { Lang, Pack, RunRequest, Scenarios } from "../types";
-import { cls } from "../util";
+import { cls, isUnavailable, rawUnavailable } from "../util";
 import { ErrorBox, Spinner, TaskBadge, VendorDot } from "../components/common";
 import { ModelPicker, ParamsForm, PlanDialog, useModels, type Params } from "../components/RunSetup";
 
@@ -58,7 +58,7 @@ function PackCard({ pack, data, onOpen }: { pack: Pack; data: Scenarios; onOpen:
       <p className="text-[13px] leading-relaxed text-ink-2">{tr(pack.description)}</p>
       <div className="flex flex-wrap gap-1">
         {pack.models.map((id) => (
-          <span key={id} className={cls("chip", info(id)?.probe?.unavailable && "line-through opacity-50")} title={info(id)?.probe?.unavailable ?? undefined}>
+          <span key={id} className={cls("chip", isUnavailable(info(id)) && "line-through opacity-50")} title={rawUnavailable(info(id)) ?? (isUnavailable(info(id)) ? t("models.unavailable") : undefined)}>
             <VendorDot vendor={info(id)?.vendor ?? ""} size={6} />
             {info(id)?.label ?? id}
           </span>

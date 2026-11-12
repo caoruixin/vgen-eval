@@ -1,7 +1,41 @@
 import { useEffect, type ReactNode } from "react";
+import { IS_ADMIN, IS_PUBLIC } from "../api";
 import { useI18n, type TKey } from "../i18n";
-import type { Task } from "../types";
+import type { Hardware, Task } from "../types";
 import { cls, vendorColor } from "../util";
+
+/** Marks a block visitors do not see (hosted site only; on the local instance everyone is admin). */
+export function AdminTag() {
+  const { t } = useI18n();
+  if (!IS_PUBLIC || !IS_ADMIN) return null;
+  return <span className="chip !text-[10px]" style={{ borderColor: "var(--focus)", color: "var(--focus)" }}>{t("admin.only")}</span>;
+}
+
+/** Diagnostics: rendered only for admins, tagged on the hosted site. */
+export function AdminOnly({ children, inline }: { children: ReactNode; inline?: boolean }) {
+  if (!IS_ADMIN) return null;
+  if (!IS_PUBLIC) return <>{children}</>;
+  return inline ? (
+    <span className="inline-flex flex-wrap items-center gap-1.5"><AdminTag />{children}</span>
+  ) : (
+    <div className="space-y-1"><AdminTag />{children}</div>
+  );
+}
+
+/** Where a clip came from. "Not on Tokenbay" is derived by the caller from the Tokenbay registry, never assumed. */
+export function SourceTag({ provider, vendor, hardware, offCatalog, compact }: { provider: string; vendor?: string; hardware?: Hardware | null; offCatalog: boolean; compact?: boolean }) {
+  const { t } = useI18n();
+  const hw = hardware?.gpu ? `${hardware.gpu_count ? `${hardware.gpu_count}× ` : ""}${hardware.gpu}` : "";
+  const base = provider === "tokenbay" ? t("src.tokenbay")
+    : provider === "self" ? (hw && !compact ? `${t("src.self")} (${hw})` : t("src.self"))
+    : provider === "official_api" ? t("src.official_api", { vendor: vendor ?? "" }).trim()
+    : provider;
+  return (
+    <span className={cls("chip !whitespace-normal", compact && "!text-[10.5px]")} title={hw || undefined} style={offCatalog ? { borderStyle: "dashed", borderColor: "var(--line-strong)" } : undefined}>
+      {offCatalog ? `${base} · ${t("src.off_catalog")}` : base}
+    </span>
+  );
+}
 
 export function VendorDot({ vendor, size = 8 }: { vendor: string; size?: number }) {
   return <span className="vendor-dot" style={{ background: vendorColor(vendor), width: size, height: size }} aria-hidden />;

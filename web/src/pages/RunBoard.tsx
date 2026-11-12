@@ -6,8 +6,8 @@ import { api, IS_PUBLIC } from "../api";
 import { useApiKey } from "../apiKey";
 import { useI18n } from "../i18n";
 import type { Job, RunRequest } from "../types";
-import { ago, cls, usd } from "../util";
-import { ErrorBox, Spinner, TaskBadge } from "../components/common";
+import { ago, asHardware, cls, usd } from "../util";
+import { ErrorBox, SourceTag, Spinner, TaskBadge } from "../components/common";
 import JobCard from "../components/JobCard";
 import { KeyField } from "../components/KeyField";
 import { PlanDialog } from "../components/RunSetup";
@@ -95,6 +95,10 @@ export default function RunBoardPage() {
   const [actionErr, setActionErr] = useState<unknown>(null);
   const videoRefs = useRef(new Map<string, HTMLVideoElement>());
   const run = data?.run;
+  // archived experiment clips: label where each came from (deployment provider + hardware; off-Tokenbay when not in the registry)
+  const experiment = run?.kind === "experiment";
+  const { data: bench } = useQuery({ queryKey: ["benchmarks"], queryFn: api.benchmarks, enabled: experiment });
+  const { data: registry } = useQuery({ queryKey: ["models"], queryFn: api.models, staleTime: 60_000, enabled: experiment });
   // stable while polling (react-query keeps `run` identical when it hasn't changed), so the plan isn't re-fetched
   const rerunRequest = useMemo<RunRequest | null>(
     () =>
@@ -138,6 +142,13 @@ export default function RunBoardPage() {
   if (error || !data || !run) return <ErrorBox error={error} />;
   const prompt = prompts.find((p) => p.key === current);
   const pickFor = (key: string) => data.picks[key];
+  const sourceTag = (j: Job) => {
+    if (!experiment) return undefined;
+    const dep = bench?.deployments.find((d) => d.id === j.deployment_id);
+    const provider = dep?.provider ?? j.provenance.source ?? "tokenbay";
+    const off = provider !== "tokenbay" && Boolean(registry) && !registry?.models.some((m) => m.id === j.model);
+    return <SourceTag provider={provider} vendor={j.vendor} hardware={asHardware(dep?.hardware)} offCatalog={off} compact />;
+  };
   const pick = async (job: Job) => {
     setActionErr(null);
     try {
@@ -161,7 +172,8 @@ export default function RunBoardPage() {
             {!data.mine && <span className="chip">{t("board.example")}</span>}
           </div>
           <div className="text-xs text-muted">
-            {ago(run.created_at, lang)} · {t("plan.clips", { n: data.jobs.length })} · {usd(data.spent_usd)}
+            {ago(run.created_at, lang)} · {t("plan.clips", { n: data.jobs.length })}
+            {data.spent_usd != null ? ` · ${usd(data.spent_usd)}` : ""}
             {data.active ? ` · ${t("runs.active", { n: data.active })}` : ""}
           </div>
         </div>
@@ -249,6 +261,7 @@ export default function RunBoardPage() {
             onSound={setAudioId}
             judgeEnabled={run.judge || Boolean(j.judge_status)}
             editable={data.mine}
+            tag={sourceTag(j)}
           />
         ))}
       </div>

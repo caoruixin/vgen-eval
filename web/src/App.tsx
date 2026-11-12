@@ -3,7 +3,7 @@ import BenchmarksPage from "./pages/Benchmarks";
 import { useEffect, useState } from "react";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { api, IS_PUBLIC } from "./api";
+import { adminLogout, api, IS_ADMIN, IS_PUBLIC } from "./api";
 import { useI18n } from "./i18n";
 import { cls, usd } from "./util";
 import ScenariosPage from "./pages/Scenarios";
@@ -13,6 +13,7 @@ import RunBoardPage from "./pages/RunBoard";
 import LeaderboardPage from "./pages/Leaderboard";
 import ModelsPage from "./pages/Models";
 import SettingsPage from "./pages/Settings";
+import AdminPage from "./pages/Admin";
 
 type Theme = "system" | "light" | "dark";
 
@@ -51,6 +52,29 @@ function SpendPill() {
         <span className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${frac * 100}%`, background: color }} />
       </span>
     </NavLink>
+  );
+}
+
+/** Hosted site, signed in: say so, offer sign-out, and notice when the session has ended (12 h, or a server restart). */
+function AdminBadge() {
+  const { t } = useI18n();
+  const { data } = useQuery({ queryKey: ["config"], queryFn: api.config, refetchInterval: 60_000 });
+  if (data?.admin === false) {
+    return (
+      <NavLink to="/admin" className="chip" style={{ borderColor: "var(--warn)" }}>
+        {t("admin.expired")}
+      </NavLink>
+    );
+  }
+  return (
+    <span className="flex items-center gap-2">
+      <span className="chip" style={{ borderColor: "var(--focus)", color: "var(--focus)" }}>
+        {t("admin.badge")}
+      </span>
+      <button className="text-[13px] text-ink-2 hover:text-ink" onClick={() => adminLogout().catch(() => undefined).then(() => window.location.reload())}>
+        {t("admin.signout")}
+      </button>
+    </span>
   );
 }
 
@@ -103,6 +127,7 @@ export default function App() {
             ) : (
               <SpendPill />
             )}
+            {IS_PUBLIC && IS_ADMIN && <AdminBadge />}
             <div className="seg" role="group" aria-label="language">
               <button aria-pressed={lang === "en"} onClick={() => setLang("en")}>EN</button>
               <button aria-pressed={lang === "zh"} onClick={() => setLang("zh")}>中文</button>
@@ -133,6 +158,7 @@ export default function App() {
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/models" element={<ModelsPage />} />
           <Route path="/settings" element={IS_PUBLIC ? <Navigate to="/" replace /> : <SettingsPage />} />
+          <Route path="/admin" element={IS_PUBLIC ? <AdminPage /> : <Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

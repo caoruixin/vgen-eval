@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api, ApiError, IS_PUBLIC } from "../api";
+import { api, ApiError, IS_ADMIN, IS_PUBLIC } from "../api";
 import { useApiKey } from "../apiKey";
 import { useI18n, type TKey } from "../i18n";
 import type { ModelRow, Plan, RunRequest, Task } from "../types";
-import { cls, secs, usd } from "../util";
-import { ErrorBox, Modal, Spinner, VendorDot } from "./common";
+import { cls, isUnavailable, rawUnavailable, secs, usd } from "../util";
+import { AdminOnly, ErrorBox, Modal, Spinner, VendorDot } from "./common";
 import { KeyField } from "./KeyField";
 
 export function useModels() {
@@ -67,7 +67,7 @@ export function ModelPicker({
               return (
                 <label
                   key={m.id}
-                  title={m.probe?.unavailable ?? (ok ? tr(m.notes) : t(`models.state.${state}` as TKey))}
+                  title={rawUnavailable(m) ?? (isUnavailable(m) ? t("models.unavailable") : ok ? tr(m.notes) : t(`models.state.${state}` as TKey))}
                   className={cls(
                     "flex cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-2 text-[13px]",
                     on ? "border-[var(--focus)] bg-surface-2" : "border-line",
@@ -84,7 +84,7 @@ export function ModelPicker({
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-1.5 font-medium">
                       {m.label}
-                      {m.doc === "inferred" && <span className="chip !px-1.5 !text-[10px]">{t("models.doc.inferred")}</span>}
+                      {IS_ADMIN && m.doc === "inferred" && <span className="chip !px-1.5 !text-[10px]">{t("models.doc.inferred")}</span>}
                       {state === "experimental" && <span className="chip !px-1.5 !text-[10px]" style={{ borderColor: "var(--warn)" }}>{t("setup.exp")}</span>}
                       {live === false && <span className="chip !px-1.5 !text-[10px]" style={{ borderColor: "var(--critical)" }}>{t("setup.offline")}</span>}
                     </span>
@@ -94,7 +94,7 @@ export function ModelPicker({
                           {usd(m.price_ref.usd)} / {m.price_ref.settings} · ~{secs(m.latency_s)}
                           {m.audio === "optional" ? " · ♪" : ""}
                         </>
-                      ) : m.probe?.unavailable ? (
+                      ) : isUnavailable(m) ? (
                         t("models.unavailable")
                       ) : (
                         t(`models.state.${state}` as TKey)
@@ -297,10 +297,12 @@ export function PlanDialog({ request, open, onClose }: { request: RunRequest | n
                       </div>
                     )}
                     {ok[0]?.payload && (
-                      <details>
-                        <summary className="cursor-pointer text-muted">{t("plan.payload")}</summary>
-                        <pre className="json mt-1">{JSON.stringify(ok[0].payload, null, 2)}</pre>
-                      </details>
+                      <AdminOnly>
+                        <details>
+                          <summary className="cursor-pointer text-muted">{t("plan.payload")}</summary>
+                          <pre className="json mt-1">{JSON.stringify(ok[0].payload, null, 2)}</pre>
+                        </details>
+                      </AdminOnly>
                     )}
                   </div>
                 </div>

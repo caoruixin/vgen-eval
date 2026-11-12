@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { api, IS_PUBLIC } from "../api";
+import { api, IS_ADMIN, IS_PUBLIC } from "../api";
 import { useI18n, type TKey } from "../i18n";
 import { ago, cls, usd } from "../util";
 import { ErrorBox, Spinner, TaskBadge } from "../components/common";
@@ -16,7 +16,7 @@ const SEG: [string, string][] = [
 ];
 
 export default function RunsPage() {
-  const { t, lang } = useI18n();
+  const { t, tx, lang } = useI18n();
   const [kind, setKind] = useState<string>("");
   const { data, error, isLoading } = useQuery({
     queryKey: ["runs", kind],
@@ -28,7 +28,7 @@ export default function RunsPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">{t("runs.title")}</h1>
         <div className="seg">
-          {(IS_PUBLIC ? (["", "pack", "compare"] as const) : (["", "pack", "compare", "probe"] as const)).map((k) => (
+          {(IS_ADMIN ? (["", "pack", "compare", "probe"] as const) : (["", "pack", "compare"] as const)).map((k) => (
             <button key={k} aria-pressed={kind === k} onClick={() => setKind(k)}>
               {t(`runs.kind.${k || "all"}` as TKey)}
             </button>
@@ -70,14 +70,14 @@ export default function RunsPage() {
                 </div>
               </div>
               <div className="w-48 space-y-1">
-                <div className="flex h-1.5 overflow-hidden rounded-full bg-surface-3" title={JSON.stringify(r.counts)}>
+                <div className="flex h-1.5 overflow-hidden rounded-full bg-surface-3" title={Object.entries(r.counts).map(([k, n]) => `${tx(`status.${k}`, k)} ${n}`).join(" · ")}>
                   {SEG.map(([k, c]) =>
                     r.counts[k] ? <span key={k} style={{ width: `${(r.counts[k] / r.n_jobs) * 100}%`, background: c }} className="border-r-2 border-[var(--surface)] last:border-r-0" /> : null,
                   )}
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className={cls(r.active ? "text-ink" : "text-muted")}>{r.active ? t("runs.active", { n: r.active }) : `${done}/${r.n_jobs}`}</span>
-                  <span className="tnum text-ink-2">{usd(r.spent_usd)}</span>
+                  {r.spent_usd != null && <span className="tnum text-ink-2">{usd(r.spent_usd)}</span>}
                 </div>
               </div>
             </Link>
