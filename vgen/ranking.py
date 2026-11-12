@@ -91,11 +91,11 @@ def collect(scenario_id: str | None = None, category: str | None = None, task: s
             q = q.where(Run.task == task)
         if scoped:
             q = q.where((Run.owner == None) | (Run.owner == viewer))  # noqa: E711
-        runs = [r for r in s.exec(q) if include_probes or r.kind != "probe"]
+        runs = [r for r in s.exec(q) if r.kind != "experiment" and (include_probes or r.kind != "probe")]
         run_ids = [r.id for r in runs]
         if not run_ids:
             return runs, [], {}, []
-        jobs = list(s.exec(select(Job).where(Job.run_id.in_(run_ids))))
+        jobs = list(s.exec(select(Job).where(Job.run_id.in_(run_ids), Job.origin == "generated")))
         ratings = {r.job_id: r for r in s.exec(select(Rating).where(Rating.run_id.in_(run_ids)))}
         picks = list(s.exec(select(Pick).where(Pick.run_id.in_(run_ids))))
     return runs, jobs, ratings, picks

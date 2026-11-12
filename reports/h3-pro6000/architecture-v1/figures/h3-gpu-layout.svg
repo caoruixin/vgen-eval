@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="878" viewBox="0 0 1240 878">
+<title>同一组八张 PRO6000 分阶段协作</title>
+<rect width="100%" height="100%" fill="white"/>
+<text x="50.0" y="60.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="38" fill="#1d2631" font-weight="600">同一组八张 PRO6000 分阶段协作</text>
+<text x="50.0" y="107.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#526276">启动配置与 rank 布局示意；所有阶段复用相同的八张 GPU</text>
+<rect x="50" y="142" width="1140" height="118" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="189.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">文本与视觉语义编码  TP8</text>
+<text x="72.0" y="231.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">Qwen3-VL 的张量计算分布在 GPU 0 至 7</text>
+<polyline points="620,260 620,301" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="620.0,301.0 614.3,289.3 625.7,289.3" fill="#536b85"/>
+<rect x="50" y="301" width="550" height="210" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="346.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="30" fill="#1d2631" font-weight="600">生成主干  NUMA 节点 0</text>
+<text x="72.0" y="390.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">TP4 分组：rank / GPU 0  1  2  3</text>
+<text x="72.0" y="429.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">同节点内切分层的张量计算</text>
+<rect x="640" y="301" width="550" height="210" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="662.0" y="346.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="30" fill="#1d2631" font-weight="600">生成主干  NUMA 节点 1</text>
+<text x="662.0" y="390.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">TP4 分组：rank / GPU 4  5  6  7</text>
+<text x="662.0" y="429.1" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">同节点内切分层的张量计算</text>
+<text x="84.0" y="482.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="31" fill="#1d2631" font-weight="600">TP4</text>
+<text x="1050.0" y="482.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="31" fill="#1d2631" font-weight="600">TP4</text>
+<polyline points="210,477 1030,477" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="1030.0,477.0 1018.3,482.7 1018.3,471.3" fill="#536b85"/>
+<polygon points="210.0,477.0 221.7,471.3 221.7,482.7" fill="#536b85"/>
+<text x="461.2" y="466.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">Ulysses2 跨分组序列并行</text>
+<text x="50.0" y="563.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="29" fill="#1d2631" font-weight="600">TP4 × Ulysses2 × Ring1 = 8 ranks  ·  共同完成一次生成</text>
+<polyline points="620,578 620,617" fill="none" stroke="#536b85" stroke-width="3"/>
+<polygon points="620.0,617.0 614.3,605.3 625.7,605.3" fill="#536b85"/>
+<rect x="50" y="617" width="1140" height="122" rx="14" fill="#f1f5fa" stroke="#8da1ba" stroke-width="2"/>
+<text x="72.0" y="664.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="32" fill="#1d2631" font-weight="600">视频 VAE  tile 模式与 patch parallel size 8</text>
+<text x="72.0" y="706.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#1d2631">按瓦片分配工作；实际并行程度受瓦片数量和运行分支影响</text>
+<text x="50.0" y="805.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="29" fill="#1d2631" font-weight="600">×8 是 GPU 数量；C2 / C4 是客户端同时存在的请求数。</text>
+<text x="50.0" y="849.0" font-family="Hiragino Sans GB, Noto Sans CJK SC, sans-serif" font-size="27" fill="#526276">未比较其它 rank 映射，也未证明各阶段满载或此拓扑最优。</text>
+</svg>

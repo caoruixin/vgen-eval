@@ -32,7 +32,7 @@ def test_seedance_token_formula(registry):
     assert video_tokens("720p", "16:9", 6) == 130_500
     assert video_tokens("480p", "16:9", 4) == 40_594
     est = estimate_job(registry, "seedance-2.0-mini", {"duration": 5, "resolution": "720p", "ratio": "16:9"})
-    assert est.usd == pytest.approx(tokens * 1.40 / 1e6)
+    assert est.usd == pytest.approx(tokens * 3.50 / 1e6)
 
 
 def test_seedance_adaptive_and_auto_duration_are_worst_case(registry):
@@ -44,12 +44,29 @@ def test_seedance_adaptive_and_auto_duration_are_worst_case(registry):
 def test_seedance_with_video_counts_input_tokens(registry):
     est = estimate_job(registry, "seedance-2.0-mini", {"duration": 4, "resolution": "480p", "ratio": "16:9",
                                                        "has_video_input": True, "input_video_s": 6.8})
-    expected = (video_tokens("480p", "16:9", 4) + video_tokens("480p", "16:9", 6.8)) * 0.84 / 1e6
+    expected = (video_tokens("480p", "16:9", 4) + video_tokens("480p", "16:9", 6.8)) * 2.10 / 1e6
     assert est.usd == pytest.approx(expected)
 
 
 def test_unknown_price(registry):
     assert estimate_job(registry, "not-a-model", {"duration": 5}).usd is None
+
+
+def test_existing_clip_uses_its_original_price_after_catalog_change(registry):
+    from vgen.db import Job
+    from vgen.runs import actual_cost
+
+    job = Job(model="seedance-2.0-mini", effective={"resolution": "720p"},
+              last_detail={"usage": {"totalTokens": 100_000}},
+              provenance={"price_snapshot": {"per_mtok": {
+                  "without_video": {"720p": 1.40}, "with_video": {"720p": .84}}}})
+    assert registry.price(job.model)["per_mtok"]["without_video"]["720p"] == 3.50
+    assert actual_cost(registry, job)[0] == pytest.approx(.14)
+    job.model = "wan3.0"
+    job.effective = {"resolution": "720p", "duration": 5}
+    job.last_detail = {}
+    job.provenance = {"price_snapshot": {"per_second": {"720p": .05}}}
+    assert actual_cost(registry, job)[0] == pytest.approx(.25)
 
 
 def test_quota_conversion(registry):

@@ -15,6 +15,7 @@ from vgen.assets import resolver
 from vgen.catalog.registry import Registry
 from vgen.costs import estimate_job, estimate_judge, quota_to_usd
 from vgen.db import BLOCKED, PENDING, Job, LedgerEntry, Run, session
+from vgen.experiments import spec_fingerprint
 
 
 class PromptIn(BaseModel):
@@ -149,6 +150,10 @@ def create(registry: Registry, req: RunRequest, planned: dict[str, Any], owner: 
                 spec["probe_override"] = True
             jobs.append(Job(
                 run_id=run.id, prompt_key=key, model=item["model"], endpoint=req.endpoint, label=label,
+                case_fingerprint=spec_fingerprint(spec) if spec else None,
+                deployment_id=f"tokenbay-{req.endpoint}-{item['model']}",
+                provenance={"price_snapshot": registry.price(item["model"]),
+                            "price_checked_at": registry.prices.get("checked_at")},
                 status=PENDING if item["ok"] else BLOCKED, spec=spec, payload=item.get("payload") or {},
                 adjustments=(item.get("adjustments") or []) + [{"field": "warning", "requested": None, "used": None,
                                                                  "reason": w} for w in item.get("warnings", [])],
@@ -222,7 +227,7 @@ def settle_actual(registry: Registry, job: Job | None) -> None:
 
 def actual_cost(registry: Registry, job: Job) -> tuple[float | None, str]:
     """Seedance: reported usage tokens × price. Per-second models: billed seconds × price (audio multiplier stays)."""
-    price = registry.price(job.model) or {}
+    price = (job.provenance or {}).get("price_snapshot") or registry.price(job.model) or {}
     eff = job.effective or {}
     detail = job.last_detail or {}
     usage = detail.get("usage") or {}
@@ -233,7 +238,7 @@ def actual_cost(registry: Registry, job: Job) -> tuple[float | None, str]:
         tokens = int(usage["totalTokens"])
         return tokens * rate / 1e6, f"{tokens:,} tokens reported × ${rate:g}/M"
     if "per_second" in price:
-        est = estimate_job(registry, job.model, eff)
+        est = estimate_job(registry, job.model, eff, price=price)
         return est.usd, f"billed seconds × rate ({est.basis})"
     return None, ""
 

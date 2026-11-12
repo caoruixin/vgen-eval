@@ -228,3 +228,16 @@ pre.json {
 video {
   background: #000;
 }
+
+/* Comparison workspace: keep evidence dense and playback prominent. */
+.eval-hero { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1rem 0 .5rem; }
+.eval-eyebrow { font-size: 10px; letter-spacing: .18em; font-weight: 600; color: var(--muted); }
+.eval-case { display: flex; flex-direction: column; gap: .35rem; min-width: 150px; text-align: left; padding: .75rem; border-radius: .6rem; border: 1px solid transparent; color: var(--ink-2); }
+.eval-case:hover { background: var(--surface-2); }
+.eval-case-active { background: var(--surface-3); color: var(--ink); border-color: var(--line); }
+.eval-table { width: 100%; text-align: left; font-size: 12px; font-variant-numeric: tabular-nums; border-collapse: collapse; }
+.eval-table th { color: var(--muted); font-weight: 500; background: var(--surface-2); white-space: nowrap; position: sticky; top: 0; z-index: 1; }
+.eval-table th, .eval-table td { padding: .7rem .8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.eval-table tr:last-child td { border-bottom: none; }
+.eval-notice { border-left: 3px solid var(--v-alibaba); padding: .7rem 1rem; background: var(--surface-2); color: var(--ink-2); border-radius: 0 .5rem .5rem 0; font-size: 12px; line-height: 1.8; }
+@media (max-width: 640px) { .eval-hero { align-items: flex-start; flex-direction: column; } }

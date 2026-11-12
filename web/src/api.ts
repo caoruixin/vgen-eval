@@ -1,3 +1,4 @@
+import type { EvaluationSet, EvaluationDetail, BackfillPlan, BenchmarkSummary, BenchmarkDetail, Deployment } from "./types";
 import type { AppConfig, Asset, Leaderboard, Ledger, ModelRow, Plan, Rating, RunDetail, RunRequest, RunSummary, Scenarios } from "./types";
 
 declare global {
@@ -59,6 +60,11 @@ async function request<T>(method: string, path: string, body?: unknown, form?: F
 }
 
 export const api = {
+  evaluations: () => request<EvaluationSet[]>("GET", "/api/evaluations"),
+  evaluation: (dataset: string, key: string) => request<EvaluationDetail>("GET", `/api/evaluations/${encodeURIComponent(dataset)}/cases/${encodeURIComponent(key)}`),
+  backfill: (dataset: string) => request<BackfillPlan>("GET", `/api/evaluations/${encodeURIComponent(dataset)}/backfill-plan`),
+  benchmarks: () => request<{ experiments: BenchmarkSummary[]; deployments: Deployment[] }>("GET", "/api/benchmarks"),
+  benchmark: (id: string) => request<BenchmarkDetail>("GET", `/api/benchmarks/${encodeURIComponent(id)}`),
   config: () => request<AppConfig>("GET", "/api/config"),
   models: () => request<{ models: ModelRow[]; unregistered: Record<string, string[]>; live_checked_at: number | null }>("GET", "/api/models"),
   refreshModels: () => request<{ ok: boolean }>("POST", "/api/models/refresh", {}),

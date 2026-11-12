@@ -1,4 +1,4 @@
-# Public tokenbay.com prices (USD), scraped 2026-10-29 from https://www.tokenbay.com/models/<id>.
+# Public tokenbay.com prices (USD); backfill model prices rechecked 2026-11-08 at https://www.tokenbay.com/models/<id>.
 # per_second: USD per output second by resolution tier.
 # per_mtok: USD per million video tokens; tokens = W x H x (fps x seconds + 1) / 1024 (Seedance formula,
 #   +1 frame as reported by the gateway).
@@ -7,7 +7,7 @@
 # The real charge is the task's `quota`; quota_per_usd is calibrated by `vgen probe`.
 
 currency: USD
-checked_at: "2026-10-29"
+checked_at: "2026-11-08"
 quota_per_usd: 500000
 quota_calibrated: false
 
@@ -31,9 +31,8 @@ models:
       with_video: {480p: 3.30, 720p: 3.30}
   seedance-2.0-mini:
     per_mtok:
-      without_video: {480p: 1.40, 720p: 1.40}
-      with_video: {480p: 0.84, 720p: 0.84}
-    promo: "60% off (list 3.50 / 2.10)"
+      without_video: {480p: 3.50, 720p: 3.50}
+      with_video: {480p: 2.10, 720p: 2.10}
   seedance-2.5:
     per_mtok:
       without_video: {480p: 10.70, 720p: 10.70}

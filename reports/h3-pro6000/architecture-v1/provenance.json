@@ -1,0 +1,38 @@
+{
+  "experiment_id": "h3-pro6000-2026-11-07",
+  "revision": "architecture-2026-11-08",
+  "measured_date": "2026-11-07",
+  "revision_date": "2026-11-08",
+  "change": "Add H3-Base inference, eight-GPU mapping, measurement boundaries and experiment-stage glossary",
+  "no_new_generation": true,
+  "no_new_benchmark_samples": true,
+  "turbo_activation_verified": false,
+  "model_commit": "42ed227ee7df40d41602854ae760620d6eb651fe",
+  "runtime_commit": "5917730a4b02aedb44d374173cdc1b10484ccd52",
+  "evidence": [
+    {
+      "archive_path": "config/baseline.json",
+      "sha256": "de50754ab4d725943ba9973f8321ad271200be5d7562516837844655e6aceb14"
+    },
+    {
+      "archive_path": "runs/self/environment/runtime-contract.json",
+      "sha256": "4f949f16f5573cb993f728ad02faaf9b3acaec348b6a179bd9d95d8d7a79b0f7"
+    },
+    {
+      "archive_path": "runs/self/environment/rank-layout.txt",
+      "sha256": "ad19c793b1c2936c6e3661b62efb7b26308eb8f801139e2ba703753a898a8573"
+    },
+    {
+      "archive_path": "runs/self/environment/stage-metric-source.json",
+      "sha256": "bfcfcb6b01a51dbc30fc377011ef6444dfb94560d4049f4fb8c5288203da2bea"
+    },
+    {
+      "archive_path": "runs/self/environment/turbo-activation-review.json",
+      "sha256": "081109377d14cdedeacea9ad17a87c88b0d24beb6eba6a66c2e568941be4f79d"
+    },
+    {
+      "archive_path": "reports/data/all-request-attempts.csv",
+      "sha256": "5f92f553852d36bf0608f53019eb90b6de3016bdcc29c387535b92787ca0f6f3"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import SyncBar from "../components/SyncBar";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -69,69 +70,6 @@ function KeyPanel({ runId, needsKey }: { runId: string; needsKey: boolean }) {
   );
 }
 
-function SyncBar({ videos, duration, muted, setMuted, loop, setLoop }: { videos: () => HTMLVideoElement[]; duration: number; muted: boolean; setMuted: (m: boolean) => void; loop: boolean; setLoop: (l: boolean) => void }) {
-  const { t } = useI18n();
-  const [time, setTime] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const loopRef = useRef(loop);
-  loopRef.current = loop;
-  const groupPlaying = useRef(false);
-  useEffect(() => {
-    let raf = 0;
-    const tick = () => {
-      const vs = videos();
-      // the longest clip is the clock; shorter clips hold their last frame until the group restarts
-      const master = vs.reduce<HTMLVideoElement | undefined>((a, v) => (!a || (v.duration || 0) > (a.duration || 0) ? v : a), undefined);
-      if (master) setTime(master.currentTime);
-      const anyPlaying = vs.some((v) => !v.paused && !v.ended);
-      if (master && groupPlaying.current && loopRef.current && master.ended) {
-        vs.forEach((v) => {
-          v.currentTime = 0;
-          void v.play().catch(() => undefined);
-        });
-      } else if (groupPlaying.current && !anyPlaying && !loopRef.current) {
-        groupPlaying.current = false;
-      }
-      setPlaying(anyPlaying || (groupPlaying.current && loopRef.current));
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [videos]);
-  const seek = (s: number) => videos().forEach((v) => (v.currentTime = Math.min(s, Math.max(0, (v.duration || s) - 0.05))));
-  const playAll = () => {
-    const vs = videos();
-    const master = vs.reduce<HTMLVideoElement | undefined>((a, v) => (!a || (v.duration || 0) > (a.duration || 0) ? v : a), undefined);
-    const at = master && !master.ended ? master.currentTime : 0;
-    groupPlaying.current = true;
-    vs.forEach((v) => {
-      v.currentTime = Math.min(at, Math.max(0, (v.duration || at) - 0.05));
-      void v.play().catch(() => undefined);
-    });
-  };
-  const pauseAll = () => {
-    groupPlaying.current = false;
-    videos().forEach((v) => v.pause());
-  };
-  return (
-    <div className="card sticky top-[52px] z-20 flex flex-wrap items-center gap-3 px-3 py-2">
-      <button className="btn btn-primary" onClick={() => (playing ? pauseAll() : playAll())}>
-        {playing ? `❚❚ ${t("board.pause")}` : `▶ ${t("board.play")}`}
-      </button>
-      <button className="btn" onClick={() => { seek(0); }}>⏮</button>
-      <input type="range" min={0} max={Math.max(1, duration)} step={0.04} value={Math.min(time, duration)} onChange={(e) => seek(Number(e.target.value))} className="min-w-[200px] flex-1" aria-label="scrub" />
-      <span className="tnum w-24 text-xs text-ink-2">
-        {time.toFixed(1)}s / {duration.toFixed(1)}s
-      </span>
-      <label className="flex items-center gap-1.5 text-xs">
-        <input type="checkbox" checked={loop} onChange={(e) => setLoop(e.target.checked)} /> {t("board.loop")}
-      </label>
-      <button className="btn" onClick={() => setMuted(!muted)}>
-        {muted ? `🔇 ${t("board.mute")}` : `🔊 ${t("board.sound")}`}
-      </button>
-    </div>
-  );
-}
 
 export default function RunBoardPage() {
   const { runId = "" } = useParams();
@@ -149,7 +87,7 @@ export default function RunBoardPage() {
     },
   });
   const [blind, setBlind] = useState(false);
-  const [muted, setMuted] = useState(true);
+  const [audioId, setAudioId] = useState("");
   const [loop, setLoop] = useState(true);
   const [promptKey, setPromptKey] = useState<string>("");
   const [rerunOpen, setRerunOpen] = useState(false);
@@ -183,8 +121,8 @@ export default function RunBoardPage() {
   const prompts = data?.run.prompts ?? [];
   const current = promptKey || prompts[0]?.key || "";
   useEffect(() => {
-    if (blind) setMuted(true);
-  }, [blind]);
+    setAudioId("");
+  }, [blind, current]);
 
   const jobs = useMemo(() => (data?.jobs ?? []).filter((j) => j.prompt_key === current).sort((a, b) => (blind ? a.label.localeCompare(b.label) : a.model_label.localeCompare(b.model_label))), [data, current, blind]);
   const register = useCallback((id: string, el: HTMLVideoElement | null) => {
@@ -232,7 +170,7 @@ export default function RunBoardPage() {
             <input type="checkbox" className="sr-only" checked={blind} onChange={(e) => setBlind(e.target.checked)} />
             {blind ? `👁 ${t("board.reveal")}` : `🙈 ${t("board.blind")}`}
           </label>
-          <button className="btn" onClick={() => setRerunOpen(true)}>
+          <button className="btn" disabled={run.kind === "experiment"} onClick={() => setRerunOpen(true)}>
             ↻ {t("board.rerun")}
           </button>
           <a className="btn" href={`/api/runs/${run.id}/export?format=csv`}>
@@ -261,7 +199,7 @@ export default function RunBoardPage() {
                 {t("board.delete_confirm")}
               </button>
             ) : (
-              <button className="btn" disabled={data.active > 0} onClick={() => setDeleteArmed(true)}>
+              <button className="btn" disabled={data.active > 0 || run.kind === "experiment"} onClick={() => setDeleteArmed(true)}>
                 {t("board.delete")}
               </button>
             ))}
@@ -294,7 +232,7 @@ export default function RunBoardPage() {
         </div>
       )}
 
-      <SyncBar videos={videos} duration={maxDur} muted={muted} setMuted={setMuted} loop={loop} setLoop={setLoop} />
+      <SyncBar key={ids} videos={videos} duration={maxDur} audioId={audioId} setAudioId={setAudioId} audioOptions={jobs.filter(j => j.status === "succeeded").map(j => ({ id: j.id, label: blind ? j.label : j.model_label }))} loop={loop} setLoop={setLoop} />
 
       <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
         {jobs.map((j) => (
@@ -307,7 +245,8 @@ export default function RunBoardPage() {
             onPick={() => pick(j)}
             registerVideo={register}
             onSeek={seekAll}
-            muted={muted}
+            muted={j.id !== audioId}
+            onSound={setAudioId}
             judgeEnabled={run.judge || Boolean(j.judge_status)}
             editable={data.mine}
           />
