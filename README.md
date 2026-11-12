@@ -136,8 +136,8 @@ experimental modes are switched on only after they pass.
 
 `VGEN_PUBLIC=1` turns the app into a demo you can share. The server holds **no** Tokenbay key.
 
-- Your existing runs become read-only examples; probe runs are hidden. Visitors can watch, compare and export
-  them, or re-run one with their own key.
+- Your existing runs become read-only examples; probe runs are hidden from visitors. Visitors can watch, compare
+  and export them, or re-run one with their own key.
 - **To generate, a visitor enters their own Tokenbay API key** in the cost dialog.
   - It is checked with a free model-list call, then used for every call of that run (submit, poll, download, judge).
   - The server keeps it in memory only, until the run is finished. It is never written to the database, logs or
@@ -154,9 +154,55 @@ experimental modes are switched on only after they pass.
 | `VGEN_PUBLIC` | `1` = hosted demo. Only `TOKENBAY_BASE_URL` is read from the env file; a key in it is ignored |
 | `VGEN_ALLOWED_HOSTS` | extra host names to accept, e.g. `video.llm-pro.cn` |
 | `VGEN_PUBLIC_MAX_ACTIVE_RUNS` | runs one visitor may have in progress (default 2) |
+| `VGEN_ADMIN_SECRET_HASH` | optional. Turns on admin sign-in at `/admin`; paste the line printed by `uv run vgen admin-hash`. Unset = sign-in disabled. Ignored on a local instance |
 
 To try it locally without spending, run `VGEN_PUBLIC=1 uv run vgen serve --mock --port 8766`. The mock rejects
 keys that start with `sk-bad`.
+
+### Admin view
+
+The hosted site has two views, and the server decides which one a request gets. Visitors get the **public view**:
+every response is built from an allowlist of fields, so anything not listed stays private. The site owner signs in
+at the hidden page `/admin` and then also sees diagnostics, each block tagged "admin only". A local instance
+(without `VGEN_PUBLIC=1`) has no sign-in and shows everything, as before.
+
+Only the admin sees:
+
+- the gateway's raw error text and error code on failed clips, raw request and response JSON, and task ids
+- the spend on example runs, run notes and the operator's probe runs
+- probe results (`GET /api/probe`) and the backfill plan, both of which answer 403 to visitors
+- in the H3 benchmark: the account-level cost figures, raw attempt records, raw JSON and the CSV/JSON export
+
+A failed clip is not hidden from visitors. It keeps its place in the comparison with a plain reason, for example
+"Not generated: a content safety check declined this prompt or input image.", so a model that returned nothing
+stays visible. This holds for a visitor's own clips too, and exports carry the category instead of the raw reason.
+
+Admin is extra visibility and nothing else. Signing in does not allow editing example runs or spending, and does
+not reveal other visitors' private runs or uploads. Features that need the operator's Tokenbay key (settings,
+model refresh, paid probes, the spending ledger) stay local-only, and the operator key is still never placed on
+the server.
+
+To set it up, choose a secret (it is a password of your own, not a Tokenbay key) and hash it:
+
+```bash
+uv run vgen admin-hash   # asks for the secret twice (16 to 1024 characters, never echoed)
+                         # prints one line: VGEN_ADMIN_SECRET_HASH=scrypt:...
+```
+
+Put that line in the server's `/etc/vgen/vgen.env` and restart the service. Only the hash is stored. If the variable
+is unset, or is not a valid hash (the server logs a warning), sign-in is disabled and nobody is admin on the hosted
+site. `deploy/provision.sh` copies `deploy/vgen.env.example` to that path only when the file is missing, so an
+existing server needs the line added by hand.
+
+Behaviour to know:
+
+- Sign-in needs https. Over plain http it is refused, except on localhost.
+- A session lasts 12 hours and lives in the server's memory, so restarting the service signs the admin out. The
+  server keeps at most 8 sessions; a ninth sign-in ends the one closest to expiry.
+- A wrong secret answers 401. Five wrong secrets from one address within 15 minutes lock that address out for the
+  rest of that window (at most 15 minutes; the answer is 429 with a `Retry-After` header). Other addresses are
+  not affected.
+- To rotate the secret, run `uv run vgen admin-hash` again, replace the line and restart the service.
 
 ### Deploying
 
@@ -174,7 +220,7 @@ deploy/upload-data.sh    # one-off: publish the local data/ (runs and clips) as 
 ## Development
 
 ```bash
-make test         # 56 tests: adapters, costs, gateway errors, limiter, analysis on synthetic clips, mock end-to-end
+make test         # 188 tests: adapters, costs, gateway errors, limiter, analysis on synthetic clips, public and admin views, mock end-to-end
 make dev          # backend + Vite dev server (http://127.0.0.1:5173, proxies /api)
 uv run vgen models   # which registered models are live on the gateway
 ```
@@ -217,6 +263,16 @@ adds H3 inference stages, GPU mapping and measurement boundaries while preservin
   deployment name means eight GPUs, not eight inference steps. Other seeds and phases remain selectable. Group play, seek and loop
   work across sources; the sound selector enables only one clip. Blind mode is visual anonymity, not an access
   control boundary. It does not modify or reveal the original offline A/B review files.
+- Every group on the Video results page carries a source label: Tokenbay, self-hosted (with its GPU count and
+  model) or the vendor's official API, plus "not on Tokenbay" for a model the Tokenbay registry does not list. The
+  collapsible **How to read this comparison** panel lists what is identical (prompt bytes, input image hash, any
+  setting with one value), what differs (output size, frame rate, clip length, seed, inference steps, how latency
+  and cost were measured) and what was not measured (human ratings, AI judge, single clips, unverified Turbo).
+  All of it is computed from the clips on screen, and the page places clips side by side without scoring or
+  ranking them. Blind mode persists across scenarios and can be linked with `?blind=1`.
+- On H3 Benchmark, visitors see the platform cards, latency and throughput, hardware and settings, the estimated
+  cost per clip, a trimmed attempts table and the report download. The account-level cost figures, raw attempt
+  records, raw JSON and the CSV/JSON export are admin-only on the hosted site (see [Admin view](#admin-view)).
 - Imported clips are terminal archive records. They cannot be resubmitted, polled, deleted as runs or sent to the
   AI judge. Local human ratings are supported; hosted showcase results remain read-only. Imported costs never
   enter the Tokenbay spending ledger, and imported experiments are excluded from the existing leaderboard.
@@ -239,11 +295,12 @@ The full import adds 10 shared cases, 89 attempt records and 87 playable origina
 idempotent; changed content under an existing experiment id is rejected. An old database receives a consistent
 `app.db.pre-migration-*.bak` backup before additive schema migration. The source archive is never modified.
 
-After import, Scenarios contains two H3 input packs. **View backfill plan** computes missing Tokenbay combinations
-without submitting them. The 2026-11-08 repository catalog yields 66 combinations, approximately $42.90, without
-AI judging. This is an offline estimate, not a price guarantee or a spending authorization. Existing successful
-results and previously attempted combinations are excluded from the ready list; review previous attempts before
-explicitly generating again. New results join the comparison through their input fingerprint, not their title.
+After import, Scenarios contains two H3 input packs. **View backfill plan** (admin-only on the hosted site) computes
+missing Tokenbay combinations without submitting them. The 2026-11-08 repository catalog yields 66 combinations,
+approximately $42.90, without AI judging. This is an offline estimate, not a price guarantee or a spending
+authorization. Existing successful results and previously attempted combinations are excluded from the ready
+list; review previous attempts before explicitly generating again. New results join the comparison through their
+input fingerprint, not their title.
 The earlier $40.58 estimate included a Seedance Mini promotion that has ended. Each new job saves its price
 snapshot so a later catalog update does not change that clip's recorded pricing basis.
 
@@ -294,4 +351,5 @@ uv run vgen package-experiment experiments/h3-pro6000.json --output /tmp/h3-publ
 Read-only APIs: `GET /api/evaluations`, `GET /api/evaluations/{dataset}/cases/{key}`,
 `GET /api/evaluations/{dataset}/backfill-plan`, `GET /api/benchmarks`,
 `GET /api/benchmarks/{experiment}`, and `GET /api/benchmarks/{experiment}/export?format=json|csv`.
-Generation remains on the existing budgeted Tokenbay APIs and is never triggered by these read endpoints.
+Generation remains on the existing budgeted Tokenbay APIs and is never triggered by these read endpoints. On the
+hosted site the backfill plan and the benchmark export answer 403 unless you are signed in as admin.
