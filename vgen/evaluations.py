@@ -11,7 +11,7 @@ from fastapi import HTTPException, Request
 from fastapi.responses import FileResponse, Response
 from sqlmodel import select
 
-from vgen import runs
+from vgen import public_view, runs
 from vgen.db import BenchmarkAttempt, Deployment, EvaluationCase, Experiment, Job, Rating, Run, session
 from vgen.experiments import case_fingerprint, spec_fingerprint
 
@@ -81,7 +81,9 @@ def imported_packs(registry) -> list[dict]:
     return packs
 
 
-def register_routes(app, state, viewer, job_out, budget_view):
+def register_routes(app, state, viewer, job_out, budget_view, is_admin, admin_only):
+    """`is_admin` decides between the full objects and their public projection (see vgen.public_view)."""
+
     def snapshot(request):
         return datasets(state(request).settings.public, viewer(request))
 
@@ -101,6 +103,7 @@ def register_routes(app, state, viewer, job_out, budget_view):
     @app.get("/api/evaluations/{dataset_id}/cases/{case_key}")
     def evaluation_case(request: Request, dataset_id: str, case_key: str):
         st = state(request)
+        admin = is_admin(request)
         dataset, case, jobs, run_map = find_case(request, dataset_id, case_key)
         matching = [j for j in jobs if (j.case_fingerprint or spec_fingerprint(j.spec)) == case["fingerprint"]]
         with session() as s:
@@ -112,10 +115,15 @@ def register_routes(app, state, viewer, job_out, budget_view):
             dep = deployments.get(deploy_id)
             label = dep.label if dep else (st.registry.models[j.model].label if j.model in st.registry.models else j.model)
             group = groups.setdefault(deploy_id, {"id": deploy_id, "model": j.model, "label": label,
-                "provider": dep.provider if dep else "tokenbay", "samples": []})
+                "provider": dep.provider if dep else "tokenbay",
+                # what the clips ran on (Tokenbay-served models have no entry): same reduced view for every viewer
+                "hardware": public_view.public_hardware(dep.hardware) if dep else {}, "samples": []})
             run = run_map[j.run_id]
-            group["samples"].append({**job_out(st, j), "editable": not st.settings.public or (run.owner is not None and run.owner == viewer(request)),
-                                     "rating": ratings.get(j.id)})
+            editable = not st.settings.public or (run.owner is not None and run.owner == viewer(request))
+            rating = ratings.get(j.id)
+            if rating is not None and not (admin or editable):    # someone else's rating: scores without the comment
+                rating = public_view.public_rating(rating)
+            group["samples"].append({**job_out(st, j, admin), "editable": editable, "rating": rating})
         for group in groups.values():
             group["samples"].sort(key=lambda j: (j["status"] != "succeeded", not j["provenance"].get("preferred"), -j["created_at"], j["id"]))
             group["default_job_id"] = group["samples"][0]["id"]
@@ -126,12 +134,14 @@ def register_routes(app, state, viewer, job_out, budget_view):
             status = "available" if any(j.status == "succeeded" for j in mine) else (
                 "failed" if mine else "missing" if state_name == "enabled" else state_name)
             coverage.append({"model": m.id, "label": m.label, "status": status, "task_state": state_name,
-                             "reason": m.probe.get("unavailable") or ""})
+                             # the stored reason quotes the gateway's error text
+                             "reason": (m.probe.get("unavailable") or "") if admin else ""})
         return {"dataset": {"id": dataset["id"], "title": dataset["title"]}, "case": case,
                 "groups": list(groups.values()), "coverage": coverage}
 
     @app.get("/api/evaluations/{dataset_id}/backfill-plan")
     def backfill_plan(request: Request, dataset_id: str):
+        admin_only(request)                # an operator planning tool: request payloads and probe-derived reasons
         st = state(request)
         all_sets, jobs, _ = snapshot(request)
         dataset = all_sets.get(dataset_id)
@@ -162,10 +172,14 @@ def register_routes(app, state, viewer, job_out, budget_view):
         with session() as s:
             experiments = list(s.exec(select(Experiment).order_by(Experiment.date.desc())))
             deployments = list(s.exec(select(Deployment)))
-        return {"experiments": [{**e.model_dump(exclude={"summary", "artifacts", "config"}),
-                "n_attempts": sum(p["n_submitted_attempts"] for p in e.summary["phases"]),
-                "n_videos": sum(p["n_technical_valid"] for p in e.summary["phases"])} for e in experiments],
-                "deployments": [d.model_dump() for d in deployments]}
+        rows = [{**e.model_dump(exclude={"summary", "artifacts", "config"}),
+                 "n_attempts": sum(p["n_submitted_attempts"] for p in e.summary["phases"]),
+                 "n_videos": sum(p["n_technical_valid"] for p in e.summary["phases"])} for e in experiments]
+        shown = [d.model_dump() for d in deployments]
+        if not is_admin(request):
+            rows = [public_view.public_experiment_row(r) for r in rows]
+            shown = [public_view.public_deployment(d) for d in shown]
+        return {"experiments": rows, "deployments": shown}
 
     def experiment_or_404(experiment_id):
         with session() as s:
@@ -184,10 +198,12 @@ def register_routes(app, state, viewer, job_out, budget_view):
 
     @app.get("/api/benchmarks/{experiment_id}")
     def benchmark(request: Request, experiment_id: str):
-        return experiment_detail(experiment_or_404(experiment_id))
+        detail = experiment_detail(experiment_or_404(experiment_id))
+        return detail if is_admin(request) else public_view.public_experiment(detail)
 
     @app.get("/api/benchmarks/{experiment_id}/export")
     def export_benchmark(request: Request, experiment_id: str, format: str = "json"):
+        admin_only(request)                # the raw attempt records, account figures included
         d = experiment_detail(experiment_or_404(experiment_id))
         if format == "json":
             body = json.dumps(d, ensure_ascii=False, indent=2)
@@ -209,10 +225,14 @@ def register_routes(app, state, viewer, job_out, budget_view):
     def artifact(request: Request, experiment_id: str, name: str):
         e = experiment_or_404(experiment_id)
         path = e.artifacts.get(name)
-        if not path or not Path(path).is_file():
+        # the report and its figures are for everyone; raw records (attempts.csv, provenance, figure data) are not
+        open_to_all = public_view.is_public_artifact(name)
+        if not path or not Path(path).is_file() or not (open_to_all or is_admin(request)):
             raise HTTPException(404, "artifact not found")
+        # on the hosted site an admin-only file must never be kept by a browser or proxy
+        cache = "private, no-store" if state(request).settings.public and not open_to_all else "no-cache"
         return FileResponse(path, filename=Path(name).name,
                             content_disposition_type="inline" if name == "report.html" else "attachment",
                             headers={"Content-Security-Policy": "default-src 'none'; script-src 'none'; img-src data:; style-src 'unsafe-inline'; "
                                      "base-uri 'none'; form-action 'none'; object-src 'none'",
-                                     "X-Content-Type-Options": "nosniff", "Cache-Control": "no-cache"})
+                                     "X-Content-Type-Options": "nosniff", "Cache-Control": cache})

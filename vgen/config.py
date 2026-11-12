@@ -6,6 +6,8 @@ set in the process environment, which wins over the file.
 
 Public mode (VGEN_PUBLIC=1) is for hosting the app for other people: the operator's
 key is never loaded, and visitors generate with a Tokenbay key they enter themselves.
+VGEN_ADMIN_SECRET_HASH (from `vgen admin-hash`) lets the operator sign in there to see
+diagnostics; it is a hash of a secret of their choosing and has nothing to do with Tokenbay.
 """
 
 from __future__ import annotations
@@ -61,6 +63,7 @@ class Settings:
     public: bool = False
     allowed_hosts: tuple[str, ...] = ()
     public_max_active_runs: int = 2
+    admin_secret_hash: str = field(default="", repr=False)   # hosted mode: scrypt hash; empty = no admin sign-in
 
     @property
     def db_path(self) -> Path:
@@ -155,6 +158,7 @@ def load_settings(env_file: Path | None = None) -> Settings:
         public=public,
         allowed_hosts=tuple(h.strip() for h in (vgen("VGEN_ALLOWED_HOSTS") or "").split(",") if h.strip()),
         public_max_active_runs=max(1, int(_float(vgen("VGEN_PUBLIC_MAX_ACTIVE_RUNS"), 2))),
+        admin_secret_hash=(vgen("VGEN_ADMIN_SECRET_HASH") or "").strip(),
     )
 
 

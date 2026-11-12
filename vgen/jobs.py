@@ -18,8 +18,8 @@ from vgen.analysis import analyze_video
 from vgen.assets import get_asset, resolver
 from vgen.catalog.registry import Registry
 from vgen.config import Settings
-from vgen.db import (ANALYZING, DOWNLOADING, FAILED, IN_PROGRESS, PENDING, QUEUED, STOPPED, SUBMIT_UNKNOWN,
-                     SUBMITTING, SUCCEEDED, TIMEOUT, Job, Run, session, update_job)
+from vgen.db import (ANALYZING, DOWNLOADING, FAILED, IN_PROGRESS, INTERNAL_ERROR_CODE, PENDING, QUEUED, STOPPED,
+                     SUBMIT_UNKNOWN, SUBMITTING, SUCCEEDED, TIMEOUT, Job, Run, session)
 from vgen.gateway import AUTH, BUSINESS, NOT_FOUND, SAFE_TO_RESEND, Gateway, GatewayError
 from vgen.judge import judge_clip
 from vgen.keys import KeyRing
@@ -29,6 +29,17 @@ log = logging.getLogger("vgen.jobs")
 
 MAX_SAFE_RESENDS = 4
 MAX_DOWNLOAD_ATTEMPTS = 3
+
+
+def update_job(job_id: str, **fields) -> Job | None:
+    """db.update_job for the engine. The marker for this app's own failures (INTERNAL_ERROR_CODE) must not outlive
+    the reason it was written with: when a step writes or clears the reason without naming a code, a leftover
+    marker is cleared as well, so a later gateway message is never blamed on this site."""
+    if "fail_reason" in fields and "error_code" not in fields:
+        current = db.get_job(job_id)
+        if current is not None and current.error_code == INTERNAL_ERROR_CODE:
+            fields["error_code"] = ""
+    return db.update_job(job_id, **fields)
 
 
 def field(d: dict, *names: str):
@@ -90,6 +101,7 @@ class JobEngine:
                 if job.status == SUBMITTING:
                     job.status = SUBMIT_UNKNOWN
                     job.fail_reason = "app stopped while submitting; the task may exist and may be billed"
+                    job.error_code = INTERNAL_ERROR_CODE
                 elif job.status in (QUEUED, IN_PROGRESS, DOWNLOADING):
                     job.status = IN_PROGRESS if job.task_id else SUBMIT_UNKNOWN
                     job.next_poll_at = now
@@ -191,7 +203,7 @@ class JobEngine:
             await coro
         except Exception as exc:  # pragma: no cover - defensive
             log.exception("job %s step failed", job_id)
-            update_job(job_id, fail_reason=f"internal error: {exc!r}")
+            update_job(job_id, fail_reason=f"internal error: {exc!r}", error_code=INTERNAL_ERROR_CODE)
         finally:
             self._busy.discard(job_id)
             self._wake.set()
@@ -227,7 +239,7 @@ class JobEngine:
         if gw is None:
             if not self.owner(job.run_id):
                 update_job(job_id, status=FAILED, fail_reason=f"endpoint '{job.endpoint}' is not enabled",
-                           done_at=time.time())
+                           error_code=INTERNAL_ERROR_CODE, done_at=time.time())
             return
         cap = self.settings.hard_cap_usd
         visitor_pays = bool(self.owner(job.run_id))

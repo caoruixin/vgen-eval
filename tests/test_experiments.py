@@ -17,12 +17,15 @@ from vgen.api import create_app
 from vgen.catalog.registry import Registry
 from vgen.db import BenchmarkAttempt, EvaluationCase, Experiment, Job, LedgerEntry, Run, session
 from vgen.experiments import case_fingerprint, import_prepared, package_experiment, prepare, spec_fingerprint
+from vgen import public_view
 from vgen.report_revisions import prepare_report, publish_report
-from vgen.security import LAUNCH_TOKEN
+from vgen.security import ADMIN_COOKIE, LAUNCH_TOKEN, hash_admin_secret
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "experiments/h3-pro6000.json"
 H = {"x-vgen-token": LAUNCH_TOKEN}
+EXPERIMENT = "h3-pro6000-2026-11-07"
+ADMIN_SECRET = "an admin secret for the archive tests"
 
 
 @pytest.fixture(scope="module")
@@ -347,3 +350,137 @@ def test_report_publication_rejects_damage_source_mismatch_and_conflicts(importe
     (stored / "report.html").write_text("damaged after publication")
     with pytest.raises(ValueError, match="published report verification failed"):
         publish_report(p, imported.data_dir)
+
+
+def test_public_benchmark_hides_account_figures_and_raw_records(imported):
+    with session() as s:
+        experiment = s.get(Experiment, EXPERIMENT)
+        attempts = list(s.exec(select(BenchmarkAttempt)))
+        stored_deployments = {d.id: d.model_dump() for d in s.exec(select(db.Deployment))}
+        costs, scenes, config = experiment.summary["costs"], experiment.summary["scenes"], experiment.config
+    # values that only the operator should see, taken from the stored archive
+    private_values = {str(costs["instance_id"]), costs["release_evidence"], costs["vast_usage_final_evidence"],
+                      config["model_path"], config["turbo"]["path"], experiment.content_sha256}
+    private_values |= {a.request_id for a in attempts}
+    for a in attempts:
+        private_values |= {str(a.metrics[k]) for k in ("task_id", "ledger_reservation_id", "record_path", "video_path",
+                                                       "config_sha256", "harness_sha256", "sha256", "error")
+                           if a.metrics.get(k)}
+    private_values |= {str(sc["official_task_id"]) for sc in scenes if sc.get("official_task_id")}
+    private_names = ("instance_id", "credit_before_usd", "credit_after_usd", "vast_observed_credit_decrease_usd",
+                     "vast_posted_usage_display_total_usd", "gpu_rate_time_estimate_usd", "final_invoice_status",
+                     "report_markdown", "ledger_reservation_id", "api_reserved_usd", "actual_settled_cost_usd",
+                     "request_id", "task_id", "record_path", "video_path", "model_path", "prior_attempt_file",
+                     "config_sha256", "harness_sha256", "prompt_sha256", "content_sha256", "limits", "versions_json",
+                     "usage_json", "/data/models", "runs/control", "attempts.csv", "provenance.json")
+    assert len(private_values) > 150 and all(len(v) >= 6 for v in private_values)
+
+    settings = replace(imported, public=True, admin_secret_hash=hash_admin_secret(ADMIN_SECRET))
+    with TestClient(create_app(settings), base_url="https://testserver") as c:
+        c.get("/")
+        listing = c.get("/api/benchmarks")
+        detail = c.get(f"/api/benchmarks/{EXPERIMENT}")
+        cases = [c.get(f"/api/evaluations/h3-v1/cases/{key}") for key in ("T01", "F02")]
+        for r in (listing, detail, *cases, c.get("/api/evaluations"), c.get("/api/runs"), c.get("/api/scenarios")):
+            assert r.status_code == 200 and r.headers["cache-control"] == "no-store"
+            for value in private_values:
+                assert value not in r.text, (str(r.url), value)
+        for name in private_names:
+            assert name not in listing.text and name not in detail.text, name
+
+        rows = listing.json()
+        assert [set(e) for e in rows["experiments"]] == [set(public_view.PUBLIC_EXPERIMENT_KEYS)]
+        assert rows["experiments"][0]["n_attempts"] == 89 and rows["experiments"][0]["n_videos"] == 87
+        by_provider = {d["provider"]: d for d in rows["deployments"]}
+        assert set(by_provider) == {"self", "official_api"}
+        assert all(set(d) == {"id", "model", "label", "provider", "timing_scope", "hardware"} for d in rows["deployments"])
+        assert by_provider["self"]["hardware"] == {"gpu": "RTX PRO 6000 Blackwell Server Edition", "gpu_count": 8,
+                                                   "memory_gb_per_gpu": 96}
+        assert by_provider["official_api"]["hardware"] == {}
+
+        b = detail.json()
+        assert set(b) == {"id", "title", "date", "dataset_id", "deployment_ids", "config", "summary", "deployments",
+                          "artifacts", "attempts"}
+        # what a customer needs is still there: settings, latency, throughput and the estimated cost per clip
+        assert b["config"]["num_inference_steps"] == 50 and b["config"]["model_revision"] and b["config"]["gpu_count"] == 8
+        assert set(b["config"]) <= {*public_view.PUBLIC_BENCH_CONFIG_KEYS, "turbo"}
+        assert b["config"]["turbo"]["num_inference_steps"] == 8 and "path" not in b["config"]["turbo"]
+        assert set(b["summary"]) == {"groups", "phases", "scenes", "telemetry", "costs", "utilization"}
+        baseline = next(p for p in b["summary"]["phases"] if p["phase"] == "baseline")
+        assert baseline["throughput_success_per_hour"] == pytest.approx(19.7445799164)
+        assert baseline["cost_per_technical_success_usd"] == pytest.approx(.70933671999)
+        assert len(b["summary"]["groups"]) == 16 and b["summary"]["groups"][0]["e2e_p50_s"] > 0
+        assert b["summary"]["telemetry"]["phase_metrics"][0]["server_inference_p50_s"] > 0
+        assert b["summary"]["utilization"][0]["gpu_disk_cost_per_success_usd"] > 0
+        assert set(b["summary"]["costs"]) == set(public_view.PUBLIC_COSTS_KEYS)
+        assert b["summary"]["costs"]["api_usage_price_estimate_usd"] == 4.0
+        assert len(b["summary"]["scenes"]) == 10
+        assert all(set(sc) <= set(public_view.PUBLIC_SCENE_KEYS) and sc["baseline_p50_s"] > 0 and sc["official_e2e_s"] > 0
+                   for sc in b["summary"]["scenes"])
+        assert len(b["attempts"]) == 89
+        assert all(set(a) == {*public_view.PUBLIC_ATTEMPT_KEYS, "metrics"} for a in b["attempts"])
+        assert all(set(a["metrics"]) == set(public_view.PUBLIC_ATTEMPT_METRIC_KEYS) for a in b["attempts"])
+        valid = [a for a in b["attempts"] if a["metrics"]["technical_valid"]]
+        assert len(valid) == 87 and all(a["job_id"] and a["metrics"]["e2e_seconds"] > 0 for a in valid)
+        assert all(a["metrics"]["estimated_cost_usd"] > 0 for a in valid if a["metrics"]["provider"] == "self"
+                   and a["metrics"]["phase"] == "baseline")
+        assert set(b["artifacts"]) == {"report.md", "report.docx", "licenses.md"}
+        assert sorted(b["deployments"], key=lambda d: d["id"]) == sorted(rows["deployments"], key=lambda d: d["id"])
+
+        base = f"/api/benchmarks/{EXPERIMENT}"
+        assert c.get(f"{base}/export").status_code == 403
+        assert c.get(f"{base}/export?format=csv").status_code == 403
+        assert c.get(f"{base}/artifacts/attempts.csv").status_code == 404
+        for name, url in b["artifacts"].items():
+            r = c.get(url)
+            assert r.status_code == 200 and r.headers["cache-control"] == "no-cache", name
+        assert c.get("/api/evaluations/h3-v1/backfill-plan").status_code == 403
+
+        # the comparison page: where each clip ran, and its settings, without archive identifiers
+        for r in cases:
+            d = r.json()
+            assert {g["provider"]: g["hardware"] for g in d["groups"]} == {
+                "self": by_provider["self"]["hardware"], "official_api": {}}
+            assert all(x["reason"] == "" for x in d["coverage"])
+            for g in d["groups"]:
+                for j in g["samples"]:
+                    assert set(j["provenance"]) <= set(public_view.PUBLIC_PROVENANCE_KEYS)
+                    assert not {"task_id", "fail_reason", "payload", "video_sha", "case_fingerprint", "quota"} & set(j)
+                    assert j["failure"] is None and j["has_task"] is False and j["origin"] == "imported"
+                    assert j["cost"]["basis"] in ("official_list_price", "phase_resource_estimate") and "quota" not in j["cost"]
+                    assert j["latency_s"] > 0 and j["latency_basis"] == g["samples"][0]["provenance"]["timing_scope"]
+                    if g["provider"] == "self" and j["provenance"]["phase"] == "baseline":
+                        assert j["provenance"]["requested_num_inference_steps"] == 50
+                chosen = g["samples"][0]
+                assert chosen["provenance"]["preferred"] and chosen["id"] == g["default_job_id"]
+                clip = c.get(chosen["video_url"], headers={"range": "bytes=0-99"})
+                assert clip.status_code == 206 and "no-store" not in clip.headers.get("cache-control", "")   # media untouched
+                assert "no-store" not in c.get(chosen["poster_url"]).headers.get("cache-control", "")
+
+        # signed in, the operator gets the full records back
+        r = c.post("/api/admin/login", json={"secret": ADMIN_SECRET}, headers=H)
+        assert r.status_code == 200 and c.cookies.get(ADMIN_COOKIE)
+        full = c.get(f"/api/benchmarks/{EXPERIMENT}")
+        assert full.headers["cache-control"] == "no-store"
+        b = full.json()
+        assert b["summary"]["costs"]["instance_id"] == costs["instance_id"] and "credit_before_usd" in b["summary"]["costs"]
+        assert b["config"]["model_path"] == config["model_path"] and b["config"]["limits"]
+        assert b["content_sha256"] == experiment.content_sha256
+        assert all(a["request_id"] and "record_path" in a["metrics"] for a in b["attempts"])
+        assert b["summary"]["scenes"][0]["official_task_id"] and "attempts.csv" in b["artifacts"]
+        assert c.get("/api/benchmarks").json()["experiments"][0]["content_sha256"] == experiment.content_sha256
+        assert {d["id"]: d for d in c.get("/api/benchmarks").json()["deployments"]} == stored_deployments
+        assert c.get(f"{base}/export?format=csv").text.startswith("﻿experiment_id")
+        assert c.get(f"{base}/export").json()["attempts"][0]["request_id"]
+        raw = c.get(f"{base}/artifacts/attempts.csv")
+        assert raw.status_code == 200 and raw.headers["cache-control"] == "private, no-store"
+        assert c.get(f"{base}/artifacts/report.md").headers["cache-control"] == "no-cache"
+        assert c.get(f"{base}/artifacts/secret.env").status_code == 404
+        d = c.get("/api/evaluations/h3-v1/cases/T01").json()
+        sample = next(g for g in d["groups"] if g["provider"] == "self")["samples"][0]
+        assert sample["provenance"]["request_id"] and sample["provenance"]["original_sha256"] and "video_sha" in sample
+        assert next(g for g in d["groups"] if g["provider"] == "self")["hardware"] == by_provider["self"]["hardware"]
+        assert c.get("/api/evaluations/h3-v1/backfill-plan").status_code == 200
+        # still read-only: the archive cannot be rated, re-run or deleted by an admin session
+        assert c.put(f"/api/jobs/{sample['id']}/rating", json={"overall": 4}, headers=H).status_code == 403
+        assert c.delete(f"/api/runs/{sample['run_id']}", headers=H).status_code == 403
